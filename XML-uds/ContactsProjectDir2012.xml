@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kite  xmlns="http://www.palantirtech.com/pg/schema/kite/">
+<!-- 1.	This code and matching ontology is developed by Artemis Ozten for Direct Relief 	-->
+<!-- 2.	This work includes the following: 									-->
+<!--  	a. 11 years HRSA UDS reports and the matching relational databases were examined to correctly name properties, and, maintain yearly changes.-->
+<!-- 		That is to say, it has been made sure that throughout 11 year history, a property indicates semantically the same data.   -->
+<!-- 		So, if age ranges were changed or adjusted, or data was split (or joined) amongst different ethnic or racial groups,  -->
+<!-- 		either the new properties were added, or, existing properties were combined, or, some properties were discontinued.   -->
+<!-- 	b. Iterative consulting with expert business users was conducted to define the scope: -->
+<!-- 		a.	Irrelevant data was left out  -->
+<!-- 		b.	All  relevant data was retrieved   -->
+<config>
+     <batchSize>1000</batchSize>
+    <batchSleepTime>0</batchSleepTime>
+    <connection>
+	  <driverName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverName>  
+	  <!-- <driverName>net.sourceforge.jtds.jdbc.Driver</driverName> -->
+	  <!-- <url>jdbc:sqlserver://DRI020:1433;DatabaseName=HRSA_UDS_2010</url> -->
+      <url>jdbc:sqlserver://DRISQL1PRD:1433;DatabaseName=HRSA_UDS_2012</url> 
+      <username>palantir</username> 
+      <plaintextPassword>paloalto</plaintextPassword>  
+    </connection>
+    <repository>
+      <path>
+        <directory>/opt/palantir/pXML-Prod/HRSA-UDS</directory>
+        <levels>2</levels>
+      </path>
+    </repository>
+  </config>
+   <tables>
+      <!--                            I M P O R T    P R O J E C T   D I R E C T O R S                        -->
+      <!--                            2 0 1 2                         										  -->
+  <table>
+      <description>HRSA PROJECT DIRS 2012 to DRI PARTNERS</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">           
+			   SELECT hci.[BHCMISID]
+			        ,hci.GrantNumber
+				   ,convert(int,p.partnerid) _partnerid
+				   ,isnull (CONVERT(varchar, convert(int, p.partnerid)), 'UDS' + hci.[BHCMISID]) as pkey 
+			      , '2012' as ry_lngReportingYear, 'Project Director' as Role
+			      ,SUBSTRING( REPLACE( REPLACE(UPPER([ProjectDirector]),' ',''),'.','') ,1 ,6) as namekey
+			      ,UPPER([ProjectDirector]) as ProjectDirector
+			       ,hci.[HealthCenterName]  
+				   ,hci.[HealthCenterStreetAddress]
+				  ,hci.[HealthCenterCity]
+				  ,hci.[HealthCenterState]
+				  ,hci.[HealthCenterZIPCode]
+				  ,'US' as Country				
+			      ,[ProjectDirectorPhone]
+			      ,[ProjectDirectorPhoneExt]
+			      ,[ProjectDirectorFax]
+			      ,[ProjectDirectorEmail]
+			       from [HRSA_UDS_2012].[dbo].[HealthCenterInfo] hci 
+				   left outer join InformationExplorer.dbo.Partner p on hci.[BHCMISID]=p.UDSGranteeID
+				 where [ProjectDirector] is not null and  LEN([ProjectDirector]) > 0
+		      </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">BHCMISID,namekey</param> 
+	      <param key="documentName">JUST_CONTACT_</param> 
+	      <param key="documentIdColumns">BHCMISID,namekey</param>
+	      <param key="objectName">JUST_CONTACT_</param>
+	      <param key="objectType">com.palantir.object.UDSContact</param>
+      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeID</param>
+			<param key="propertyValueColumn">BHCMISID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">EHBGrantId_</param>
+			<param key="propertyType">com.palantir.property.EHBGrantID</param>
+			<param key="propertyValueColumn">GrantNumber</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ry_lngReportingYear</param>
+			 <param key="endDateColumn">ry_lngReportingYear</param>
+			  <param key="inputDateFormat">yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">FaxNumber_</param>
+			<param key="propertyType">com.palantir.property.Fax</param>
+			<param key="propertyValueColumn">ProjectDirectorFax</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Name_</param>
+			<param key="propertyType">com.palantir.property.Name</param>
+			<param key="propertyValueColumn">ProjectDirector</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Phone_</param>
+			<param key="propertyType">com.palantir.property.Phone</param>
+			<param key="propertyValueColumn">ProjectDirectorPhone</param>
+		</rowprocessor>
+
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PhoneExt_</param>
+			<param key="propertyType">com.palantir.property.PhoneExtension</param>
+			<param key="propertyValueColumn">ProjectDirectorPhoneExt</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Email_</param>
+			<param key="propertyType">com.palantir.property.Email</param>
+			<param key="propertyValueColumn">ProjectDirectorEmail</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Role2012PD_</param>
+			<param key="propertyType">com.palantir.property.UDSRole</param>
+			<param key="propertyValueColumn">Role</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">HRSAOrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">HealthCenterName</param>
+		</rowprocessor>
+<!-- 		No long/lat if already exists in our DB -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">HealthCenterStreetAddress,HealthCenterCity,HealthCenterState,HealthCenterZIPCode</param>
+			<param key="componentTypes">ADDRESS1,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Country_</param>
+			<param key="propertyType">com.palantir.property.Country</param>
+			<param key="propertyValueColumn">Country</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">City_</param>
+			<param key="propertyType">com.palantir.property.city</param>
+			<param key="propertyValueColumn">HealthCenterCity</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Region_</param>
+			<param key="propertyType">com.palantir.property.region</param>
+			<param key="propertyValueColumn">HealthCenterState</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">JUST_CONTACT_</param>
+			<param key="childKeyColumns">BHCMISID,namekey</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,BHCMISID,namekey</param>
+			<param key="linkName">Contact_</param>
+			<param key="linkText">Project Dir.</param>
+		</rowprocessor>
+      </rowprocessorSet>
+    </table>
+  </tables>
+  </kite>

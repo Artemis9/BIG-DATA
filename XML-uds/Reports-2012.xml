@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kite  xmlns="http://www.palantirtech.com/pg/schema/kite/">
+<!-- 1.	This code and matching ontology is developed by Artemis Ozten for Direct Relief 	-->
+<!-- 2.	This work includes the following: 									-->
+<!--  	a. 11 years HRSA UDS reports and the matching relational databases were examined to correctly name properties, and, maintain yearly changes.-->
+<!-- 		That is to say, it has been made sure that throughout 11 year history, a property indicates semantically the same data.   -->
+<!-- 		So, if age ranges were changed or adjusted, or data was split (or joined) amongst different ethnic or racial groups,  -->
+<!-- 		either the new properties were added, or, existing properties were combined, or, some properties were discontinued.   -->
+<!-- 	b. Iterative consulting with expert business users was conducted to define the scope: -->
+<!-- 		a.	Irrelevant data was left out  -->
+<!-- 		b.	All  relevant data was retrieved   -->
+<!-- 		c.	Clinic level aggregates were determined -->
+<config>
+     <batchSize>1000</batchSize>
+    <batchSleepTime>0</batchSleepTime>
+    <connection>
+	  <driverName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverName>  
+        <!-- <driverName>net.sourceforge.jtds.jdbc.Driver</driverName> -->
+	  <!-- <url>jdbc:sqlserver://DRI020:1433;DatabaseName=HRSA_UDS_2010</url> -->
+      <url>jdbc:sqlserver://DRISQL1PRD:1433;DatabaseName=HRSA_UDS_2012</url> 
+      <username>palantir</username> 
+      <plaintextPassword>paloalto</plaintextPassword>  
+    </connection>
+    <repository>
+      <path>
+        <directory>/opt/palantir/pXML-Prod/HRSA-UDS</directory>
+        <levels>2</levels>
+      </path>
+    </repository>
+  </config>
+  <tables>
+<!--                            I M P O R T      R E P O R T S                         -->
+<!--                            2 0 1 2                        -->
+<table>
+      <description>HRSA REPORT HEADERS 2012</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 	
+         SELECT hci.[BHCMISID]
+				  ,'2012' as ry_lngReportingYear
+				  ,'01/01/2012' as ReportingPeriodBegin, '12/31/2012' as ReportingPeriodEnd      
+			      ,hci.[HealthCenterName] 
+			      ,'UDSReport-'+ hci.[HealthCenterName] + '-2012' as  ReportName 
+			       ,isnull (CONVERT(varchar, convert(int, p.partnerid)), 'UDS' + hci.[BHCMISID]) as pkey 
+			      ,hci.[HealthCenterStreetAddress]
+			      ,hci.[HealthCenterOtherAddress]
+			      ,hci.[HealthCenterCity]
+			      ,hci.[HealthCenterState]
+			      ,hci.[HealthCenterZIPCode]
+			      ,'US' as Country
+			      ,hci.GrantNumber
+			      --,[gi_lngDeliverySites]
+			      --,[gi_lngAssignees]
+				  ,[FundingCHC] = case hci.[FundingCHC] when 'TRUE' then 'Y' when 'FALSE' then 'N' else NULL end
+			      ,[FundingMHC] = case hci.[FundingMHC] when 'TRUE' then 'Y' when 'FALSE' then 'N' else NULL end
+			      ,[FundingHO]= case hci.[FundingHO] when 'TRUE' then 'Y' when 'FALSE' then 'N' else NULL end
+			      ,[FundingPH]= case hci.[FundingPH] when 'TRUE' then 'Y' when 'FALSE' then 'N' else NULL end
+				  ,isnull(convert(int,p.partnerid),'') as partnerID
+				   , geo.Longitude, geo.Latitude
+			  FROM  
+			   [HRSA_UDS_2012].[dbo].TBLGRANTEEINFOGEOCODED geo, 
+			  [HRSA_UDS_2012].[dbo].[HealthCenterInfo] hci
+            left outer join InformationExplorer.dbo.partner p on hci.[BHCMISID] = p.UDSGranteeID  
+			   where hci.[BHCMISID] = geo.[BHCMISID]  
+		 </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">BHCMISID,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_</param> 
+	      <param key="documentIdColumns">BHCMISID,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_</param>
+	      <param key="objectType">com.palantir.object.UDSReport</param>
+      	  <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No
+      </param>
+      </globalParams>
+      <rowprocessorSet>
+         <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">HealthCenterName</param>
+		</rowprocessor>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">BHCMISID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="blacklistValues">0</param>
+			<param key="propertyName">PartnerID_</param>
+			<param key="propertyType">com.palantir.property.OrganizationId</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportName</param>
+		</rowprocessor>
+		 <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">EHBGrantId_</param>
+			<param key="propertyType">com.palantir.property.EHBGrantID</param>
+			<param key="propertyValueColumn">GrantNumber</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">HealthCenterStreetAddress,HealthCenterOtherAddress,HealthCenterCity,HealthCenterState,HealthCenterZipCode</param>
+			<param key="componentTypes">ADDRESS1,ADDRESS2,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Country_</param>
+			<param key="propertyType">com.palantir.property.Country</param>
+			<param key="propertyValueColumn">Country</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">City_</param>
+			<param key="propertyType">com.palantir.property.city</param>
+			<param key="propertyValueColumn">HealthCenterCity</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Region_</param>
+			<param key="propertyType">com.palantir.property.region</param>
+			<param key="propertyValueColumn">HealthCenterState</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">FundingCHC_</param>
+			<param key="propertyType">com.palantir.property.fCHC</param>
+			<param key="propertyValueColumn">FundingCHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">FundingMHC_</param>
+			<param key="propertyType">com.palantir.property.fMHC</param>
+			<param key="propertyValueColumn">FundingMHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">FundingHO_</param>
+			<param key="propertyType">com.palantir.property.fHO</param>
+			<param key="propertyValueColumn">FundingHO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">FundingPH_</param>
+			<param key="propertyType">com.palantir.property.fPH</param>
+			<param key="propertyValueColumn">FundingPH</param>
+		</rowprocessor>
+<!-- 		<rowprocessor -->
+<!-- 			class="com.palantir.kite.processor.importresync.PropertyRawProcessor"> -->
+<!-- 			<param key="propertyName">gi_fHSHC_</param> -->
+<!-- 			<param key="propertyType">com.palantir.property.fHSHC</param> -->
+<!-- 			<param key="propertyValueColumn">gi_fHSHC</param> -->
+<!-- 		</rowprocessor> -->
+
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">REPORT_</param>
+			<param key="childKeyColumns">BHCMISID,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey, BHCMISID,ry_lngReportingYear</param>
+			<param key="linkName">Reported_</param>	
+			<param key="linkText">Reported</param>		
+		</rowprocessor>
+      </rowprocessorSet>
+    </table>
+    
+    <table>
+      <description>HRSA REPORT TABLE 3A 2012</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">
+           SELECT [HRSA_UDS_2012].[dbo].[Table3A]. BHCMISID 
+					 ,'2012' as ry_lngReportingYear
+					 ,[T3a_L39_Ca]--'Total Male Patients'
+					 ,[T3a_L39_Cb]--'Total Female Patients'	
+					 ,[T3b_L8_Cd] -- Total Patients Total			      
+				  FROM 
+				    [HRSA_UDS_2012].[dbo].[Table3A] , [HRSA_UDS_2012].[dbo].[Table3B]
+					where [HRSA_UDS_2012].[dbo].[Table3B].[BHCMISID] = [HRSA_UDS_2012].[dbo].[Table3A].[BHCMISID]
+		 </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+		  <param key="primaryKeyColumns">BHCMISID,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_</param> 
+	      <param key="documentIdColumns">BHCMISID,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_</param>
+	      <param key="objectType">com.palantir.object.UDSReport</param>
+      </globalParams>
+      <rowprocessorSet> 
+
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3a_L39_Ca_</param>
+			<param key="propertyType">com.palantir.property.T3a_L39_Ca</param>
+			<param key="propertyValueColumn">T3a_L39_Ca</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3a_L39_Cb_</param>
+			<param key="propertyType">com.palantir.property.T3a_L39_Cb</param>
+			<param key="propertyValueColumn">T3a_L39_Cb</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L8_Cd_</param>
+			<param key="propertyType">com.palantir.property.T3b_L8_Cd</param>
+			<param key="propertyValueColumn">T3b_L8_Cd</param>
+		</rowprocessor>
+     </rowprocessorSet>
+    </table>
+  
+     <table>
+      <description>HRSA REPORT TABLE 6A 2012</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">				
+			 SELECT BHCMISID
+ 				,'2012' as ry_lngReportingYear
+ 				  ,[T6a_L24a_Cb]  --Selected Diagnostic Tests Services  Seasonal flu Vaccine  Patients Nr
+			      ,[T6a_L10_Cb] T6a_L10_Cb --Other Medical Conditions  Heart disease  Number of Patients
+			      ,[T6a_L11_Cb] T6a_L11_Cb --Other Medical Conditions  Hypertension  Number of Patients
+			      ,[T6a_L5_Cb] T6a_L5_Cb -- Respiratory System Diseases  Asthma  Number of Patients
+			      ,[T6a_L9_Cb] T6a_L9_Cb -- Other Medical Conditions  Diabetes mellitus  Number of Patients
+				FROM [HRSA_UDS_2012].[dbo].[Table6A] 
+			</param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+		  <param key="primaryKeyColumns">BHCMISID,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_</param> 
+	      <param key="documentIdColumns">BHCMISID,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_</param>
+	      <param key="objectType">com.palantir.object.UDSReport</param>
+      </globalParams>
+      <rowprocessorSet> 
+      	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L5_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L5_Cb</param>
+			<param key="propertyValueColumn">T6a_L5_Cb</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L9_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L9_Cb</param>
+			<param key="propertyValueColumn">T6a_L9_Cb</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L11_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L11_Cb</param>
+			<param key="propertyValueColumn">T6a_L11_Cb</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L10_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L10_Cb</param>
+			<param key="propertyValueColumn">T6a_L10_Cb</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L24a_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L24a_Cb</param>
+			<param key="propertyValueColumn">T6a_L24a_Cb</param>
+		</rowprocessor>
+     </rowprocessorSet>
+    </table>
+    <table>
+      <description>HRSA REPORT TABLE 4 2012</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">
+				SELECT [BHCMISID]
+				  ,'2012' as ry_lngReportingYear
+			      ,[T4_L1_Ca] -- Poverty Level  100 and below  Number of Patients
+			      ,[T4_L2_Ca] -- Poverty Level  101 150  Number of Patients
+			      ,[T4_L3_Ca] -- Poverty Level  151 200  Number of Patients		      
+			      ,[T4_L7_Ca]+[T4_L7_Cb] T4_L7_CMIaPLUSb -- Principal 3rd party MI source None/Uninsured Total			       
+			      ,[T4_L9_Ca]+[T4_L9_Cb] T4_L9_CMIaPLUSb -- Principal 3rd party MI source Medicare Total 
+			      ,[T4_L24_Ca] -- Special Populations Total School Based Health Center Patients
+			      ,[T4_L8_Ca]+[T4_L8_Cb] T4_L8_CMIaPLUSb -- Principal 3rd party MI source Medicaid All Age Total
+				FROM [HRSA_UDS_2012].[dbo].[Table4]
+			</param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+		  <param key="primaryKeyColumns">BHCMISID,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_</param> 
+	      <param key="documentIdColumns">BHCMISID,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_</param>
+	      <param key="objectType">com.palantir.object.UDSReport</param>
+      </globalParams>
+      <rowprocessorSet> 
+      	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L1_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L1_Ca</param>
+			<param key="propertyValueColumn">T4_L1_Ca</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L2_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L2_Ca</param>
+			<param key="propertyValueColumn">T4_L2_Ca</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L3_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L3_Ca</param>
+			<param key="propertyValueColumn">T4_L3_Ca</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L7_CMIaPLUSb_</param>
+			<param key="propertyType">com.palantir.property.T4_L7_CMIaPLUSb</param>
+			<param key="propertyValueColumn">T4_L7_CMIaPLUSb</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L9_CMIaPLUSb_</param>
+			<param key="propertyType">com.palantir.property.T4_L9_CMIaPLUSb</param>
+			<param key="propertyValueColumn">T4_L9_CMIaPLUSb</param>
+		</rowprocessor>
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L8_CMIaPLUSb_</param>
+			<param key="propertyType">com.palantir.property.T4_L8_CMIaPLUSb</param>
+			<param key="propertyValueColumn">T4_L8_CMIaPLUSb</param>
+		</rowprocessor>
+     </rowprocessorSet>
+    </table>
+  </tables>
+</kite>

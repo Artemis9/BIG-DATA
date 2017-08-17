@@ -1,0 +1,1084 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 1.	This code and matching ontology is developed by Artemis Ozten for Direct Relief 	-->
+<!-- 2.	This work includes the following: 									-->
+<!--  	a. 11 years HRSA UDS reports and the matching relational databases were examined to correctly name properties, and, maintain yearly changes.-->
+<!-- 		That is to say, it has been made sure that throughout 11 year history, a property indicates semantically the same data.   -->
+<!-- 		So, if age ranges were changed or adjusted, or data was split (or joined) amongst different ethnic or racial groups,  -->
+<!-- 		either the new properties were added, or, existing properties were combined, or, some properties were discontinued.   -->
+<!-- 	b. Iterative consulting with expert business users was conducted to define the scope: -->
+<!-- 		a.	Irrelevant data was left out  -->
+<!-- 		b.	All  relevant data was retrieved   -->
+<!-- 		c.	Clinic level aggregates were determined -->
+<kite  xmlns="http://www.palantirtech.com/pg/schema/kite/">
+<config>
+     <batchSize>1000</batchSize>
+    <batchSleepTime>0</batchSleepTime>
+    <connection>
+	  <driverName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverName>   
+	   <!-- <driverName>net.sourceforge.jtds.jdbc.Driver</driverName> -->
+       <!-- <url>jdbc:jtds:sqlserver://DRISQLHAPRD:1433;DatabaseName=InformationExplorer</url> -->
+	<url>jdbc:sqlserver://DRISQLHAPRD:1433;DatabaseName=HRSA_UDS_2011</url>
+      <!-- DRISQLHAPRD -->
+      <username>palantir</username>
+      <plaintextPassword>paloalto</plaintextPassword>
+    </connection>
+    <repository>
+      <path>
+        <directory>/opt/palantir/pXML-Prod/HRSA-UDS</directory>
+        <levels>2</levels>
+      </path>
+    </repository>
+  </config>
+   <tables>
+      <!--                            I M P O R T    CLINIC  D I R E C T O R S                         -->
+      <!--                            2 0 0 0                         -->
+    <table>
+      <description>HRSA CLINIC DIRS 2000</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+          SELECT 
+          	gi_txtUDS
+          	,convert(int,p.partnerid) _partnerid
+          	,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey 
+	      	,'2000' as[ry_lngReportingYear]  
+	      	,'Clinic Director' as Role	      
+	     	,UPPER([gi_txtClinicalDirector])    gi_txtClinicalDirector
+	     	,SUBSTRING( REPLACE( REPLACE(UPPER([gi_txtClinicalDirector]),' ',''),'.','') ,1 ,6)  as  namekey
+	      	,[gi_txtClinicalDirectorPhone]
+	      	,[gi_txtClinicalDirectorEmail]
+  			from [HRSA_UDS_2000].[dbo].[tblGranteeInfo]  gi 
+		      left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS]=p.UDSGranteeID
+				where [gi_txtClinicalDirector] is not null and  LEN([gi_txtClinicalDirector]) > 0		  
+		 </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,namekey</param> 
+	      <param key="documentName">JUST_CONTACT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,namekey</param>
+	      <param key="objectName">JUST_CONTACT_</param>
+	      <param key="objectType">com.palantir.object.UDSContact</param>
+      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeID</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ry_lngReportingYear</param>
+			 <param key="endDateColumn">ry_lngReportingYear</param>
+			  <param key="inputDateFormat">yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">RoleCD2000_</param>
+			<param key="propertyType">com.palantir.property.UDSRole</param>
+			<param key="propertyValueColumn">Role</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Name_</param>
+			<param key="propertyType">com.palantir.property.Name</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirector</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Phone_</param>
+			<param key="propertyType">com.palantir.property.Phone</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhone</param>
+		</rowprocessor>
+
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Email_</param>
+			<param key="propertyType">com.palantir.property.Email</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorEmail</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">JUST_CONTACT_</param>
+			<param key="childKeyColumns">gi_txtUDS,namekey</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,namekey</param>
+			<param key="linkName">Contact_</param>
+			<param key="linkText">Clinic Dir.</param>
+		</rowprocessor>	
+      </rowprocessorSet>
+    </table>   
+    <!--                            2 0 0 1                         -->
+   
+ <table>
+      <description>HRSA CLINIC DIRS 2001</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+           select 
+           	[gi_txtUDS]  
+           	,convert(int,p.partnerid) _partnerid
+          	,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey 
+           	,'2001' as ry_lngReportingYear  
+           	,'Clinic Director' as Role
+			  ,UPPER([gi_txtClinicalDirector])    gi_txtClinicalDirector
+			 ,SUBSTRING( REPLACE( REPLACE(UPPER([gi_txtClinicalDirector]),' ',''),'.','') ,1 ,6)  as  namekey
+		      ,[gi_txtClinicalDirectorPhone]
+		      ,[gi_txtClinicalDirectorPhoneExt]
+		      ,[gi_txtClinicalDirectorEmail]     
+		      from [HRSA_UDS_2001].[dbo].[tblGranteeInfo] gi 
+		      left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS]=p.UDSGranteeID
+				where [gi_txtClinicalDirector] is not null and  LEN([gi_txtClinicalDirector]) > 0		 
+		      </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,namekey</param> 
+	      <param key="documentName">JUST_CONTACT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,namekey</param>
+	      <param key="objectName">JUST_CONTACT_</param>
+	      <param key="objectType">com.palantir.object.UDSContact</param>
+      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeID</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ry_lngReportingYear</param>
+			 <param key="endDateColumn">ry_lngReportingYear</param>
+			  <param key="inputDateFormat">yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Role2001CD_</param>
+			<param key="propertyType">com.palantir.property.UDSRole</param>
+			<param key="propertyValueColumn">Role</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Name_</param>
+			<param key="propertyType">com.palantir.property.Name</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirector</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Phone_</param>
+			<param key="propertyType">com.palantir.property.Phone</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhone</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PhoneExt_</param>
+			<param key="propertyType">com.palantir.property.PhoneExtension</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhoneExt</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Email_</param>
+			<param key="propertyType">com.palantir.property.Email</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorEmail</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">JUST_CONTACT_</param>
+			<param key="childKeyColumns">gi_txtUDS,namekey</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,namekey</param>
+			<param key="linkName">Contact_</param>
+			<param key="linkText">Clinic Dir.</param>
+		</rowprocessor>		
+      </rowprocessorSet>
+    </table>
+     <!--                            2 0 0 2                         -->
+    <table>
+      <description>HRSA CLINIC DIRS 2002</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+			select 
+	          	[gi_txtUDS]	
+	          	,convert(int,p.partnerid) _partnerid
+          		,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey  
+	          	,'2002' as ry_lngReportingYear  
+	          	,'Clinic Director' as Role
+				  ,UPPER([gi_txtClinicalDirector])    gi_txtClinicalDirector
+				  ,SUBSTRING( REPLACE( REPLACE(UPPER([gi_txtClinicalDirector]),' ',''),'.','') ,1 ,6)  as  namekey
+			      ,[gi_txtClinicalDirectorPhone]
+			      ,[gi_txtClinicalDirectorPhoneExt]
+			      ,[gi_txtClinicalDirectorEmail]     
+			      from [HRSA_UDS_2002].[dbo].[tblGranteeInfo] gi 
+		      left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS]=p.UDSGranteeID
+				where [gi_txtClinicalDirector] is not null and  LEN([gi_txtClinicalDirector]) > 0	 		      		     
+		      </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,namekey</param> 
+	      <param key="documentName">JUST_CONTACT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,namekey</param>
+	      <param key="objectName">JUST_CONTACT_</param>
+	      <param key="objectType">com.palantir.object.UDSContact</param>
+      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeID</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ry_lngReportingYear</param>
+			 <param key="endDateColumn">ry_lngReportingYear</param>
+			  <param key="inputDateFormat">yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Role2002CD_</param>
+			<param key="propertyType">com.palantir.property.UDSRole</param>
+			<param key="propertyValueColumn">Role</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Name_</param>
+			<param key="propertyType">com.palantir.property.Name</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirector</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Phone_</param>
+			<param key="propertyType">com.palantir.property.Phone</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhone</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PhoneExt_</param>
+			<param key="propertyType">com.palantir.property.PhoneExtension</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhoneExt</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Email_</param>
+			<param key="propertyType">com.palantir.property.Email</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorEmail</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">JUST_CONTACT_</param>
+			<param key="childKeyColumns">gi_txtUDS,namekey</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,namekey</param>
+			<param key="linkName">Contact_</param>
+			<param key="linkText">Clinic Dir.</param>
+		</rowprocessor>		
+      </rowprocessorSet>
+    </table>   
+    <!--                            2 0 0 3                         -->
+  <table>
+      <description>HRSA CLINIC DIRS 2003</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+          	select [gi_txtUDS]
+				,convert(int,p.partnerid) _partnerid
+          		,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey   
+          		,'2003' as ry_lngReportingYear, 'Clinic Director' as Role
+			  ,UPPER([gi_txtClinicalDirector])    gi_txtClinicalDirector
+			 ,SUBSTRING( REPLACE( REPLACE(UPPER([gi_txtClinicalDirector]),' ',''),'.','') ,1 ,6)  as  namekey
+		      ,[gi_txtClinicalDirectorPhone]
+		      ,[gi_txtClinicalDirectorPhoneExt]
+		      ,[gi_txtClinicalDirectorEmail]     
+		      from [HRSA_UDS_2003].[dbo].[tblGranteeInfo] gi 
+		      left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS]=p.UDSGranteeID
+				where [gi_txtClinicalDirector] is not null and  LEN([gi_txtClinicalDirector]) > 0		      	 
+		      </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,namekey</param> 
+	      <param key="documentName">JUST_CONTACT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,namekey</param>
+	      <param key="objectName">JUST_CONTACT_</param>
+	      <param key="objectType">com.palantir.object.UDSContact</param>
+      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeID</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ry_lngReportingYear</param>
+			 <param key="endDateColumn">ry_lngReportingYear</param>
+			  <param key="inputDateFormat">yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Role2003CD_</param>
+			<param key="propertyType">com.palantir.property.UDSRole</param>
+			<param key="propertyValueColumn">Role</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Name_</param>
+			<param key="propertyType">com.palantir.property.Name</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirector</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Phone_</param>
+			<param key="propertyType">com.palantir.property.Phone</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhone</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PhoneExt_</param>
+			<param key="propertyType">com.palantir.property.PhoneExtension</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhoneExt</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Email_</param>
+			<param key="propertyType">com.palantir.property.Email</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorEmail</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">JUST_CONTACT_</param>
+			<param key="childKeyColumns">gi_txtUDS,namekey</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,namekey</param>
+			<param key="linkName">Contact_</param>
+			<param key="linkText">Clinic Dir.</param>
+		</rowprocessor>		
+      </rowprocessorSet>
+    </table>    
+    <!--                            2 0 0 4                         -->
+   <table>
+      <description>HRSA CLINIC DIRS 2004</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> select [gi_txtUDS]
+				,convert(int,p.partnerid) _partnerid
+          		,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey   
+          		,'2004' as ry_lngReportingYear, 'Clinic Director' as Role
+			  ,UPPER([gi_txtClinicalDirector])    gi_txtClinicalDirector
+			 ,SUBSTRING( REPLACE( REPLACE(UPPER([gi_txtClinicalDirector]),' ',''),'.','') ,1 ,6)  as  namekey
+		      ,[gi_txtClinicalDirectorPhone]
+		      ,[gi_txtClinicalDirectorPhoneExt]
+		      ,[gi_txtClinicalDirectorEmail]     
+		      from [HRSA_UDS_2004].[dbo].[tblGranteeInfo] gi 
+		      left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS]=p.UDSGranteeID
+				where [gi_txtClinicalDirector] is not null and  LEN([gi_txtClinicalDirector]) > 0 	      
+		      </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,namekey</param> 
+	      <param key="documentName">JUST_CONTACT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,namekey</param>
+	      <param key="objectName">JUST_CONTACT_</param>
+	      <param key="objectType">com.palantir.object.UDSContact</param>
+      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeID</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ry_lngReportingYear</param>
+			 <param key="endDateColumn">ry_lngReportingYear</param>
+			  <param key="inputDateFormat">yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Role2004CD_</param>
+			<param key="propertyType">com.palantir.property.UDSRole</param>
+			<param key="propertyValueColumn">Role</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Name_</param>
+			<param key="propertyType">com.palantir.property.Name</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirector</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Phone_</param>
+			<param key="propertyType">com.palantir.property.Phone</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhone</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PhoneExt_</param>
+			<param key="propertyType">com.palantir.property.PhoneExtension</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhoneExt</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Email_</param>
+			<param key="propertyType">com.palantir.property.Email</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorEmail</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">JUST_CONTACT_</param>
+			<param key="childKeyColumns">gi_txtUDS,namekey</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,namekey</param>
+			<param key="linkName">Contact_</param>
+			<param key="linkText">Clinic Dir.</param>
+		</rowprocessor>		
+      </rowprocessorSet>
+    </table>   
+    <!--                            2 0 0 5                         -->
+ <table>
+      <description>HRSA CLINIC DIRS 2005</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+          	select [gi_txtUDS]
+             ,convert(int,p.partnerid) _partnerid
+          	  ,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey  
+          	  , '2005' as ry_lngReportingYear, 'Clinic Director' as Role
+			  ,UPPER([gi_txtClinicalDirector])    gi_txtClinicalDirector
+			 ,SUBSTRING( REPLACE( REPLACE(UPPER([gi_txtClinicalDirector]),' ',''),'.','') ,1 ,6)  as  namekey
+		      ,[gi_txtClinicalDirectorPhone]
+		      ,[gi_txtClinicalDirectorPhoneExt]
+		      ,[gi_txtClinicalDirectorEmail]     
+		      from [HRSA_UDS_2005].[dbo].[tblGranteeInfo] gi 
+		      left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS]=p.UDSGranteeID
+				where [gi_txtClinicalDirector] is not null and  LEN([gi_txtClinicalDirector]) > 0	 				 
+		      </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	     <param key="primaryKeyColumns">gi_txtUDS,namekey</param> 
+	      <param key="documentName">JUST_CONTACT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,namekey</param>
+	      <param key="objectName">JUST_CONTACT_</param>
+	      <param key="objectType">com.palantir.object.UDSContact</param>
+      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeID</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ry_lngReportingYear</param>
+			 <param key="endDateColumn">ry_lngReportingYear</param>
+			  <param key="inputDateFormat">yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Role2005CD_</param>
+			<param key="propertyType">com.palantir.property.UDSRole</param>
+			<param key="propertyValueColumn">Role</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Name_</param>
+			<param key="propertyType">com.palantir.property.Name</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirector</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Phone_</param>
+			<param key="propertyType">com.palantir.property.Phone</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhone</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PhoneExt_</param>
+			<param key="propertyType">com.palantir.property.PhoneExtension</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhoneExt</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Email_</param>
+			<param key="propertyType">com.palantir.property.Email</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorEmail</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		<rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">JUST_CONTACT_</param>
+			<param key="childKeyColumns">gi_txtUDS,namekey</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,namekey</param>
+			<param key="linkName">Contact_</param>
+			<param key="linkText">Clinic Dir.</param>
+		</rowprocessor>
+      </rowprocessorSet>
+    </table>
+    <!--                            2 0 0 6                         -->
+    <table>
+      <description>HRSA CLINIC DIRS 2006</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+            select [gi_txtUDS]
+			,convert(int,p.partnerid) _partnerid
+          	,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey
+            ,'2006' as ry_lngReportingYear, 'Clinic Director' as Role
+			  ,UPPER([gi_txtClinicalDirector])    gi_txtClinicalDirector
+			 ,SUBSTRING( REPLACE( REPLACE(UPPER([gi_txtClinicalDirector]),' ',''),'.','') ,1 ,6)  as  namekey
+		      ,[gi_txtClinicalDirectorPhone]
+		      ,[gi_txtClinicalDirectorPhoneExt]
+		      ,[gi_txtClinicalDirectorEmail]     
+		      from [HRSA_UDS_2006].[dbo].[tblGranteeInfo] gi 
+		      left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS]=p.UDSGranteeID
+				where [gi_txtClinicalDirector] is not null and  LEN([gi_txtClinicalDirector]) > 0	
+		      </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,namekey</param> 
+	      <param key="documentName">JUST_CONTACT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,namekey</param>
+	      <param key="objectName">JUST_CONTACT_</param>
+	      <param key="objectType">com.palantir.object.UDSContact</param>
+      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeID</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ry_lngReportingYear</param>
+			 <param key="endDateColumn">ry_lngReportingYear</param>
+			  <param key="inputDateFormat">yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Role2006CD_</param>
+			<param key="propertyType">com.palantir.property.UDSRole</param>
+			<param key="propertyValueColumn">Role</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Name_</param>
+			<param key="propertyType">com.palantir.property.Name</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirector</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Phone_</param>
+			<param key="propertyType">com.palantir.property.Phone</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhone</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PhoneExt_</param>
+			<param key="propertyType">com.palantir.property.PhoneExtension</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhoneExt</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Email_</param>
+			<param key="propertyType">com.palantir.property.Email</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorEmail</param>
+		</rowprocessor>
+<rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">JUST_CONTACT_</param>
+			<param key="childKeyColumns">gi_txtUDS,namekey</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,namekey</param>
+			<param key="linkName">Contact_</param>
+			<param key="linkText">Clinic Dir.</param>
+		</rowprocessor>		
+      </rowprocessorSet>
+    </table>
+    <!--                            2 0 0 7                         -->
+     <table>
+      <description>HRSA CLINIC DIRS 2007</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+          	select [gi_txtUDS]
+          		,convert(int,p.partnerid) _partnerid
+          		,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey
+          		,'2007' as ry_lngReportingYear, 'Clinic Director' as Role
+			  	,UPPER([gi_txtClinicalDirector])    gi_txtClinicalDirector
+			  ,SUBSTRING( REPLACE( REPLACE(UPPER([gi_txtClinicalDirector]),' ',''),'.','') ,1 ,6)  as  namekey
+		      ,[gi_txtClinicalDirectorPhone]
+		      ,[gi_txtClinicalDirectorPhoneExt]
+		      ,[gi_txtClinicalDirectorEmail]     
+		      from [HRSA_UDS_2007].[dbo].[tblGranteeInfo] gi 
+		      left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS]=p.UDSGranteeID
+				where [gi_txtClinicalDirector] is not null and  LEN([gi_txtClinicalDirector]) > 0		        
+		      </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,namekey</param> 
+	      <param key="documentName">JUST_CONTACT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,namekey</param>
+	      <param key="objectName">JUST_CONTACT_</param>
+	      <param key="objectType">com.palantir.object.UDSContact</param>
+      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeID</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ry_lngReportingYear</param>
+			 <param key="endDateColumn">ry_lngReportingYear</param>
+			  <param key="inputDateFormat">yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Role2007CD_</param>
+			<param key="propertyType">com.palantir.property.UDSRole</param>
+			<param key="propertyValueColumn">Role</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Name_</param>
+			<param key="propertyType">com.palantir.property.Name</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirector</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Phone_</param>
+			<param key="propertyType">com.palantir.property.Phone</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhone</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PhoneExt_</param>
+			<param key="propertyType">com.palantir.property.PhoneExtension</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhoneExt</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Email_</param>
+			<param key="propertyType">com.palantir.property.Email</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorEmail</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		<rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">JUST_CONTACT_</param>
+			<param key="childKeyColumns">gi_txtUDS,namekey</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,namekey</param>
+			<param key="linkName">Contact_</param>
+			<param key="linkText">Clinic Dir.</param>
+		</rowprocessor>      </rowprocessorSet>
+    </table>    
+     <!--                            2 0 0 8                         -->
+     <table>
+      <description>HRSA CLINIC DIRS 2008</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+          select [gi_txtUDS]
+              ,convert(int,p.partnerid) _partnerid
+          	  ,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey
+          	  , '2008' as ry_lngReportingYear, 'Clinic Director' as Role
+			  ,UPPER([gi_txtClinicalDirector])    gi_txtClinicalDirector
+			 ,SUBSTRING( REPLACE( REPLACE(UPPER([gi_txtClinicalDirector]),' ',''),'.','') ,1 ,6)  as  namekey
+		      ,[gi_txtClinicalDirectorPhone]
+		      ,[gi_txtClinicalDirectorPhoneExt]
+		      ,[gi_txtClinicalDirectorEmail]     
+		      from [HRSA_UDS_2008].[dbo].[tblGranteeInfo] gi 
+		      left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS]=p.UDSGranteeID
+				where [gi_txtClinicalDirector] is not null and  LEN([gi_txtClinicalDirector]) > 0  
+		      </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,namekey</param> 
+	      <param key="documentName">JUST_CONTACT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,namekey</param>
+	      <param key="objectName">JUST_CONTACT_</param>
+	      <param key="objectType">com.palantir.object.UDSContact</param>
+      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeID</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ry_lngReportingYear</param>
+			 <param key="endDateColumn">ry_lngReportingYear</param>
+			  <param key="inputDateFormat">yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Role2008CD_</param>
+			<param key="propertyType">com.palantir.property.UDSRole</param>
+			<param key="propertyValueColumn">Role</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Name_</param>
+			<param key="propertyType">com.palantir.property.Name</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirector</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Phone_</param>
+			<param key="propertyType">com.palantir.property.Phone</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhone</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PhoneExt_</param>
+			<param key="propertyType">com.palantir.property.PhoneExtension</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhoneExt</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Email_</param>
+			<param key="propertyType">com.palantir.property.Email</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorEmail</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		<rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">JUST_CONTACT_</param>
+			<param key="childKeyColumns">gi_txtUDS,namekey</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,namekey</param>
+			<param key="linkName">Contact_</param>
+			<param key="linkText">Clinic Dir.</param>
+		</rowprocessor>    
+		</rowprocessorSet>
+    </table>
+    
+    <!--                            2 0 0 9                         -->
+   <table>
+      <description>HRSA CLINIC DIRS 2009</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+          	select [gi_txtUDS]
+			  ,convert(int,p.partnerid) _partnerid
+          	  ,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey
+          	  ,'2009' as ry_lngReportingYear, 'Clinic Director' as Role
+			  ,UPPER([gi_txtClinicalDirector])    gi_txtClinicalDirector
+			 ,SUBSTRING( REPLACE( REPLACE(UPPER([gi_txtClinicalDirector]),' ',''),'.','') ,1 ,6)  as  namekey
+		      ,[gi_txtClinicalDirectorPhone]
+		      ,[gi_txtClinicalDirectorPhoneExt]
+		      ,[gi_txtClinicalDirectorEmail]     
+		      from [HRSA_UDS_2009].[dbo].[tblGranteeInfo] gi 
+		      left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS]=p.UDSGranteeID
+				where [gi_txtClinicalDirector] is not null and  LEN([gi_txtClinicalDirector]) > 0  
+		       
+		      </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,namekey</param> 
+	      <param key="documentName">JUST_CONTACT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,namekey</param>
+	      <param key="objectName">JUST_CONTACT_</param>
+	      <param key="objectType">com.palantir.object.UDSContact</param>
+      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeID</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ry_lngReportingYear</param>
+			 <param key="endDateColumn">ry_lngReportingYear</param>
+			  <param key="inputDateFormat">yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Role2009CD_</param>
+			<param key="propertyType">com.palantir.property.UDSRole</param>
+			<param key="propertyValueColumn">Role</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Name_</param>
+			<param key="propertyType">com.palantir.property.Name</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirector</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Phone_</param>
+			<param key="propertyType">com.palantir.property.Phone</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhone</param>
+		</rowprocessor>
+
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PhoneExt_</param>
+			<param key="propertyType">com.palantir.property.PhoneExtension</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhoneExt</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Email_</param>
+			<param key="propertyType">com.palantir.property.Email</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorEmail</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		<rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">JUST_CONTACT_</param>
+			<param key="childKeyColumns">gi_txtUDS,namekey</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,namekey</param>
+			<param key="linkName">Contact_</param>
+			<param key="linkText">Clinic Dir.</param>
+		</rowprocessor>
+		</rowprocessorSet>
+    </table>   
+      <!--                            2 0 1 0                         -->
+  <table>
+      <description>HRSA CLINIC DIRS 2010</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+          	select [gi_txtUDS]
+			  ,convert(int,p.partnerid) _partnerid
+          	  ,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey 
+          	  ,'2010' as ry_lngReportingYear , 'Clinic Director' as Role
+			  ,UPPER([gi_txtClinicalDirector])    gi_txtClinicalDirector
+			 ,SUBSTRING( REPLACE( REPLACE(UPPER([gi_txtClinicalDirector]),' ',''),'.','') ,1 ,6)  as  namekey
+		      ,[gi_txtClinicalDirectorPhone]
+		      ,[gi_txtClinicalDirectorPhoneExt]
+		      ,[gi_txtClinicalDirectorEmail]     
+		      from [HRSA_UDS_2010].[dbo].[tblGranteeInfo] gi 
+		      left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS]=p.UDSGranteeID
+				where [gi_txtClinicalDirector] is not null and  LEN([gi_txtClinicalDirector]) > 0  
+		      </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,namekey</param> 
+	      <param key="documentName">JUST_CONTACT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,namekey</param>
+	      <param key="objectName">JUST_CONTACT_</param>
+	      <param key="objectType">com.palantir.object.UDSContact</param>
+      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeID</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ry_lngReportingYear</param>
+			 <param key="endDateColumn">ry_lngReportingYear</param>
+			  <param key="inputDateFormat">yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Role2010CD_</param>
+			<param key="propertyType">com.palantir.property.UDSRole</param>
+			<param key="propertyValueColumn">Role</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Name_</param>
+			<param key="propertyType">com.palantir.property.Name</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirector</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Phone_</param>
+			<param key="propertyType">com.palantir.property.Phone</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhone</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PhoneExt_</param>
+			<param key="propertyType">com.palantir.property.PhoneExtension</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorPhoneExt</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Email_</param>
+			<param key="propertyType">com.palantir.property.Email</param>
+			<param key="propertyValueColumn">gi_txtClinicalDirectorEmail</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">JUST_CONTACT_</param>
+			<param key="childKeyColumns">gi_txtUDS,namekey</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,namekey</param>
+			<param key="linkName">Contact_</param>
+			<param key="linkText">Clinic Dir.</param>
+		</rowprocessor>
+      </rowprocessorSet>
+    </table>
+  </tables>
+  </kite>
+
+
+

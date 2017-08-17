@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 1.	This code and matching ontology is developed by Artemis Ozten for Direct Relief 	-->
+<!-- 2.	This work includes the following: 									-->
+<!--  	a. 11 years HRSA UDS reports and the matching relational databases were examined to correctly name properties, and, maintain yearly changes.-->
+<!-- 		That is to say, it has been made sure that throughout 11 year history, a property indicates semantically the same data.   -->
+<!-- 		So, if age ranges were changed or adjusted, or data was split (or joined) amongst different ethnic or racial groups,  -->
+<!-- 		either the new properties were added, or, existing properties were combined, or, some properties were discontinued.   -->
+<!-- 	b. Iterative consulting with expert business users was conducted to define the scope: -->
+<!-- 		a.	Irrelevant data was left out  -->
+<!-- 		b.	All  relevant data was retrieved   -->
+<!-- 		c.	Clinic level aggregates were determined -->
+<kite  xmlns="http://www.palantirtech.com/pg/schema/kite/">
+<config>
+     <batchSize>1000</batchSize>
+    <batchSleepTime>0</batchSleepTime>
+    <connection>
+	  <driverName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverName>   
+	   <!-- <driverName>net.sourceforge.jtds.jdbc.Driver</driverName> -->
+       <!-- <url>jdbc:jtds:sqlserver://DRISQLHAPRD:1433;DatabaseName=InformationExplorer</url> -->
+	<url>jdbc:sqlserver://DRISQLHAPRD:1433;DatabaseName=HRSA_UDS_2011</url>
+      <!-- DRISQLHAPRD -->
+      <username>palantir</username>
+      <plaintextPassword>paloalto</plaintextPassword>
+    </connection>
+    <repository>
+      <path>
+        <directory>/opt/palantir/pXML-Prod/HRSA-UDS</directory>
+        <levels>2</levels>
+      </path>
+    </repository>
+  </config>
+  <tables>
+      <!--                            I M P O R T    T A B L E    3 B                         -->
+<!--                            2 0 1 1                         -->
+<table>
+      <description>HRSA REPORT TABLE 3B 2011</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+				 SELECT [HRSA_UDS_2011].[dbo].GranteeInfo.BHCMISID					 
+						,'2011' as ry_lngReportingYear
+				        ,'01/01/2011' as ReportingPeriodBegin, '12/31/2011' as ReportingPeriodEnd     
+				        ,[HRSA_UDS_2011].[dbo].GranteeInfo.[GranteeName]
+				        ,'3B' as UDSTableType
+				         ,'TABLE 3B–PATIENTS BY HISPANIC OR LATINO ETHNICITY/RACE/LANGUAGE-' + [HRSA_UDS_2011].[dbo].GranteeInfo.[GranteeName] + '-2011' as  ReportSectionName 
+					      ,[T3b_L1_Ca] --Asian  Hispanic/Latino
+					      ,[T3b_L1_Cb] --Asian  Not Hispanic/Latino
+					      ,[T3b_L1_Cd] --Asian  Total'
+					      ,[T3b_L2_Ca] --Total Hawaiian/Pacific Islander  Hispanic/Latino
+					      ,[T3b_L2_Cb] --Total Hawaiian/Pacific Islander  Not Hispanic/Latino
+					      ,[T3b_L2_Cd] --Total Hawaiian/Pacific Islander  Total'
+					      ,[T3b_L2a_Ca] --'Native Hawaiian  Hispanic/Latino
+					      ,[T3b_L2a_Cb] --'Native Hawaiian  Not Hispanic/Latino
+					      ,[T3b_L2a_Cd] --'Native Hawaiian  Total'
+					      ,[T3b_L2b_Ca] --'Other Pacific Islander  Hispanic/Latino
+					      ,[T3b_L2b_Cb] --'Other Pacific Islander  Not Hispanic/Latino
+					      ,[T3b_L2b_Cd] --'Other Pacific Islander  Total'
+					      ,[T3b_L3_Ca] --Black/African American  Hispanic/Latino
+					      ,[T3b_L3_Cb] --Black/African American  Not Hispanic/Latino
+					      ,[T3b_L3_Cd] --Black/African American  Total'
+					      ,[T3b_L4_Ca] --American Indian/Alaska Native  Hispanic/Latino
+					      ,[T3b_L4_Cb] --American Indian/Alaska Native  Not Hispanic/Latino
+					      ,[T3b_L4_Cd] --American Indian/Alaska Native  Total'
+					      ,[T3b_L5_Ca] --White  Hispanic/Latino
+					      ,[T3b_L5_Cb] --White  Not Hispanic/Latino
+					      ,[T3b_L5_Cd] --White  Total'
+					      ,[T3b_L6_Ca] --More than one race  Hispanic/Latino
+					      ,[T3b_L6_Cb] --More than one race  Not Hispanic/Latino
+					      ,[T3b_L6_Cd] --More than one race  Total'
+					      ,[T3b_L7_Ca] --Unreported/Refused to report  Hispanic/Latino
+					      ,[T3b_L7_Cb] --Unreported/Refused to report  Not Hispanic/Latino
+					      ,[T3b_L7_Cc] --Unreported/Refused to report  Unreported/Refused'
+					      ,[T3b_L7_Cd] --Unreported/Refused to report  Total'
+					      ,[T3b_L8_Ca] --Total patients  Hispanic/Latino
+					      ,[T3b_L8_Cb] --Total patients  Not Hispanic/Latino
+					      ,[T3b_L8_Cc] --Total patients  Unreported/Refused'
+					      ,isnull([T3b_L8_Cb],0) + isnull([T3b_L8_Cc],0) TotalNotHispanicAndUnreported	--All others including unreported
+					      ,[T3b_L8_Cd] --Total patients  Total
+					      ,[T3b_L12_Ca] --'Patients best served in a language other than English'
+					FROM [HRSA_UDS_2011].[dbo].[Table3B],[HRSA_UDS_2011].[dbo].GranteeInfo
+					where [HRSA_UDS_2011].[dbo].[Table3B].[BHCMISID] = [HRSA_UDS_2011].[dbo].GranteeInfo.[BHCMISID]
+							 </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">UDSTableType,BHCMISID,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_SECTION_</param> 
+	      <param key="documentIdColumns">UDSTableType,BHCMISID,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_SECTION_</param>
+	       <param key="objectType">com.palantir.object.UDSReportSection</param>
+      </globalParams>
+      <rowprocessorSet> 
+      	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">GranteeName</param>
+		</rowprocessor>     
+      		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportSectionName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportSectionName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">UDSTableType_</param>
+			<param key="propertyType">com.palantir.property.UDSTableType</param>
+			<param key="propertyValueColumn">UDSTableType</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">BHCMISID</param>
+		</rowprocessor>
+    <!-- Asian  Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L1_Ca_</param>
+			<param key="propertyType">com.palantir.property.T3b_L1_Ca</param>
+			<param key="propertyValueColumn">T3b_L1_Ca</param>
+		</rowprocessor>
+		<!-- Asian  Not Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L1_Cb_</param>
+			<param key="propertyType">com.palantir.property.T3b_L1_Cb</param>
+			<param key="propertyValueColumn">T3b_L1_Cb</param>
+		</rowprocessor>  
+		<!-- Asian  Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L1_Cd_</param>
+			<param key="propertyType">com.palantir.property.T3b_L1_Cd</param>
+			<param key="propertyValueColumn">T3b_L1_Cd</param>
+		</rowprocessor>  
+		<!-- Total Hawaiian/Pacific Islander  Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L2_Ca_</param>
+			<param key="propertyType">com.palantir.property.T3b_L2_Ca</param>
+			<param key="propertyValueColumn">T3b_L2_Ca</param>
+		</rowprocessor>  
+		<!-- Total Hawaiian/Pacific Islander Non Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L2_Cb_</param>
+			<param key="propertyType">com.palantir.property.T3b_L2_Cb</param>
+			<param key="propertyValueColumn">T3b_L2_Cb</param>
+		</rowprocessor>  
+		<!-- Total Hawaiian/Pacific Islander  Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L2_Cd_</param>
+			<param key="propertyType">com.palantir.property.T3b_L2_Cd</param>
+			<param key="propertyValueColumn">T3b_L2_Cd</param>
+		</rowprocessor> 
+		
+		
+		<!-- Native Hawaiian  Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L2a_Ca_</param>
+			<param key="propertyType">com.palantir.property.T3b_L2a_Ca</param>
+			<param key="propertyValueColumn">T3b_L2a_Ca</param>
+		</rowprocessor>  
+		<!-- Native Hawaiian Not Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L2a_Cb_</param>
+			<param key="propertyType">com.palantir.property.T3b_L2a_Cb</param>
+			<param key="propertyValueColumn">T3b_L2a_Cb</param>
+		</rowprocessor>  
+		<!-- Native Hawaiian Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L2a_Cd_</param>
+			<param key="propertyType">com.palantir.property.T3b_L2a_Cd</param>
+			<param key="propertyValueColumn">T3b_L2a_Cd</param>
+		</rowprocessor>  
+		
+		<!-- Other Pacific Islander  Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L2b_Ca_</param>
+			<param key="propertyType">com.palantir.property.T3b_L2b_Ca</param>
+			<param key="propertyValueColumn">T3b_L2b_Ca</param>
+		</rowprocessor>  
+		<!-- Other Pacific Islander Non Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L2b_Cb_</param>
+			<param key="propertyType">com.palantir.property.T3b_L2b_Cb</param>
+			<param key="propertyValueColumn">T3b_L2b_Cb</param>
+		</rowprocessor>  
+		<!-- Other Pacific Islander Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L2b_Cd_</param>
+			<param key="propertyType">com.palantir.property.T3b_L2b_Cd</param>
+			<param key="propertyValueColumn">T3b_L2b_Cd</param>
+		</rowprocessor>  
+		 
+		 <!-- Black/African American  Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L3_Ca_</param>
+			<param key="propertyType">com.palantir.property.T3b_L3_Ca</param>
+			<param key="propertyValueColumn">T3b_L3_Ca</param>
+		</rowprocessor>  
+		<!-- Black/African American Non Hispanic/Latino-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L3_Cb_</param>
+			<param key="propertyType">com.palantir.property.T3b_L3_Cb</param>
+			<param key="propertyValueColumn">T3b_L3_Cb</param>
+		</rowprocessor>  
+		<!-- Black/African American Total-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L3_Cd_</param>
+			<param key="propertyType">com.palantir.property.T3b_L3_Cd</param>
+			<param key="propertyValueColumn">T3b_L3_Cd</param>
+		</rowprocessor> 
+		
+<!-- American Indian/Alaska Native  Hispanic/Latino  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L4_Ca_</param>
+			<param key="propertyType">com.palantir.property.T3b_L4_Ca</param>
+			<param key="propertyValueColumn">T3b_L4_Ca</param>
+		</rowprocessor>  
+		<!-- American Indian/Alaska Native Non Hispanic/Latino-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L4_Cb_</param>
+			<param key="propertyType">com.palantir.property.T3b_L4_Cb</param>
+			<param key="propertyValueColumn">T3b_L4_Cb</param>
+		</rowprocessor>  
+		<!-- American Indian/Alaska Native Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L4_Cd_</param>
+			<param key="propertyType">com.palantir.property.T3b_L4_Cd</param>
+			<param key="propertyValueColumn">T3b_L4_Cd</param>
+		</rowprocessor> 
+		
+		<!-- White  Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L5_Ca_</param>
+			<param key="propertyType">com.palantir.property.T3b_L5_Ca</param>
+			<param key="propertyValueColumn">T3b_L5_Ca</param>
+		</rowprocessor>  
+		<!-- White  Non Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L5_Cb_</param>
+			<param key="propertyType">com.palantir.property.T3b_L5_Cb</param>
+			<param key="propertyValueColumn">T3b_L5_Cb</param>
+		</rowprocessor>  
+		<!--White  Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L5_Cd_</param>
+			<param key="propertyType">com.palantir.property.T3b_L5_Cd</param>
+			<param key="propertyValueColumn">T3b_L5_Cd</param>
+		</rowprocessor>
+		
+		<!-- More than one race  Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L6_Ca_</param>
+			<param key="propertyType">com.palantir.property.T3b_L6_Ca</param>
+			<param key="propertyValueColumn">T3b_L6_Ca</param>
+		</rowprocessor>  
+		<!-- More than one race Non Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L6_Cb_</param>
+			<param key="propertyType">com.palantir.property.T3b_L6_Cb</param>
+			<param key="propertyValueColumn">T3b_L6_Cb</param>
+		</rowprocessor>  
+		<!--More than one race  Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L6_Cd_</param>
+			<param key="propertyType">com.palantir.property.T3b_L6_Cd</param>
+			<param key="propertyValueColumn">T3b_L6_Cd</param>
+		</rowprocessor>
+
+		<!-- Unreported/Refused to report  Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L7_Ca_</param>
+			<param key="propertyType">com.palantir.property.T3b_L7_Ca</param>
+			<param key="propertyValueColumn">T3b_L7_Ca</param>
+		</rowprocessor>  
+		<!-- Unreported/Refused to report  Non Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L7_Cb_</param>
+			<param key="propertyType">com.palantir.property.T3b_L7_Cb</param>
+			<param key="propertyValueColumn">T3b_L7_Cb</param>
+		</rowprocessor> 
+		<!-- Unreported/Refused to report  Unreported/Refused -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L7_Cc_</param>
+			<param key="propertyType">com.palantir.property.T3b_L7_Cc</param>
+			<param key="propertyValueColumn">T3b_L7_Cc</param>
+		</rowprocessor> 
+		<!-- Unreported/Refused to report  Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L7_Cd_</param>
+			<param key="propertyType">com.palantir.property.T3b_L7_Cd</param>
+			<param key="propertyValueColumn">T3b_L7_Cd</param>
+		</rowprocessor> 
+		
+		<!-- Total patients  Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L8_Ca_</param>
+			<param key="propertyType">com.palantir.property.T3b_L8_Ca</param>
+			<param key="propertyValueColumn">T3b_L8_Ca</param>
+		</rowprocessor>  
+		<!-- Total patients Non Hispanic/Latino -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L8_Cb_</param>
+			<param key="propertyType">com.palantir.property.T3b_L8_Cb</param>
+			<param key="propertyValueColumn">T3b_L8_Cb</param>
+		</rowprocessor> 
+		<!-- Total patients  Unreported/Refused  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L8_Cc_</param>
+			<param key="propertyType">com.palantir.property.T3b_L8_Cc</param>
+			<param key="propertyValueColumn">T3b_L8_Cc</param>
+		</rowprocessor>
+		 <!-- All others (ethnicity) including unreported -->   
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L2_Ca20072008_</param>
+			<param key="propertyType">com.palantir.property.T3b_L2_Ca20072008</param>
+			<param key="propertyValueColumn">TotalNotHispanicAndUnreported</param>
+		</rowprocessor>
+		<!-- Total patients  Total  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T3b_L8_Cd_</param>
+			<param key="propertyType">com.palantir.property.T3b_L8_Cd</param>
+			<param key="propertyValueColumn">T3b_L8_Cd</param>
+		</rowprocessor> 
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">REPORT_</param>
+			<param key="primaryKeyColumns">BHCMISID,ry_lngReportingYear</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">REPORT_</param>
+			<param key="parentKeyColumns">BHCMISID,ry_lngReportingYear</param>
+			<param key="childObjectName">REPORT_SECTION_</param>
+			<param key="childKeyColumns">UDSTableType,BHCMISID,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">BHCMISID,ry_lngReportingYear,UDSTableType,BHCMISID,ry_lngReportingYear</param>
+			<param key="linkName">BelongsTo_</param>	
+			<param key="linkText">BelongsTo</param>		
+		</rowprocessor>
+      </rowprocessorSet>      
+    </table>
+  </tables>
+</kite>

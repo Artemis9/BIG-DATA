@@ -1,0 +1,2431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 1.	This code and matching ontology is developed by Artemis Ozten for Direct Relief 	-->
+<!-- 2.	This work includes the following: 									-->
+<!--  	a. 11 years HRSA UDS reports and the matching relational databases were examined to correctly name properties, and, maintain yearly changes.-->
+<!-- 		That is to say, it has been made sure that throughout 11 year history, a property indicates semantically the same data.   -->
+<!-- 		So, if age ranges were changed or adjusted, or data was split (or joined) amongst different ethnic or racial groups,  -->
+<!-- 		either the new properties were added, or, existing properties were combined, or, some properties were discontinued.   -->
+<!-- 	b. Iterative consulting with expert business users was conducted to define the scope: -->
+<!-- 		a.	Irrelevant data was left out  -->
+<!-- 		b.	All  relevant data was retrieved   -->
+<!-- 		c.	Clinic level aggregates were determined -->
+<kite  xmlns="http://www.palantirtech.com/pg/schema/kite/">
+<config>
+     <batchSize>1000</batchSize>
+    <batchSleepTime>0</batchSleepTime>
+    <connection>
+	  <driverName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverName>   
+	   <!-- <driverName>net.sourceforge.jtds.jdbc.Driver</driverName> -->
+       <!-- <url>jdbc:jtds:sqlserver://DRISQLHAPRD:1433;DatabaseName=InformationExplorer</url> -->
+	<url>jdbc:sqlserver://DRISQLHAPRD:1433;DatabaseName=HRSA_UDS_2011</url>
+      <!-- DRISQLHAPRD -->
+      <username>palantir</username>
+      <plaintextPassword>paloalto</plaintextPassword>
+    </connection>
+    <repository>
+      <path>
+        <directory>/opt/palantir/pXML-Prod/HRSA-UDS</directory>
+        <levels>2</levels>
+      </path>
+    </repository>
+  </config>
+  <tables>
+ <!--                            I M P O R T    T A B L E    6 A        -->  
+ <!--                            2 0 0 8                                -->
+<table >
+      <description>HRSA REPORT TABLE 6A 2008</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> SELECT [HRSA_UDS_2008].[dbo].tblGranteeInfo.gi_txtUDS
+				  ,'2008' as ry_lngReportingYear 
+				  ,'01/01/2008' as ReportingPeriodBegin, '12/31/2008' as ReportingPeriodEnd     
+				  ,[HRSA_UDS_2008].[dbo].tblGranteeInfo.gi_txtName
+				  ,'6A' as UDSTableType
+				  ,'TABLE 6A-SELECTED DIAGNOSES AND SERVICES RENDERED-' + [HRSA_UDS_2008].[dbo].tblGranteeInfo.gi_txtName + '-2008' as  ReportSectionName 				  
+			      ,[T6a_L1_Ca]-- Symptomatic HIV  Number of Visits
+			      ,[T6a_L1_Cb]--Symptomatic HIV  Number of Patients
+			      ,[T6a_L1_Ca]+[T6a_L2_Ca] as [T6a_L1and2_Ca]--Asymptomatic / Symptomatic HIV  Number of Visits
+			      ,[T6a_L1_Cb]+[T6a_L2_Cb] as [T6a_L1and2_Cb] --Asymptomatic / Symptomatic HIV  Number of Patients
+			      ,[T6a_L10_Ca] --Other Medical Conditions  Heart disease  Number of Visits
+			      ,[T6a_L10_Cb] --Other Medical Conditions  Heart disease  Number of Patients
+			      ,[T6a_L11_Ca] --Other Medical Conditions  Hypertension  Number of Visits
+			      ,[T6a_L11_Cb] --Other Medical Conditions  Hypertension  Number of Patients
+			      ,[T6a_L12_Ca] --Other Medical Conditions  Contact dermatitis other eczema  Number of Visits
+			      ,[T6a_L12_Cb] --Other Medical Conditions  Contact dermatitis other eczema  Number of Patients
+			      ,[T6a_L13_Ca] --Other Medical Conditions  Dehydration  Number of Visits
+			      ,[T6a_L13_Cb] --Other Medical Conditions  Dehydration  Number of Patients
+			      ,[T6a_L14_Ca] --Other Medical Conditions  Exposure to heat or cold  Number of Visits
+			      ,[T6a_L14_Cb] --Other Medical Conditions  Exposure to heat or cold  Number of Patients
+			      ,[T6a_L15_Ca] --Childhood Conditions  Otitis media eustachian tube disorders  Number of Visits
+			      ,[T6a_L15_Cb] --Childhood Conditions  Otitis media eustachian tube disorders  Number of Patients
+			      ,[T6a_L16_Ca] --Childhood Conditions  Perinatal medical conditions  Number of Visits
+			      ,[T6a_L16_Cb] --Childhood Conditions  Perinatal medical conditions  Number of Patients
+			      ,[T6a_L17_Ca] --Childhood Conditions  Lack of exp normal development Number of Visits
+			      ,[T6a_L17_Cb] --Childhood Conditions  Lack of exp normal development Number of Patients
+			      ,[T6a_L18_Ca] --Mental Health Substance Abuse Conditions  Alcohol disorders  Number of Visits
+			      ,[T6a_L18_Cb] --Mental Health Substance Abuse Conditions  Alcohol disorders  Number of Patients
+			      ,[T6a_L19_Ca] --Mental Health Substance Abuse Conditions  Other substance disorders  Number of Visits
+			      ,[T6a_L19_Cb] --Mental Health Substance Abuse Conditions  Other substance disorders  Number of Patients
+			       ,[T6a_L2_Ca] --Asymptomatic HIV Number of Visits
+			      ,[T6a_L2_Cb]  --Asymptomatic HIV Number of Patients
+			      ,[T6a_L20a_Ca] --Mental Health Substance Abuse Conditions  Depression or mood disorders  Number of Visits
+			      ,[T6a_L20a_Cb] --Mental Health Substance Abuse Conditions  Depression or mood disorders  Number of Patients
+			      ,[T6a_L20b_Ca] --Mental Health Substance Abuse Conditions  Anxiety disorders PTSD  Number of Visits
+			      ,[T6a_L20b_Cb] --Mental Health Substance Abuse Conditions  Anxiety disorders PTSD  Number of Patients
+			      ,[T6a_L20c_Ca] --Mental Health Substance Abuse Conditions  Attention deficit Disruptive disorders  Number of Visits
+			      ,[T6a_L20c_Cb] --Mental Health Substance Abuse Conditions  Attention deficit Disruptive disorders  Number of Patients
+			      ,[T6a_L20d_Ca] --Mental Health Substance Abuse Conditions  Other mental disorders  Number of Visits
+			      ,[T6a_L20d_Cb] --Mental Health Substance Abuse Conditions  Other mental disorders  Number of Patients
+			      ,[T6a_L21_Ca] --Selected Diagnostic Tests Services  HIV Test  Visits Nr
+			      ,[T6a_L21_Cb] --Selected Diagnostic Tests Services  HIV Test  Patients Nr
+			      ,[T6a_L22_Ca] --Selected Diagnostic Tests Services  Mammogram  Visits Nr
+			      ,[T6a_L22_Cb] --Selected Diagnostic Tests Services  Mammogram  Patients Nr
+			      ,[T6a_L23_Ca] --Selected Diagnostic Tests Services  Pap Test  Visits Nr
+			      ,[T6a_L23_Cb] --Selected Diagnostic Tests Services  Pap Test  Patients Nr
+			      ,[T6a_L24_Ca] --Selected Diagnostic Tests Services  Selected Immunizations  Visits Nr
+			      ,[T6a_L24_Cb] --Selected Diagnostic Tests Services  Selected Immunizations  Patients Nr
+			      ,[T6a_L25_Ca] --Selected Diagnostic Tests Services  Contraceptive management  Visits Nr
+			      ,[T6a_L25_Cb] --Selected Diagnostic Tests Services  Contraceptive management  Patients Nr
+			      ,[T6a_L26_Ca] --Selected Diagnostic Tests Services  Health supervision of infant or child  Visits Nr
+			      ,[T6a_L26_Cb] --Selected Diagnostic Tests Services  Health supervision of infant or child  Patients Nr
+			      ,[T6a_L27_Ca] --Selected Dental Services  Emergency services  Visits Nr
+			      ,[T6a_L27_Cb] --Selected Dental Services  Emergency services  Patients Nr
+			      ,[T6a_L28_Ca] --Selected Dental Services  Oral exams  Visits Nr
+			      ,[T6a_L28_Cb] --Selected Dental Services  Oral exams  Patients Nr
+			      ,[T6a_L29_Ca] --Selected Dental Services  Prophylaxis  Visits Nr
+			      ,[T6a_L29_Cb] --Selected Dental Services  Prophylaxis  Patients Nr
+			      ,[T6a_L3_Ca] -- Infectious Parasitic Diseases  Tuberculosis  Number of Visits
+			      ,[T6a_L3_Cb] -- Infectious Parasitic Diseases  Tuberculosis  Number of Patients
+			      ,[T6a_L30_Ca] --Selected Dental Services  Sealants  Visits Nr
+			      ,[T6a_L30_Cb] --Selected Dental Services  Sealants  Patients Nr
+			      ,[T6a_L31_Ca] --Selected Dental Services  Fluoride treatment  Visits Nr
+			      ,[T6a_L31_Cb] --Selected Dental Services  Fluoride treatment  Patients Nr
+			      ,[T6a_L32_Ca] --Selected Dental Services  Restorative services  Visits Nr
+			      ,[T6a_L32_Cb] --Selected Dental Services  Restorative services  Patients Nr
+			      ,[T6a_L33_Ca] --Selected Dental Services  Oral Surgery  Visits Nr
+			      ,[T6a_L33_Cb] --Selected Dental Services  Oral Surgery  Patients Nr
+			      ,[T6a_L34_Ca] --Selected Dental Services  Rehabilitative services  Visits Nr
+			      ,[T6a_L34_Cb] --Selected Dental Services  Rehabilitative services  Patients Nr
+			      ,[T6a_L4_Ca] --  Infectious Parasitic Diseases  Syphilis and other sexually transmitted disease  Number of Visits
+			      ,[T6a_L4_Cb] -- Infectious Parasitic Diseases  Syphilis and other sexually transmitted disease  Number of Patients
+			      ,[T6a_L5_Ca] --  Respiratory System Diseases  Asthma  Number of Visits
+			      ,[T6a_L5_Cb] -- Respiratory System Diseases  Asthma  Number of Patients
+			      ,[T6a_L6_Ca] --  Respiratory System Diseases  Bronchitis Emphysema  Number of Visits
+			      ,[T6a_L6_Cb] --  Respiratory System Diseases  Bronchitis Emphysema  Number of Patients
+			      ,[T6a_L7_Ca] --  Other Medical Conditions  Abnormal breast findings Female  Number of Visits
+			      ,[T6a_L7_Cb] --  Other Medical Conditions  Abnormal breast findings Female  Number of Patients
+			      ,[T6a_L8_Ca] --  Other Medical Conditions  Abnormal cervical findings  Number of Visits
+			      ,[T6a_L8_Cb] --  Other Medical Conditions  Abnormal cervical findings  Number of Patients
+			      ,[T6a_L9_Ca] --  Other Medical Conditions  Diabetes mellitus  Number of Visits
+			      ,[T6a_L9_Cb] --  Other Medical Conditions  Diabetes mellitus  Number of Patients
+				FROM [HRSA_UDS_2008].[dbo].[tblTable6A],[HRSA_UDS_2008].[dbo].tblGranteeInfo
+				where [HRSA_UDS_2008].[dbo].[tblTable6A].[gi_lnggranteeid] = [HRSA_UDS_2008].[dbo].tblGranteeInfo.[gi_lnggranteeid]         
+		</param>
+        </rowprovider>
+      </rowproviderSet>
+     <globalParams>
+	      <param key="primaryKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_SECTION_</param> 
+	      <param key="documentIdColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_SECTION_</param>
+	      <param key="objectType">com.palantir.object.UDSReportSection</param>
+      </globalParams>
+      <rowprocessorSet>
+      <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>     
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportSectionName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportSectionName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">UDSTableType_</param>
+			<param key="propertyType">com.palantir.property.UDSTableType</param>
+			<param key="propertyValueColumn">UDSTableType</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>    
+        <!-- Symptomatic HIV  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L1_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L1_Ca</param>
+			<param key="propertyValueColumn">T6a_L1_Ca</param>
+		</rowprocessor>
+		<!-- Symptomatic HIV  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L1_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L1_Cb</param>
+			<param key="propertyValueColumn">T6a_L1_Cb</param>
+		</rowprocessor>
+		<!--       Symptomatic HIV , Asymptomatic HIV Number of Visits -->
+       		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L1and2_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L1and2_Ca</param>
+			<param key="propertyValueColumn">T6a_L1and2_Ca</param>
+		</rowprocessor>
+		<!-- Symptomatic HIV , Asymptomatic HIV Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L1and2_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L1and2_Cb</param>
+			<param key="propertyValueColumn">T6a_L1and2_Cb</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Heart disease  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L10_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L10_Ca</param>
+			<param key="propertyValueColumn">T6a_L10_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Heart disease  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L10_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L10_Cb</param>
+			<param key="propertyValueColumn">T6a_L10_Cb</param>
+		</rowprocessor>
+		
+		<!-- Other Medical Conditions  Hypertension  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L11_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L11_Ca</param>
+			<param key="propertyValueColumn">T6a_L11_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Hypertension  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L11_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L11_Cb</param>
+			<param key="propertyValueColumn">T6a_L11_Cb</param>
+		</rowprocessor>
+		
+		<!-- Other Medical Conditions  Contact dermatitis other eczema  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L12_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L12_Ca</param>
+			<param key="propertyValueColumn">T6a_L12_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Contact dermatitis other eczema  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L12_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L12_Cb</param>
+			<param key="propertyValueColumn">T6a_L12_Cb</param>
+		</rowprocessor>		
+		<!-- Other Medical Conditions  Dehydration  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L13_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L13_Ca</param>
+			<param key="propertyValueColumn">T6a_L13_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Dehydration  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L13_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L13_Cb</param>
+			<param key="propertyValueColumn">T6a_L13_Cb</param>
+		</rowprocessor>	
+		<!-- Other Medical Conditions Exposure to heat or cold Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L14_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L14_Ca</param>
+			<param key="propertyValueColumn">T6a_L14_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions Exposure to heat or cold Number of  Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L14_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L14_Cb</param>
+			<param key="propertyValueColumn">T6a_L14_Cb</param>
+		</rowprocessor>		
+		<!-- Childhood Conditions  Otitis media eustachian tube disorders  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L15_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L15_Ca</param>
+			<param key="propertyValueColumn">T6a_L15_Ca</param>
+		</rowprocessor>
+		<!-- Childhood Conditions  Otitis media eustachian tube disorders  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L15_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L15_Cb</param>
+			<param key="propertyValueColumn">T6a_L15_Cb</param>
+		</rowprocessor>		
+		
+		<!-- Childhood Conditions  Perinatal medical conditions  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L16_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L16_Ca</param>
+			<param key="propertyValueColumn">T6a_L16_Ca</param>
+		</rowprocessor>
+		<!-- Childhood Conditions  Perinatal medical conditions  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L16_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L16_Cb</param>
+			<param key="propertyValueColumn">T6a_L16_Cb</param>
+		</rowprocessor>		
+				
+		<!-- Childhood Conditions Lack of exp normal development Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L17_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L17_Ca</param>
+			<param key="propertyValueColumn">T6a_L17_Ca</param>
+		</rowprocessor>
+		<!-- Childhood Conditions Lack of exp normal development Number of  Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L17_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L17_Cb</param>
+			<param key="propertyValueColumn">T6a_L17_Cb</param>
+		</rowprocessor>	
+		
+		<!-- Mental Health Substance Abuse Conditions Alcohol disorders Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L18_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L18_Ca</param>
+			<param key="propertyValueColumn">T6a_L18_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions Alcohol disorders Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L18_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L18_Cb</param>
+			<param key="propertyValueColumn">T6a_L18_Cb</param>
+		</rowprocessor>		
+		
+		<!-- Mental Health Substance Abuse Conditions Other substance disorders Number of Visits-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L19_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L19_Ca</param>
+			<param key="propertyValueColumn">T6a_L19_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions Other substance disorders Number of  Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L19_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L19_Cb</param>
+			<param key="propertyValueColumn">T6a_L19_Cb</param>
+		</rowprocessor>		
+		
+		<!-- Asymptomatic HIV Number of Visits-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L2_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L2_Ca</param>
+			<param key="propertyValueColumn">T6a_L2_Ca</param>
+		</rowprocessor>
+		<!-- Asymptomatic HIV Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L2_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L2_Cb</param>
+			<param key="propertyValueColumn">T6a_L2_Cb</param>
+		</rowprocessor>		
+		
+		<!-- Mental Health Substance Abuse Conditions  Depression or mood disorders  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20a_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20a_Ca</param>
+			<param key="propertyValueColumn">T6a_L20a_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions  Depression or mood disorders  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20a_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20a_Cb</param>
+			<param key="propertyValueColumn">T6a_L20a_Cb</param>
+		</rowprocessor>				
+		
+		<!-- Mental Health Substance Abuse Conditions Anxiety disorders PTSD Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20b_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20b_Ca</param>
+			<param key="propertyValueColumn">T6a_L20b_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions Anxiety disorders PTSD Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20b_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20b_Cb</param>
+			<param key="propertyValueColumn">T6a_L20b_Cb</param>
+		</rowprocessor>		
+		
+		<!--Mental Health Substance Abuse Conditions Attention deficit Disruptive disorders Number of Visits-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20c_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20c_Ca</param>
+			<param key="propertyValueColumn">T6a_L20c_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions Attention deficit Disruptive disorders Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20c_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20c_Cb</param>
+			<param key="propertyValueColumn">T6a_L20c_Cb</param>
+		</rowprocessor>		
+		
+		<!--Mental Health Substance Abuse Conditions  Other mental disorders  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20d_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20d_Ca</param>
+			<param key="propertyValueColumn">T6a_L20d_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions  Other mental disorders  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20d_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20d_Cb</param>
+			<param key="propertyValueColumn">T6a_L20d_Cb</param>
+		</rowprocessor>	
+		
+		<!--Selected Diagnostic Tests Services HIV Test Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L21_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L21_Ca</param>
+			<param key="propertyValueColumn">T6a_L21_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services HIV Test Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L21_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L21_Cb</param>
+			<param key="propertyValueColumn">T6a_L21_Cb</param>
+		</rowprocessor>		
+		
+		<!--Selected Diagnostic Tests Services  Mammogram  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L22_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L22_Ca</param>
+			<param key="propertyValueColumn">T6a_L22_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Mammogram  Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L22_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L22_Cb</param>
+			<param key="propertyValueColumn">T6a_L22_Cb</param>
+		</rowprocessor>		
+	<!--Selected Diagnostic Tests Services  Pap Test  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L23_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L23_Ca</param>
+			<param key="propertyValueColumn">T6a_L23_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Pap Test Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L23_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L23_Cb</param>
+			<param key="propertyValueColumn">T6a_L23_Cb</param>
+		</rowprocessor>	
+		<!--Selected Diagnostic Tests Services  Selected Immunizations  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L24_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L24_Ca</param>
+			<param key="propertyValueColumn">T6a_L24_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Selected Immunizations  Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L24_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L24_Cb</param>
+			<param key="propertyValueColumn">T6a_L24_Cb</param>
+		</rowprocessor>	
+		<!--Selected Diagnostic Tests Services  Contraceptive management  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L25_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L25_Ca</param>
+			<param key="propertyValueColumn">T6a_L25_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Contraceptive management Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L25_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L25_Cb</param>
+			<param key="propertyValueColumn">T6a_L25_Cb</param>
+		</rowprocessor>
+		<!--Selected Diagnostic Tests Services  Health supervision of infant or child  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26_Ca</param>
+			<param key="propertyValueColumn">T6a_L26_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Health supervision of infant or child Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26_Cb</param>
+			<param key="propertyValueColumn">T6a_L26_Cb</param>
+		</rowprocessor>																															
+				
+		<!--Selected Dental Services  Emergency services  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L27_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L27_Ca</param>
+			<param key="propertyValueColumn">T6a_L27_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services  Emergency services Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L27_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L27_Cb</param>
+			<param key="propertyValueColumn">T6a_L27_Cb</param>
+		</rowprocessor>																															
+		<!-- Selected Dental Services  Oral exams  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L28_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L28_Ca</param>
+			<param key="propertyValueColumn">T6a_L28_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services  Oral exams Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L28_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L28_Cb</param>
+			<param key="propertyValueColumn">T6a_L28_Cb</param>
+		</rowprocessor>	
+		<!-- Selected Dental Services  Prophylaxis  Visits Nr-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L29_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L29_Ca</param>
+			<param key="propertyValueColumn">T6a_L29_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services  Prophylaxis Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L29_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L29_Cb</param>
+			<param key="propertyValueColumn">T6a_L29_Cb</param>
+		</rowprocessor>
+		
+		<!-- Selected Dental Services Sealants Visits Nr-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L30_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L30_Ca</param>
+			<param key="propertyValueColumn">T6a_L30_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services Sealants Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L30_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L30_Cb</param>
+			<param key="propertyValueColumn">T6a_L30_Cb</param>
+		</rowprocessor>	
+		<!-- Infectious Parasitic Diseases  Tuberculosis  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L3_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L3_Ca</param>
+			<param key="propertyValueColumn">T6a_L3_Ca</param>
+		</rowprocessor>
+		<!-- Infectious Parasitic Diseases  Tuberculosis  Number of  Patients   -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L3_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L3_Cb</param>
+			<param key="propertyValueColumn">T6a_L3_Cb</param>
+		</rowprocessor>					
+		
+		<!-- Selected Dental Services Fluoride treatment Visits Nr-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L31_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L31_Ca</param>
+			<param key="propertyValueColumn">T6a_L31_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services Fluoride treatment Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L31_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L31_Cb</param>
+			<param key="propertyValueColumn">T6a_L31_Cb</param>
+		</rowprocessor>	
+		
+		<!-- Selected Dental Services  Restorative services  Visits Nr-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L32_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L32_Ca</param>
+			<param key="propertyValueColumn">T6a_L32_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services  Restorative services  Patients Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L32_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L32_Cb</param>
+			<param key="propertyValueColumn">T6a_L32_Cb</param>
+		</rowprocessor>
+
+        <!-- Selected Dental Services Oral Surgery Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L33_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L33_Ca</param>
+			<param key="propertyValueColumn">T6a_L33_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services Oral Surgery Patients Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L33_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L33_Cb</param>
+			<param key="propertyValueColumn">T6a_L33_Cb</param>
+		</rowprocessor>
+		 <!-- Selected Dental Services Rehabilitative services Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L34_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L34_Ca</param>
+			<param key="propertyValueColumn">T6a_L34_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services Rehabilitative services Patients Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L34_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L34_Cb</param>
+			<param key="propertyValueColumn">T6a_L34_Cb</param>
+		</rowprocessor>		
+       <!-- 	Infectious Parasitic Diseases  Syphilis and other sexually transmitted disease  Number of Visits  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L4_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L4_Ca</param>
+			<param key="propertyValueColumn">T6a_L4_Ca</param>
+		</rowprocessor>
+		<!-- Infectious Parasitic Diseases  Syphilis and other sexually transmitted disease  Number of Patients Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L4_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L4_Cb</param>
+			<param key="propertyValueColumn">T6a_L4_Cb</param>
+		</rowprocessor>		
+       <!-- 	Respiratory System Diseases  Asthma  Number of Visits  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L5_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L5_Ca</param>
+			<param key="propertyValueColumn">T6a_L5_Ca</param>
+		</rowprocessor>
+		<!-- Respiratory System Diseases  Asthma  Number of Patients  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L5_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L5_Cb</param>
+			<param key="propertyValueColumn">T6a_L5_Cb</param>
+		</rowprocessor>		
+ <!-- 	Respiratory System Diseases Bronchitis Emphysema Number of Visits  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L6_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L6_Ca</param>
+			<param key="propertyValueColumn">T6a_L6_Ca</param>
+		</rowprocessor>
+		<!-- Respiratory System Diseases Bronchitis Emphysema Number of  Patients  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L6_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L6_Cb</param>
+			<param key="propertyValueColumn">T6a_L6_Cb</param>
+		</rowprocessor>	
+<!-- 		Other Medical Conditions  Abnormal breast findings Female  Number of Visits	 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L7_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L7_Ca</param>
+			<param key="propertyValueColumn">T6a_L7_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Abnormal breast findings Female  Number of Patients  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L7_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L7_Cb</param>
+			<param key="propertyValueColumn">T6a_L7_Cb</param>
+		</rowprocessor>	
+<!-- 		Other Medical Conditions Abnormal cervical findings Number of Visits	 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L8_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L8_Ca</param>
+			<param key="propertyValueColumn">T6a_L8_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions Abnormal cervical findings Number of Patients  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L8_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L8_Cb</param>
+			<param key="propertyValueColumn">T6a_L8_Cb</param>
+		</rowprocessor>	
+<!-- 		Other Medical Conditions  Diabetes mellitus  Number of Visits	 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L9_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L9_Ca</param>
+			<param key="propertyValueColumn">T6a_L9_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Diabetes mellitus  Number of Patients  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L9_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L9_Cb</param>
+			<param key="propertyValueColumn">T6a_L9_Cb</param>
+		</rowprocessor>	
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">REPORT_</param>
+			<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">REPORT_</param>
+			<param key="parentKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="childObjectName">REPORT_SECTION_</param>
+			<param key="childKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear,UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">BelongsTo_</param>	
+			<param key="linkText">BelongsTo</param>		
+		</rowprocessor>		  		
+     </rowprocessorSet>
+    </table>
+    
+ <!--                            2 0 0 9                         -->
+ <table >
+      <description>HRSA REPORT TABLE 6A 2009</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">SELECT [HRSA_UDS_2009].[dbo].tblGranteeInfo.gi_txtUDS
+				  ,'2009' as ry_lngReportingYear
+				  ,'01/01/2009' as ReportingPeriodBegin, '12/31/2009' as ReportingPeriodEnd     
+				  ,[HRSA_UDS_2009].[dbo].tblGranteeInfo.gi_txtName
+				  ,'6A' as UDSTableType
+				  ,'TABLE 6A-SELECTED DIAGNOSES AND SERVICES RENDERED-' + [HRSA_UDS_2009].[dbo].tblGranteeInfo.gi_txtName + '-2009' as  ReportSectionName 				  
+				  
+			      ,[T6a_L1_Ca]--Symptomatic HIV  Number of Visits
+			      ,[T6a_L1_Cb]--Symptomatic HIV  Number of Patients
+			      ,[T6a_L1_Ca]+[T6a_L2_Ca] as [T6a_L1and2_Ca]--Asymptomatic / Symptomatic HIV  Number of Visits
+			      ,[T6a_L1_Cb]+[T6a_L2_Cb] as [T6a_L1and2_Cb] --Asymptomatic / Symptomatic HIV  Number of Patients			      
+			      ,[T6a_L10_Ca] --Other Medical Conditions  Heart disease  Number of Visits
+			      ,[T6a_L10_Cb] --Other Medical Conditions  Heart disease  Number of Patients
+			      ,[T6a_L11_Ca] --Other Medical Conditions  Hypertension  Number of Visits
+			      ,[T6a_L11_Cb] --Other Medical Conditions  Hypertension  Number of Patients
+			      ,[T6a_L12_Ca] --Other Medical Conditions  Contact dermatitis other eczema  Number of Visits
+			      ,[T6a_L12_Cb] --Other Medical Conditions  Contact dermatitis other eczema  Number of Patients
+			      ,[T6a_L13_Ca] --Other Medical Conditions  Dehydration  Number of Visits
+			      ,[T6a_L13_Cb] --Other Medical Conditions  Dehydration  Number of Patients
+			      ,[T6a_L14_Ca] --Other Medical Conditions  Exposure to heat or cold  Number of Visits
+			      ,[T6a_L14_Cb] --Other Medical Conditions  Exposure to heat or cold  Number of Patients
+			      ,[T6a_L14a_Ca] --Other Medical Conditions  Overweight and obesity  Number of Visits
+			      ,[T6a_L14a_Cb] --Other Medical Conditions  Overweight and obesity  Number of Patients
+			      ,[T6a_L15_Ca] --Childhood Conditions  Otitis media eustachian tube disorders  Number of Visits
+			      ,[T6a_L15_Cb] --Childhood Conditions  Otitis media eustachian tube disorders  Number of Patients
+			      ,[T6a_L16_Ca] --Childhood Conditions  Perinatal medical conditions  Number of Visits
+			      ,[T6a_L16_Cb] --Childhood Conditions  Perinatal medical conditions  Number of Patients
+			      ,[T6a_L17_Ca] --Childhood Conditions  Lack of exp normal development Number of Visits
+			      ,[T6a_L17_Cb] --Childhood Conditions  Lack of exp normal development Number of Patients
+			      ,[T6a_L18_Ca] --Mental Health Substance Abuse Conditions  Alcohol disorders  Number of Visits
+			      ,[T6a_L18_Cb] --Mental Health Substance Abuse Conditions  Alcohol disorders  Number of Patients
+			      ,[T6a_L19_Ca] --Mental Health Substance Abuse Conditions  Other substance disorders  Number of Visits
+			      ,[T6a_L19_Cb] --Mental Health Substance Abuse Conditions  Other substance disorders  Number of Patients
+			      ,[T6a_L19a_Ca] --Mental Health Substance Abuse Conditions  Tobacco use disorder  Number of Visits
+			      ,[T6a_L19a_Cb] --Mental Health Substance Abuse Conditions  Tobacco use disorder  Number of Patients
+			       ,[T6a_L2_Ca] --Asymptomatic HIV Number of Visits
+			      ,[T6a_L2_Cb] --Asymptomatic HIV Number of Patients
+			      ,[T6a_L20a_Ca] --Mental Health Substance Abuse Conditions  Depression or mood disorders  Number of Visits
+			      ,[T6a_L20a_Cb] --Mental Health Substance Abuse Conditions  Depression or mood disorders  Number of Patients
+			      ,[T6a_L20b_Ca] --Mental Health Substance Abuse Conditions  Anxiety disorders PTSD  Number of Visits
+			      ,[T6a_L20b_Cb] --Mental Health Substance Abuse Conditions  Anxiety disorders PTSD  Number of Patients
+			      ,[T6a_L20c_Ca] --Mental Health Substance Abuse Conditions  Attention deficit Disruptive disorders  Number of Visits
+			      ,[T6a_L20c_Cb] --Mental Health Substance Abuse Conditions  Attention deficit Disruptive disorders  Number of Patients
+			      ,[T6a_L20d_Ca] --Mental Health Substance Abuse Conditions  Other mental disorders  Number of Visits
+			      ,[T6a_L20d_Cb] --Mental Health Substance Abuse Conditions  Other mental disorders  Number of Patients
+			      ,[T6a_L21_Ca] --Selected Diagnostic Tests Services  HIV Test  Visits Nr
+			      ,[T6a_L21_Cb] --Selected Diagnostic Tests Services  HIV Test  Patients Nr
+			      ,[T6a_L22_Ca] --Selected Diagnostic Tests Services  Mammogram  Visits Nr
+			      ,[T6a_L22_Cb] --Selected Diagnostic Tests Services  Mammogram  Patients Nr
+			      ,[T6a_L23_Ca] --Selected Diagnostic Tests Services  Pap Test  Visits Nr
+			      ,[T6a_L23_Cb] --Selected Diagnostic Tests Services  Pap Test  Patients Nr
+			      ,[T6a_L24_Ca] --Selected Diagnostic Tests Services  Selected Immunizations  Visits Nr
+			      ,[T6a_L24_Cb] --Selected Diagnostic Tests Services  Selected Immunizations  Patients Nr
+			      ,[T6a_L24a_Ca] --Selected Diagnostic Tests Services  Seasonal flu Vaccine  Visits Nr
+			      ,[T6a_L24a_Cb] --Selected Diagnostic Tests Services  Seasonal flu Vaccine  Patients Nr
+			      ,[T6a_L24b_Ca] --Selected Diagnostic Tests Services  H1N1 Flu Vaccine  Visits Nr
+			      ,[T6a_L24b_Cb] --Selected Diagnostic Tests Services  H1N1 Flu Vaccine  Patients Nr
+			      ,[T6a_L25_Ca] --Selected Diagnostic Tests Services  Contraceptive management  Visits Nr
+			      ,[T6a_L25_Cb] --Selected Diagnostic Tests Services  Contraceptive management  Patients Nr
+			      ,[T6a_L26_Ca] --Selected Diagnostic Tests Services  Health supervision of infant or child  Visits Nr
+			      ,[T6a_L26_Cb] --Selected Diagnostic Tests Services  Health supervision of infant or child  Patients Nr
+			      ,[T6a_L26a_Ca] --Selected Diagnostic Tests Services  Childhood lead test  Visits Nr
+			      ,[T6a_L26a_Cb] --Selected Diagnostic Tests Services  Childhood lead test  Patients Nr
+			      ,[T6a_L26b_Ca] --Selected Diagnostic Tests Services  SBIRT  Visits Nr
+			      ,[T6a_L26b_Cb] --Selected Diagnostic Tests Services  SBIRT  Patients Nr
+			      ,[T6a_L26c_Ca] --Selected Diagnostic Tests Services  Smoke and tobacco cessassion counseling  Visits Nr
+			      ,[T6a_L26c_Cb] --Selected Diagnostic Tests Services  Smoke and tobacco cessassion counseling  Patients Nr
+			      ,[T6a_L27_Ca] --Selected Dental Services  Emergency services  Visits Nr
+			      ,[T6a_L27_Cb] --Selected Dental Services  Emergency services  Patients Nr
+			      ,[T6a_L28_Ca] --Selected Dental Services  Oral exams  Visits Nr
+			      ,[T6a_L28_Cb] --Selected Dental Services  Oral exams  Patients Nr
+			      ,[T6a_L29_Ca] --Selected Dental Services  Prophylaxis  Visits Nr
+			      ,[T6a_L29_Cb] --Selected Dental Services  Prophylaxis  Patients Nr
+			      ,[T6a_L3_Ca] --  Infectious Parasitic Diseases  Tuberculosis  Number of Visits
+			      ,[T6a_L3_Cb] --  Infectious Parasitic Diseases  Tuberculosis  Number of Patients
+			      ,[T6a_L30_Ca] --Selected Dental Services  Sealants  Visits Nr
+			      ,[T6a_L30_Cb] --Selected Dental Services  Sealants  Patients Nr
+			      ,[T6a_L31_Ca] --Selected Dental Services  Fluoride treatment  Visits Nr
+			      ,[T6a_L31_Cb] --Selected Dental Services  Fluoride treatment  Patients Nr
+			      ,[T6a_L32_Ca] --Selected Dental Services  Restorative services  Visits Nr
+			      ,[T6a_L32_Cb] --Selected Dental Services  Restorative services  Patients Nr
+			      ,[T6a_L33_Ca] --Selected Dental Services  Oral Surgery  Visits Nr
+			      ,[T6a_L33_Cb] --Selected Dental Services  Oral Surgery  Patients Nr
+			      ,[T6a_L34_Ca] --Selected Dental Services  Rehabilitative services  Visits Nr
+			      ,[T6a_L34_Cb] --Selected Dental Services  Rehabilitative services  Patients Nr
+			      ,[T6a_L4_Ca] -- Infectious Parasitic Diseases  Syphilis and other sexually transmitted disease  Number of Visits
+			      ,[T6a_L4_Cb] -- Infectious Parasitic Diseases  Syphilis and other sexually transmitted disease  Number of Patients
+			      ,[T6a_L5_Ca] -- Respiratory System Diseases  Asthma  Number of Visits
+			      ,[T6a_L5_Cb] -- Respiratory System Diseases  Asthma  Number of Patients
+			      ,[T6a_L6_Ca] -- Respiratory System Diseases  Bronchitis Emphysema  Number of Visits
+			      ,[T6a_L6_Cb] -- Respiratory System Diseases  Bronchitis Emphysema  Number of Patients
+			      ,[T6a_L7_Ca] -- Other Medical Conditions  Abnormal breast findings Female  Number of Visits
+			      ,[T6a_L7_Cb] --  Other Medical Conditions  Abnormal breast findings Female  Number of Patients
+			      ,[T6a_L8_Ca] --  Other Medical Conditions  Abnormal cervical findings  Number of Visits
+			      ,[T6a_L8_Cb] --  Other Medical Conditions  Abnormal cervical findings  Number of Patients
+			      ,[T6a_L9_Ca] --  Other Medical Conditions  Diabetes mellitus  Number of Visits
+			      ,[T6a_L9_Cb] --  Other Medical Conditions  Diabetes mellitus  Number of Patients
+				FROM [HRSA_UDS_2009].[dbo].[tblTable6A],[HRSA_UDS_2009].[dbo].tblGranteeInfo
+				where [HRSA_UDS_2009].[dbo].[tblTable6A].[gi_lnggranteeid] = [HRSA_UDS_2009].[dbo].tblGranteeInfo.[gi_lnggranteeid]     
+          </param>
+        </rowprovider>
+      </rowproviderSet>
+<globalParams>
+	      <param key="primaryKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_SECTION_</param> 
+	      <param key="documentIdColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_SECTION_</param>
+	      <param key="objectType">com.palantir.object.UDSReportSection</param>
+      </globalParams>
+      <rowprocessorSet>
+      <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>     
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportSectionName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportSectionName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">UDSTableType_</param>
+			<param key="propertyType">com.palantir.property.UDSTableType</param>
+			<param key="propertyValueColumn">UDSTableType</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>    
+       		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L1_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L1_Ca</param>
+			<param key="propertyValueColumn">T6a_L1_Ca</param>
+		</rowprocessor>
+		<!-- Symptomatic HIV  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L1_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L1_Cb</param>
+			<param key="propertyValueColumn">T6a_L1_Cb</param>
+		</rowprocessor>
+		<!--       Symptomatic HIV , Asymptomatic HIV Number of Visits -->
+       		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L1and2_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L1and2_Ca</param>
+			<param key="propertyValueColumn">T6a_L1and2_Ca</param>
+		</rowprocessor>
+		<!-- Symptomatic HIV , Asymptomatic HIV Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L1and2_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L1and2_Cb</param>
+			<param key="propertyValueColumn">T6a_L1and2_Cb</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Heart disease  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L10_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L10_Ca</param>
+			<param key="propertyValueColumn">T6a_L10_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Heart disease  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L10_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L10_Cb</param>
+			<param key="propertyValueColumn">T6a_L10_Cb</param>
+		</rowprocessor>
+		
+		<!-- Other Medical Conditions  Hypertension  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L11_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L11_Ca</param>
+			<param key="propertyValueColumn">T6a_L11_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Hypertension  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L11_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L11_Cb</param>
+			<param key="propertyValueColumn">T6a_L11_Cb</param>
+		</rowprocessor>
+		
+		<!-- Other Medical Conditions  Contact dermatitis other eczema  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L12_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L12_Ca</param>
+			<param key="propertyValueColumn">T6a_L12_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Contact dermatitis other eczema  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L12_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L12_Cb</param>
+			<param key="propertyValueColumn">T6a_L12_Cb</param>
+		</rowprocessor>		
+		<!-- Other Medical Conditions  Dehydration  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L13_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L13_Ca</param>
+			<param key="propertyValueColumn">T6a_L13_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Dehydration  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L13_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L13_Cb</param>
+			<param key="propertyValueColumn">T6a_L13_Cb</param>
+		</rowprocessor>	
+		<!-- Other Medical Conditions  Exposure to heat or cold  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L14_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L14_Ca</param>
+			<param key="propertyValueColumn">T6a_L14_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions Exposure to heat or cold Number of  Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L14_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L14_Cb</param>
+			<param key="propertyValueColumn">T6a_L14_Cb</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Overweight and obesity  Number of Visits -->	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L14a_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L14a_Ca</param>
+			<param key="propertyValueColumn">T6a_L14a_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Overweight and obesity  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L14a_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L14a_Cb</param>
+			<param key="propertyValueColumn">T6a_L14a_Cb</param>
+		</rowprocessor>		
+		<!-- Childhood Conditions  Otitis media eustachian tube disorders  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L15_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L15_Ca</param>
+			<param key="propertyValueColumn">T6a_L15_Ca</param>
+		</rowprocessor>
+		<!-- Childhood Conditions  Otitis media eustachian tube disorders  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L15_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L15_Cb</param>
+			<param key="propertyValueColumn">T6a_L15_Cb</param>
+		</rowprocessor>		
+		
+		<!-- Childhood Conditions  Perinatal medical conditions  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L16_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L16_Ca</param>
+			<param key="propertyValueColumn">T6a_L16_Ca</param>
+		</rowprocessor>
+		<!-- Childhood Conditions  Perinatal medical conditions  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L16_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L16_Cb</param>
+			<param key="propertyValueColumn">T6a_L16_Cb</param>
+		</rowprocessor>		
+				
+		<!-- Childhood Conditions Lack of exp normal development Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L17_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L17_Ca</param>
+			<param key="propertyValueColumn">T6a_L17_Ca</param>
+		</rowprocessor>
+		<!-- Childhood Conditions Lack of exp normal development Number of  Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L17_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L17_Cb</param>
+			<param key="propertyValueColumn">T6a_L17_Cb</param>
+		</rowprocessor>	
+		
+		<!-- Mental Health Substance Abuse Conditions Alcohol disorders Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L18_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L18_Ca</param>
+			<param key="propertyValueColumn">T6a_L18_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions Alcohol disorders Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L18_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L18_Cb</param>
+			<param key="propertyValueColumn">T6a_L18_Cb</param>
+		</rowprocessor>		
+		
+		<!-- Mental Health Substance Abuse Conditions Other substance disorders Number of Visits-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L19_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L19_Ca</param>
+			<param key="propertyValueColumn">T6a_L19_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions Other substance disorders Number of  Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L19_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L19_Cb</param>
+			<param key="propertyValueColumn">T6a_L19_Cb</param>
+		</rowprocessor>		
+		
+		<!-- Mental Health Substance Abuse Conditions  Tobacco use disorder  Number of Visits-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L19a_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L19a_Ca</param>
+			<param key="propertyValueColumn">T6a_L19a_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions  Tobacco use disorder  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L19a_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L19a_Cb</param>
+			<param key="propertyValueColumn">T6a_L19a_Cb</param>
+		</rowprocessor>		
+		<!-- Asymptomatic HIV Number of Visits-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L2_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L2_Ca</param>
+			<param key="propertyValueColumn">T6a_L2_Ca</param>
+		</rowprocessor>
+		<!-- Asymptomatic HIV Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L2_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L2_Cb</param>
+			<param key="propertyValueColumn">T6a_L2_Cb</param>
+		</rowprocessor>		
+		
+		<!-- Mental Health Substance Abuse Conditions  Depression or mood disorders  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20a_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20a_Ca</param>
+			<param key="propertyValueColumn">T6a_L20a_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions  Depression or mood disorders  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20a_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20a_Cb</param>
+			<param key="propertyValueColumn">T6a_L20a_Cb</param>
+		</rowprocessor>				
+		
+		<!-- Mental Health Substance Abuse Conditions Anxiety disorders PTSD Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20b_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20b_Ca</param>
+			<param key="propertyValueColumn">T6a_L20b_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions Anxiety disorders PTSD Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20b_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20b_Cb</param>
+			<param key="propertyValueColumn">T6a_L20b_Cb</param>
+		</rowprocessor>		
+		
+		<!--Mental Health Substance Abuse Conditions Attention deficit Disruptive disorders Number of Visits-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20c_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20c_Ca</param>
+			<param key="propertyValueColumn">T6a_L20c_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions Attention deficit Disruptive disorders Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20c_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20c_Cb</param>
+			<param key="propertyValueColumn">T6a_L20c_Cb</param>
+		</rowprocessor>		
+		
+		<!--Mental Health Substance Abuse Conditions  Other mental disorders  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20d_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20d_Ca</param>
+			<param key="propertyValueColumn">T6a_L20d_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions  Other mental disorders  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20d_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20d_Cb</param>
+			<param key="propertyValueColumn">T6a_L20d_Cb</param>
+		</rowprocessor>	
+		
+		<!--Selected Diagnostic Tests Services HIV Test Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L21_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L21_Ca</param>
+			<param key="propertyValueColumn">T6a_L21_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services HIV Test Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L21_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L21_Cb</param>
+			<param key="propertyValueColumn">T6a_L21_Cb</param>
+		</rowprocessor>		
+		
+		<!--Selected Diagnostic Tests Services  Mammogram  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L22_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L22_Ca</param>
+			<param key="propertyValueColumn">T6a_L22_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Mammogram  Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L22_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L22_Cb</param>
+			<param key="propertyValueColumn">T6a_L22_Cb</param>
+		</rowprocessor>		
+	<!--Selected Diagnostic Tests Services  Pap Test  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L23_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L23_Ca</param>
+			<param key="propertyValueColumn">T6a_L23_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Pap Test Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L23_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L23_Cb</param>
+			<param key="propertyValueColumn">T6a_L23_Cb</param>
+		</rowprocessor>	
+		<!--Selected Diagnostic Tests Services  Selected Immunizations  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L24_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L24_Ca</param>
+			<param key="propertyValueColumn">T6a_L24_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Selected Immunizations  Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L24_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L24_Cb</param>
+			<param key="propertyValueColumn">T6a_L24_Cb</param>
+		</rowprocessor>	
+		<!--Selected Diagnostic Tests Services  Seasonal flu Vaccine  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L24a_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L24a_Ca</param>
+			<param key="propertyValueColumn">T6a_L24a_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Seasonal flu Vaccine  Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L24a_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L24a_Cb</param>
+			<param key="propertyValueColumn">T6a_L24a_Cb</param>
+		</rowprocessor>	
+		<!--Selected Diagnostic Tests Services  H1N1 Flu Vaccine  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L24b_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L24b_Ca</param>
+			<param key="propertyValueColumn">T6a_L24b_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  H1N1 Flu Vaccine Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L24b_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L24b_Cb</param>
+			<param key="propertyValueColumn">T6a_L24b_Cb</param>
+		</rowprocessor>	
+		<!--Selected Diagnostic Tests Services  Contraceptive management  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L25_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L25_Ca</param>
+			<param key="propertyValueColumn">T6a_L25_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Contraceptive management Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L25_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L25_Cb</param>
+			<param key="propertyValueColumn">T6a_L25_Cb</param>
+		</rowprocessor>
+		<!--Selected Diagnostic Tests Services  Health supervision of infant or child  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26_Ca</param>
+			<param key="propertyValueColumn">T6a_L26_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Health supervision of infant or child Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26_Cb</param>
+			<param key="propertyValueColumn">T6a_L26_Cb</param>
+		</rowprocessor>		
+		
+		<!--Selected Diagnostic Tests Services  Childhood lead test  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26a_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26a_Ca</param>
+			<param key="propertyValueColumn">T6a_L26a_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Childhood lead test Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26a_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26a_Cb</param>
+			<param key="propertyValueColumn">T6a_L26a_Cb</param>
+		</rowprocessor>						
+		<!--Selected Diagnostic Tests Services  SBIRT  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26b_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26b_Ca</param>
+			<param key="propertyValueColumn">T6a_L26b_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  SBIRT  Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26b_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26b_Cb</param>
+			<param key="propertyValueColumn">T6a_L26b_Cb</param>
+		</rowprocessor>						
+		<!--Selected Diagnostic Tests Services  Smoke and tobacco cessassion counseling  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26c_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26c_Ca</param>
+			<param key="propertyValueColumn">T6a_L26c_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Smoke and tobacco cessassion counseling Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26c_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26c_Cb</param>
+			<param key="propertyValueColumn">T6a_L26c_Cb</param>
+		</rowprocessor>						
+				
+		<!--Selected Dental Services  Emergency services  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L27_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L27_Ca</param>
+			<param key="propertyValueColumn">T6a_L27_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services  Emergency services Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L27_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L27_Cb</param>
+			<param key="propertyValueColumn">T6a_L27_Cb</param>
+		</rowprocessor>																															
+		<!-- Selected Dental Services  Oral exams  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L28_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L28_Ca</param>
+			<param key="propertyValueColumn">T6a_L28_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services  Oral exams Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L28_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L28_Cb</param>
+			<param key="propertyValueColumn">T6a_L28_Cb</param>
+		</rowprocessor>	
+		<!-- Selected Dental Services  Prophylaxis  Visits Nr-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L29_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L29_Ca</param>
+			<param key="propertyValueColumn">T6a_L29_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services  Prophylaxis Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L29_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L29_Cb</param>
+			<param key="propertyValueColumn">T6a_L29_Cb</param>
+		</rowprocessor>
+		
+		<!-- Infectious Parasitic Diseases  Tuberculosis  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L3_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L3_Ca</param>
+			<param key="propertyValueColumn">T6a_L3_Ca</param>
+		</rowprocessor>
+		<!-- Infectious Parasitic Diseases  Tuberculosis  Number of  Patients   -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L3_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L3_Cb</param>
+			<param key="propertyValueColumn">T6a_L3_Cb</param>
+		</rowprocessor>					
+		
+		<!-- Selected Dental Services Sealants Visits Nr-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L30_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L30_Ca</param>
+			<param key="propertyValueColumn">T6a_L30_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services Sealants Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L30_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L30_Cb</param>
+			<param key="propertyValueColumn">T6a_L30_Cb</param>
+		</rowprocessor>
+		
+		<!-- Selected Dental Services Fluoride treatment Visits Nr-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L31_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L31_Ca</param>
+			<param key="propertyValueColumn">T6a_L31_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services Fluoride treatment Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L31_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L31_Cb</param>
+			<param key="propertyValueColumn">T6a_L31_Cb</param>
+		</rowprocessor>	
+		
+		<!-- Selected Dental Services  Restorative services  Visits Nr-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L32_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L32_Ca</param>
+			<param key="propertyValueColumn">T6a_L32_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services  Restorative services  Patients Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L32_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L32_Cb</param>
+			<param key="propertyValueColumn">T6a_L32_Cb</param>
+		</rowprocessor>
+
+        <!-- Selected Dental Services Oral Surgery Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L33_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L33_Ca</param>
+			<param key="propertyValueColumn">T6a_L33_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services Oral Surgery Patients Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L33_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L33_Cb</param>
+			<param key="propertyValueColumn">T6a_L33_Cb</param>
+		</rowprocessor>
+		 <!-- Selected Dental Services Rehabilitative services Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L34_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L34_Ca</param>
+			<param key="propertyValueColumn">T6a_L34_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services Rehabilitative services Patients Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L34_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L34_Cb</param>
+			<param key="propertyValueColumn">T6a_L34_Cb</param>
+		</rowprocessor>		
+       <!-- 	Infectious Parasitic Diseases  Syphilis and other sexually transmitted disease  Number of Visits  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L4_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L4_Ca</param>
+			<param key="propertyValueColumn">T6a_L4_Ca</param>
+		</rowprocessor>
+		<!-- Infectious Parasitic Diseases  Syphilis and other sexually transmitted disease  Number of Patients Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L4_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L4_Cb</param>
+			<param key="propertyValueColumn">T6a_L4_Cb</param>
+		</rowprocessor>		
+       <!-- 	Respiratory System Diseases  Asthma  Number of Visits  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L5_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L5_Ca</param>
+			<param key="propertyValueColumn">T6a_L5_Ca</param>
+		</rowprocessor>
+		<!-- Respiratory System Diseases  Asthma  Number of Patients  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L5_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L5_Cb</param>
+			<param key="propertyValueColumn">T6a_L5_Cb</param>
+		</rowprocessor>		
+ <!-- 	Respiratory System Diseases Bronchitis Emphysema Number of Visits  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L6_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L6_Ca</param>
+			<param key="propertyValueColumn">T6a_L6_Ca</param>
+		</rowprocessor>
+		<!-- Respiratory System Diseases Bronchitis Emphysema Number of  Patients  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L6_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L6_Cb</param>
+			<param key="propertyValueColumn">T6a_L6_Cb</param>
+		</rowprocessor>	
+<!-- 		Other Medical Conditions  Abnormal breast findings Female  Number of Visits	 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L7_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L7_Ca</param>
+			<param key="propertyValueColumn">T6a_L7_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Abnormal breast findings Female  Number of Patients  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L7_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L7_Cb</param>
+			<param key="propertyValueColumn">T6a_L7_Cb</param>
+		</rowprocessor>	
+<!-- 		Other Medical Conditions Abnormal cervical findings Number of Visits	 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L8_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L8_Ca</param>
+			<param key="propertyValueColumn">T6a_L8_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions Abnormal cervical findings Number of Patients  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L8_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L8_Cb</param>
+			<param key="propertyValueColumn">T6a_L8_Cb</param>
+		</rowprocessor>	
+<!-- 		Other Medical Conditions  Diabetes mellitus  Number of Visits	 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L9_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L9_Ca</param>
+			<param key="propertyValueColumn">T6a_L9_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Diabetes mellitus  Number of Patients  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L9_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L9_Cb</param>
+			<param key="propertyValueColumn">T6a_L9_Cb</param>
+		</rowprocessor>	
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+			 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+				<param key="objectName">REPORT_</param>
+				<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+				<param key="objectType">com.palantir.object.abstract</param>
+			</rowprocessor>
+			<rowprocessor
+				class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+				<param key="parentObjectName">REPORT_</param>
+				<param key="parentKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+				<param key="childObjectName">REPORT_SECTION_</param>
+				<param key="childKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+				<param key="linkRole">com.palantir.role.none</param>
+				<param key="linkType">com.palantir.link.Simple</param>
+				<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear,UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+				<param key="linkName">BelongsTo_</param>	
+				<param key="linkText">BelongsTo</param>		
+			</rowprocessor>		  		
+     </rowprocessorSet>
+    </table>
+   
+<!--                            2 0 1 0                         -->
+<table>
+      <description>HRSA REPORT TABLE 6A 2010</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> SELECT [HRSA_UDS_2010].[dbo].tblGranteeInfo.gi_txtUDS
+				  ,'2010' as ry_lngReportingYear
+				  ,'01/01/2010' as ReportingPeriodBegin, '12/31/2010' as ReportingPeriodEnd     
+				  ,[HRSA_UDS_2010].[dbo].tblGranteeInfo.gi_txtName
+				  ,'6A' as UDSTableType
+				  ,'TABLE 6A-SELECTED DIAGNOSES AND SERVICES RENDERED-' + [HRSA_UDS_2010].[dbo].tblGranteeInfo.gi_txtName + '-2010' as  ReportSectionName 				  				  
+			      ,[T6a_L1and2_Ca] --Symptomatic HIV , Asymptomatic HIV Number of Visits
+			      ,[T6a_L1and2_Cb] --Symptomatic HIV , Asymptomatic HIV Number of Patients
+			      ,[T6a_L10_Ca] --Other Medical Conditions  Heart disease  Number of Visits
+			      ,[T6a_L10_Cb] --Other Medical Conditions  Heart disease  Number of Patients
+			      ,[T6a_L11_Ca] --Other Medical Conditions  Hypertension  Number of Visits
+			      ,[T6a_L11_Cb] --Other Medical Conditions  Hypertension  Number of Patients
+			      ,[T6a_L12_Ca] --Other Medical Conditions  Contact dermatitis other eczema  Number of Visits
+			      ,[T6a_L12_Cb] --Other Medical Conditions  Contact dermatitis other eczema  Number of Patients
+			      ,[T6a_L13_Ca] --Other Medical Conditions  Dehydration  Number of Visits
+			      ,[T6a_L13_Cb] --Other Medical Conditions  Dehydration  Number of Patients
+			      ,[T6a_L14_Ca] --Other Medical Conditions  Exposure to heat or cold  Number of Visits
+			      ,[T6a_L14_Cb] --Other Medical Conditions  Exposure to heat or cold  Number of Patients
+			      ,[T6a_L14a_Ca] --Other Medical Conditions  Overweight and obesity  Number of Visits
+			      ,[T6a_L14a_Cb] --Other Medical Conditions  Overweight and obesity  Number of Patients
+			      ,[T6a_L15_Ca] --Childhood Conditions  Otitis media eustachian tube disorders  Number of Visits
+			      ,[T6a_L15_Cb] --Childhood Conditions  Otitis media eustachian tube disorders  Number of Patients
+			      ,[T6a_L16_Ca] --Childhood Conditions  Perinatal medical conditions  Number of Visits
+			      ,[T6a_L16_Cb] --Childhood Conditions  Perinatal medical conditions  Number of Patients
+			      ,[T6a_L17_Ca] --Childhood Conditions  Lack of exp normal development Number of Visits
+			      ,[T6a_L17_Cb] --Childhood Conditions  Lack of exp normal development Number of Patients
+			      ,[T6a_L18_Ca] --Mental Health Substance Abuse Conditions  Alcohol disorders  Number of Visits
+			      ,[T6a_L18_Cb] --Mental Health Substance Abuse Conditions  Alcohol disorders  Number of Patients
+			      ,[T6a_L19_Ca] --Mental Health Substance Abuse Conditions  Other substance disorders  Number of Visits
+			      ,[T6a_L19_Cb] --Mental Health Substance Abuse Conditions  Other substance disorders  Number of Patients
+			      ,[T6a_L19a_Ca] --Mental Health Substance Abuse Conditions  Tobacco use disorder  Number of Visits
+			      ,[T6a_L19a_Cb] --Mental Health Substance Abuse Conditions  Tobacco use disorder  Number of Patients
+			      ,[T6a_L20a_Ca] --Mental Health Substance Abuse Conditions  Depression or mood disorders  Number of Visits
+			      ,[T6a_L20a_Cb] --Mental Health Substance Abuse Conditions  Depression or mood disorders  Number of Patients
+			      ,[T6a_L20b_Ca] --Mental Health Substance Abuse Conditions  Anxiety disorders PTSD  Number of Visits
+			      ,[T6a_L20b_Cb] --Mental Health Substance Abuse Conditions  Anxiety disorders PTSD  Number of Patients
+			      ,[T6a_L20c_Ca] --Mental Health Substance Abuse Conditions  Attention deficit Disruptive disorders  Number of Visits
+			      ,[T6a_L20c_Cb] --Mental Health Substance Abuse Conditions  Attention deficit Disruptive disorders  Number of Patients
+			      ,[T6a_L20d_Ca] --Mental Health Substance Abuse Conditions  Other mental disorders  Number of Visits
+			      ,[T6a_L20d_Cb] --Mental Health Substance Abuse Conditions  Other mental disorders  Number of Patients
+			      ,[T6a_L21_Ca] --Selected Diagnostic Tests Services  HIV Test  Visits Nr
+			      ,[T6a_L21_Cb] --Selected Diagnostic Tests Services  HIV Test  Patients Nr
+			      ,[T6a_L21a_Ca] --Selected Diagnostic Tests Services  Hepatitis B Test  Visits Nr
+			      ,[T6a_L21a_Cb] --Selected Diagnostic Tests Services  Hepatitis B Test  Patients Nr
+			      ,[T6a_L21b_Ca] --Selected Diagnostic Tests Services  Hepatitis C Test  Visits Nr
+			      ,[T6a_L21b_Cb] --Selected Diagnostic Tests Services  Hepatitis C Test  Patients Nr
+			      ,[T6a_L22_Ca] --Selected Diagnostic Tests Services  Mammogram  Visits Nr
+			      ,[T6a_L22_Cb] --Selected Diagnostic Tests Services  Mammogram  Patients Nr
+			      ,[T6a_L23_Ca] --Selected Diagnostic Tests Services  Pap Test  Visits Nr
+			      ,[T6a_L23_Cb] --Selected Diagnostic Tests Services  Pap Test  Patients Nr
+			      ,[T6a_L24_Ca] --Selected Diagnostic Tests Services  Selected Immunizations  Visits Nr
+			      ,[T6a_L24_Cb] --Selected Diagnostic Tests Services  Selected Immunizations  Patients Nr
+			      ,[T6a_L24a_Ca] --Selected Diagnostic Tests Services  Seasonal flu Vaccine  Visits Nr
+			      ,[T6a_L24a_Cb] --Selected Diagnostic Tests Services  Seasonal flu Vaccine  Patients Nr
+			      ,[T6a_L24b_Ca] --Selected Diagnostic Tests Services  H1N1 Flu Vaccine  Visits Nr
+			      ,[T6a_L24b_Cb] --Selected Diagnostic Tests Services  H1N1 Flu Vaccine  Patients Nr
+			      ,[T6a_L25_Ca] --Selected Diagnostic Tests Services  Contraceptive management  Visits Nr
+			      ,[T6a_L25_Cb] --Selected Diagnostic Tests Services  Contraceptive management  Patients Nr
+			      ,[T6a_L26_Ca] --Selected Diagnostic Tests Services  Health supervision of infant or child  Visits Nr
+			      ,[T6a_L26_Cb] --Selected Diagnostic Tests Services  Health supervision of infant or child  Patients Nr
+			      ,[T6a_L26a_Ca] --Selected Diagnostic Tests Services  Childhood lead test  Visits Nr
+			      ,[T6a_L26a_Cb] --Selected Diagnostic Tests Services  Childhood lead test  Patients Nr
+			      ,[T6a_L26b_Ca] --Selected Diagnostic Tests Services  SBIRT  Visits Nr
+			      ,[T6a_L26b_Cb] --Selected Diagnostic Tests Services  SBIRT  Patients Nr
+			      ,[T6a_L26c_Ca] --Selected Diagnostic Tests Services  Smoke and tobacco cessassion counseling  Visits Nr
+			      ,[T6a_L26c_Cb] --Selected Diagnostic Tests Services  Smoke and tobacco cessassion counseling  Patients Nr
+			      ,[T6a_L26d_Ca] --Selected Diagnostic Tests Services  eye exams  Visits Nr
+			      ,[T6a_L26d_Cb] --Selected Diagnostic Tests Services  eye exams  Patients Nr
+			      ,[T6a_L27_Ca] --Selected Dental Services  Emergency services  Visits Nr
+			      ,[T6a_L27_Cb] --Selected Dental Services  Emergency services  Patients Nr
+			      ,[T6a_L28_Ca] --Selected Dental Services  Oral exams  Visits Nr
+			      ,[T6a_L28_Cb] --Selected Dental Services  Oral exams  Patients Nr
+			      ,[T6a_L29_Ca] --Selected Dental Services  Prophylaxis  Visits Nr
+			      ,[T6a_L29_Cb] --Selected Dental Services  Prophylaxis  Patients Nr
+			      ,[T6a_L3_Ca] --  Infectious Parasitic Diseases  Tuberculosis  Number of Visits
+			      ,[T6a_L3_Cb] --  Infectious Parasitic Diseases  Tuberculosis  Number of Patients
+			      ,[T6a_L30_Ca] --Selected Dental Services  Sealants  Visits Nr
+			      ,[T6a_L30_Cb] --Selected Dental Services  Sealants  Patients Nr
+			      ,[T6a_L31_Ca] --Selected Dental Services  Fluoride treatment  Visits Nr
+			      ,[T6a_L31_Cb] --Selected Dental Services  Fluoride treatment  Patients Nr
+			      ,[T6a_L32_Ca] --Selected Dental Services  Restorative services  Visits Nr
+			      ,[T6a_L32_Cb] --Selected Dental Services  Restorative services  Patients Nr
+			      ,[T6a_L33_Ca] --Selected Dental Services  Oral Surgery  Visits Nr
+			      ,[T6a_L33_Cb] --Selected Dental Services  Oral Surgery  Patients Nr
+			      ,[T6a_L34_Ca] --Selected Dental Services  Rehabilitative services  Visits Nr
+			      ,[T6a_L34_Cb] --Selected Dental Services  Rehabilitative services  Patients Nr
+			      ,[T6a_L4_Ca] --  Infectious Parasitic Diseases  Syphilis and other sexually transmitted disease  Number of Visits
+			      ,[T6a_L4_Cb] --  Infectious Parasitic Diseases  Syphilis and other sexually transmitted disease  Number of Patients
+			      ,[T6a_L4a_Ca] --Infectious Parasitic Diseases  Hepatitis B  Number of Visits
+			      ,[T6a_L4a_Cb] --Infectious Parasitic Diseases  Hepatitis B  Number of Patients
+			      ,[T6a_L4b_Ca] --Infectious Parasitic Diseases  Hepatitis C  Number of Visits
+			      ,[T6a_L4b_Cb] --Infectious Parasitic Diseases  Hepatitis C  Number of Patients
+			      ,[T6a_L5_Ca] --  Respiratory System Diseases  Asthma  Number of Visits
+			      ,[T6a_L5_Cb] --  Respiratory System Diseases  Asthma  Number of Patients
+			      ,[T6a_L6_Ca] --  Respiratory System Diseases  Bronchitis Emphysema  Number of Visits
+			      ,[T6a_L6_Cb] --  Respiratory System Diseases  Bronchitis Emphysema  Number of Patients
+			      ,[T6a_L7_Ca] --  Other Medical Conditions  Abnormal breast findings Female  Number of Visits
+			      ,[T6a_L7_Cb] --  Other Medical Conditions  Abnormal breast findings Female  Number of Patients
+			      ,[T6a_L8_Ca] --  Other Medical Conditions  Abnormal cervical findings  Number of Visits
+			      ,[T6a_L8_Cb] --  Other Medical Conditions  Abnormal cervical findings  Number of Patients
+			      ,[T6a_L9_Ca] --  Other Medical Conditions  Diabetes mellitus  Number of Visits
+			      ,[T6a_L9_Cb] --  Other Medical Conditions  Diabetes mellitus  Number of Patients
+				FROM [HRSA_UDS_2010].[dbo].[tblTable6A],[HRSA_UDS_2010].[dbo].tblGranteeInfo
+				where [HRSA_UDS_2010].[dbo].[tblTable6A].[gi_lnggranteeid] = [HRSA_UDS_2010].[dbo].tblGranteeInfo.[gi_lnggranteeid]
+          </param>
+        </rowprovider>
+      </rowproviderSet>
+<globalParams>
+	      <param key="primaryKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_SECTION_</param> 
+	      <param key="documentIdColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_SECTION_</param>
+	      <param key="objectType">com.palantir.object.UDSReportSection</param>
+      </globalParams>
+      <rowprocessorSet>
+      <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>     
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportSectionName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportSectionName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">UDSTableType_</param>
+			<param key="propertyType">com.palantir.property.UDSTableType</param>
+			<param key="propertyValueColumn">UDSTableType</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>    
+	<!--       Symptomatic HIV , Asymptomatic HIV Number of Visits -->
+       		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L1and2_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L1and2_Ca</param>
+			<param key="propertyValueColumn">T6a_L1and2_Ca</param>
+		</rowprocessor>
+		<!-- Symptomatic HIV , Asymptomatic HIV Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L1and2_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L1and2_Cb</param>
+			<param key="propertyValueColumn">T6a_L1and2_Cb</param>
+		</rowprocessor>
+		
+		<!-- Other Medical Conditions  Heart disease  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L10_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L10_Ca</param>
+			<param key="propertyValueColumn">T6a_L10_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Heart disease  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L10_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L10_Cb</param>
+			<param key="propertyValueColumn">T6a_L10_Cb</param>
+		</rowprocessor>
+		
+		<!-- Other Medical Conditions  Hypertension  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L11_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L11_Ca</param>
+			<param key="propertyValueColumn">T6a_L11_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Hypertension  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L11_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L11_Cb</param>
+			<param key="propertyValueColumn">T6a_L11_Cb</param>
+		</rowprocessor>
+		
+		<!-- Other Medical Conditions  Contact dermatitis other eczema  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L12_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L12_Ca</param>
+			<param key="propertyValueColumn">T6a_L12_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Contact dermatitis other eczema  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L12_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L12_Cb</param>
+			<param key="propertyValueColumn">T6a_L12_Cb</param>
+		</rowprocessor>		
+		<!-- Other Medical Conditions  Dehydration  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L13_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L13_Ca</param>
+			<param key="propertyValueColumn">T6a_L13_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Dehydration  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L13_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L13_Cb</param>
+			<param key="propertyValueColumn">T6a_L13_Cb</param>
+		</rowprocessor>	
+		<!-- Other Medical Conditions  Exposure to heat or cold  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L14_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L14_Ca</param>
+			<param key="propertyValueColumn">T6a_L14_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions Exposure to heat or cold Number of  Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L14_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L14_Cb</param>
+			<param key="propertyValueColumn">T6a_L14_Cb</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Overweight and obesity  Number of Visits -->	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L14a_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L14a_Ca</param>
+			<param key="propertyValueColumn">T6a_L14a_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Overweight and obesity  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L14a_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L14a_Cb</param>
+			<param key="propertyValueColumn">T6a_L14a_Cb</param>
+		</rowprocessor>		
+		<!-- Childhood Conditions  Otitis media eustachian tube disorders  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L15_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L15_Ca</param>
+			<param key="propertyValueColumn">T6a_L15_Ca</param>
+		</rowprocessor>
+		<!-- Childhood Conditions  Otitis media eustachian tube disorders  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L15_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L15_Cb</param>
+			<param key="propertyValueColumn">T6a_L15_Cb</param>
+		</rowprocessor>		
+		
+		<!-- Childhood Conditions  Perinatal medical conditions  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L16_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L16_Ca</param>
+			<param key="propertyValueColumn">T6a_L16_Ca</param>
+		</rowprocessor>
+		<!-- Childhood Conditions  Perinatal medical conditions  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L16_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L16_Cb</param>
+			<param key="propertyValueColumn">T6a_L16_Cb</param>
+		</rowprocessor>		
+				
+		<!-- Childhood Conditions Lack of exp normal development Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L17_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L17_Ca</param>
+			<param key="propertyValueColumn">T6a_L17_Ca</param>
+		</rowprocessor>
+		<!-- Childhood Conditions Lack of exp normal development Number of  Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L17_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L17_Cb</param>
+			<param key="propertyValueColumn">T6a_L17_Cb</param>
+		</rowprocessor>	
+		
+		<!-- Mental Health Substance Abuse Conditions Alcohol disorders Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L18_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L18_Ca</param>
+			<param key="propertyValueColumn">T6a_L18_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions Alcohol disorders Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L18_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L18_Cb</param>
+			<param key="propertyValueColumn">T6a_L18_Cb</param>
+		</rowprocessor>		
+		
+		<!-- Mental Health Substance Abuse Conditions Other substance disorders Number of Visits-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L19_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L19_Ca</param>
+			<param key="propertyValueColumn">T6a_L19_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions Other substance disorders Number of  Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L19_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L19_Cb</param>
+			<param key="propertyValueColumn">T6a_L19_Cb</param>
+		</rowprocessor>		
+		
+		<!-- Mental Health Substance Abuse Conditions  Tobacco use disorder  Number of Visits-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L19a_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L19a_Ca</param>
+			<param key="propertyValueColumn">T6a_L19a_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions  Tobacco use disorder  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L19a_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L19a_Cb</param>
+			<param key="propertyValueColumn">T6a_L19a_Cb</param>
+		</rowprocessor>		
+		
+		<!-- Mental Health Substance Abuse Conditions  Depression or mood disorders  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20a_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20a_Ca</param>
+			<param key="propertyValueColumn">T6a_L20a_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions  Depression or mood disorders  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20a_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20a_Cb</param>
+			<param key="propertyValueColumn">T6a_L20a_Cb</param>
+		</rowprocessor>				
+		
+		<!-- Mental Health Substance Abuse Conditions Anxiety disorders PTSD Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20b_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20b_Ca</param>
+			<param key="propertyValueColumn">T6a_L20b_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions Anxiety disorders PTSD Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20b_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20b_Cb</param>
+			<param key="propertyValueColumn">T6a_L20b_Cb</param>
+		</rowprocessor>		
+		
+		<!--Mental Health Substance Abuse Conditions Attention deficit Disruptive disorders Number of Visits-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20c_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20c_Ca</param>
+			<param key="propertyValueColumn">T6a_L20c_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions Attention deficit Disruptive disorders Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20c_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20c_Cb</param>
+			<param key="propertyValueColumn">T6a_L20c_Cb</param>
+		</rowprocessor>		
+		
+		<!--Mental Health Substance Abuse Conditions  Other mental disorders  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20d_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20d_Ca</param>
+			<param key="propertyValueColumn">T6a_L20d_Ca</param>
+		</rowprocessor>
+		<!-- Mental Health Substance Abuse Conditions  Other mental disorders  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L20d_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L20d_Cb</param>
+			<param key="propertyValueColumn">T6a_L20d_Cb</param>
+		</rowprocessor>	
+		
+		<!--Selected Diagnostic Tests Services HIV Test Visits Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L21_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L21_Ca</param>
+			<param key="propertyValueColumn">T6a_L21_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services HIV Test  Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L21_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L21_Cb</param>
+			<param key="propertyValueColumn">T6a_L21_Cb</param>
+		</rowprocessor>		
+			
+		<!--Selected Diagnostic Tests Services  Hepatitis B Test  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L21a_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L21a_Ca</param>
+			<param key="propertyValueColumn">T6a_L21a_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Hepatitis B Test Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L21a_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L21a_Cb</param>
+			<param key="propertyValueColumn">T6a_L21a_Cb</param>
+		</rowprocessor>		
+		
+		<!--Selected Diagnostic Tests Services  Hepatitis C Test  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L21b_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L21b_Ca</param>
+			<param key="propertyValueColumn">T6a_L21b_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Hepatitis C Test Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L21b_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L21b_Cb</param>
+			<param key="propertyValueColumn">T6a_L21b_Cb</param>
+		</rowprocessor>		
+		
+		<!--Selected Diagnostic Tests Services  Mammogram  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L22_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L22_Ca</param>
+			<param key="propertyValueColumn">T6a_L22_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Mammogram  Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L22_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L22_Cb</param>
+			<param key="propertyValueColumn">T6a_L22_Cb</param>
+		</rowprocessor>		
+	<!--Selected Diagnostic Tests Services  Pap Test  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L23_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L23_Ca</param>
+			<param key="propertyValueColumn">T6a_L23_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Pap Test Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L23_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L23_Cb</param>
+			<param key="propertyValueColumn">T6a_L23_Cb</param>
+		</rowprocessor>	
+		<!--Selected Diagnostic Tests Services  Selected Immunizations  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L24_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L24_Ca</param>
+			<param key="propertyValueColumn">T6a_L24_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Selected Immunizations  Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L24_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L24_Cb</param>
+			<param key="propertyValueColumn">T6a_L24_Cb</param>
+		</rowprocessor>	
+		<!--Selected Diagnostic Tests Services  Seasonal flu Vaccine  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L24a_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L24a_Ca</param>
+			<param key="propertyValueColumn">T6a_L24a_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Seasonal flu Vaccine  Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L24a_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L24a_Cb</param>
+			<param key="propertyValueColumn">T6a_L24a_Cb</param>
+		</rowprocessor>	
+		<!--Selected Diagnostic Tests Services  H1N1 Flu Vaccine  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L24b_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L24b_Ca</param>
+			<param key="propertyValueColumn">T6a_L24b_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  H1N1 Flu Vaccine Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L24b_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L24b_Cb</param>
+			<param key="propertyValueColumn">T6a_L24b_Cb</param>
+		</rowprocessor>	
+		<!--Selected Diagnostic Tests Services  Contraceptive management  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L25_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L25_Ca</param>
+			<param key="propertyValueColumn">T6a_L25_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Contraceptive management Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L25_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L25_Cb</param>
+			<param key="propertyValueColumn">T6a_L25_Cb</param>
+		</rowprocessor>
+		<!--Selected Diagnostic Tests Services  Health supervision of infant or child  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26_Ca</param>
+			<param key="propertyValueColumn">T6a_L26_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Health supervision of infant or child Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26_Cb</param>
+			<param key="propertyValueColumn">T6a_L26_Cb</param>
+		</rowprocessor>		
+		
+		<!--Selected Diagnostic Tests Services  Childhood lead test  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26a_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26a_Ca</param>
+			<param key="propertyValueColumn">T6a_L26a_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Childhood lead test Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26a_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26a_Cb</param>
+			<param key="propertyValueColumn">T6a_L26a_Cb</param>
+		</rowprocessor>						
+		<!--Selected Diagnostic Tests Services  SBIRT  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26b_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26b_Ca</param>
+			<param key="propertyValueColumn">T6a_L26b_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  SBIRT  Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26b_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26b_Cb</param>
+			<param key="propertyValueColumn">T6a_L26b_Cb</param>
+		</rowprocessor>						
+		<!--Selected Diagnostic Tests Services  Smoke and tobacco cessassion counseling  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26c_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26c_Ca</param>
+			<param key="propertyValueColumn">T6a_L26c_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  Smoke and tobacco cessassion counseling Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26c_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26c_Cb</param>
+			<param key="propertyValueColumn">T6a_L26c_Cb</param>
+		</rowprocessor>						
+		<!--Selected Diagnostic Tests Services  eye exams  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26d_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26d_Ca</param>
+			<param key="propertyValueColumn">T6a_L26d_Ca</param>
+		</rowprocessor>
+		<!-- Selected Diagnostic Tests Services  eye exams Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L26d_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L26d_Cb</param>
+			<param key="propertyValueColumn">T6a_L26d_Cb</param>
+		</rowprocessor>
+		
+		<!--Selected Dental Services  Emergency services  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L27_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L27_Ca</param>
+			<param key="propertyValueColumn">T6a_L27_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services  Emergency services Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L27_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L27_Cb</param>
+			<param key="propertyValueColumn">T6a_L27_Cb</param>
+		</rowprocessor>																															
+		<!-- Selected Dental Services  Oral exams  Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L28_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L28_Ca</param>
+			<param key="propertyValueColumn">T6a_L28_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services  Oral exams Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L28_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L28_Cb</param>
+			<param key="propertyValueColumn">T6a_L28_Cb</param>
+		</rowprocessor>	
+		<!-- Selected Dental Services  Prophylaxis  Visits Nr-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L29_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L29_Ca</param>
+			<param key="propertyValueColumn">T6a_L29_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services  Prophylaxis Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L29_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L29_Cb</param>
+			<param key="propertyValueColumn">T6a_L29_Cb</param>
+		</rowprocessor>
+		
+		<!-- Infectious Parasitic Diseases  Tuberculosis  Number of Visits -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L3_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L3_Ca</param>
+			<param key="propertyValueColumn">T6a_L3_Ca</param>
+		</rowprocessor>
+		<!-- Infectious Parasitic Diseases  Tuberculosis  Number of  Patients   -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L3_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L3_Cb</param>
+			<param key="propertyValueColumn">T6a_L3_Cb</param>
+		</rowprocessor>					
+		
+		<!-- Selected Dental Services Sealants Visits Nr-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L30_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L30_Ca</param>
+			<param key="propertyValueColumn">T6a_L30_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services Sealants Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L30_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L30_Cb</param>
+			<param key="propertyValueColumn">T6a_L30_Cb</param>
+		</rowprocessor>
+		
+		<!-- Selected Dental Services Fluoride treatment Visits Nr-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L31_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L31_Ca</param>
+			<param key="propertyValueColumn">T6a_L31_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services Fluoride treatment Patients Nr  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L31_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L31_Cb</param>
+			<param key="propertyValueColumn">T6a_L31_Cb</param>
+		</rowprocessor>	
+		
+		<!-- Selected Dental Services  Restorative services  Visits Nr-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L32_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L32_Ca</param>
+			<param key="propertyValueColumn">T6a_L32_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services  Restorative services  Patients Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L32_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L32_Cb</param>
+			<param key="propertyValueColumn">T6a_L32_Cb</param>
+		</rowprocessor>
+
+        <!-- Selected Dental Services Oral Surgery Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L33_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L33_Ca</param>
+			<param key="propertyValueColumn">T6a_L33_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services Oral Surgery Patients Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L33_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L33_Cb</param>
+			<param key="propertyValueColumn">T6a_L33_Cb</param>
+		</rowprocessor>
+		 <!-- Selected Dental Services Rehabilitative services Visits Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L34_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L34_Ca</param>
+			<param key="propertyValueColumn">T6a_L34_Ca</param>
+		</rowprocessor>
+		<!-- Selected Dental Services Rehabilitative services Patients Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L34_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L34_Cb</param>
+			<param key="propertyValueColumn">T6a_L34_Cb</param>
+		</rowprocessor>		
+       <!-- 	Infectious Parasitic Diseases  Syphilis and other sexually transmitted disease  Number of Visits  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L4_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L4_Ca</param>
+			<param key="propertyValueColumn">T6a_L4_Ca</param>
+		</rowprocessor>
+		<!-- Infectious Parasitic Diseases  Syphilis and other sexually transmitted disease  Number of Patients Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L4_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L4_Cb</param>
+			<param key="propertyValueColumn">T6a_L4_Cb</param>
+		</rowprocessor>		
+		
+		 <!-- 	Infectious Parasitic Diseases  Hepatitis B  Number of Visits  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L4a_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L4a_Ca</param>
+			<param key="propertyValueColumn">T6a_L4a_Ca</param>
+		</rowprocessor>
+		<!-- Infectious Parasitic Diseases  Hepatitis B  Number Patients Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L4a_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L4a_Cb</param>
+			<param key="propertyValueColumn">T6a_L4a_Cb</param>
+		</rowprocessor>		
+		
+		 <!-- 	Infectious Parasitic Diseases  Hepatitis C  Number of Visits  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L4b_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L4b_Ca</param>
+			<param key="propertyValueColumn">T6a_L4b_Ca</param>
+		</rowprocessor>
+		<!-- Infectious Parasitic Diseases  Hepatitis C  Number Patients Nr -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L4b_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L4b_Cb</param>
+			<param key="propertyValueColumn">T6a_L4b_Cb</param>
+		</rowprocessor>		
+      <!-- 	Respiratory System Diseases  Asthma  Number of Visits  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L5_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L5_Ca</param>
+			<param key="propertyValueColumn">T6a_L5_Ca</param>
+		</rowprocessor>
+		<!-- Respiratory System Diseases  Asthma  Number of Patients  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L5_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L5_Cb</param>
+			<param key="propertyValueColumn">T6a_L5_Cb</param>
+		</rowprocessor>		
+ <!-- 	Respiratory System Diseases Bronchitis Emphysema Number of Visits  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L6_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L6_Ca</param>
+			<param key="propertyValueColumn">T6a_L6_Ca</param>
+		</rowprocessor>
+		<!-- Respiratory System Diseases Bronchitis Emphysema Number of  Patients  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L6_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L6_Cb</param>
+			<param key="propertyValueColumn">T6a_L6_Cb</param>
+		</rowprocessor>	
+<!-- 		Other Medical Conditions  Abnormal breast findings Female  Number of Visits	 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L7_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L7_Ca</param>
+			<param key="propertyValueColumn">T6a_L7_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Abnormal breast findings Female  Number of Patients  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L7_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L7_Cb</param>
+			<param key="propertyValueColumn">T6a_L7_Cb</param>
+		</rowprocessor>	
+<!-- 		Other Medical Conditions Abnormal cervical findings Number of Visits	 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L8_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L8_Ca</param>
+			<param key="propertyValueColumn">T6a_L8_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions Abnormal cervical findings Number of Patients  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L8_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L8_Cb</param>
+			<param key="propertyValueColumn">T6a_L8_Cb</param>
+		</rowprocessor>	
+<!-- 		Other Medical Conditions  Diabetes mellitus  Number of Visits	 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L9_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6a_L9_Ca</param>
+			<param key="propertyValueColumn">T6a_L9_Ca</param>
+		</rowprocessor>
+		<!-- Other Medical Conditions  Diabetes mellitus  Number of Patients  -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6a_L9_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6a_L9_Cb</param>
+			<param key="propertyValueColumn">T6a_L9_Cb</param>
+		</rowprocessor>	
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+			 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+				<param key="objectName">REPORT_</param>
+				<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+				<param key="objectType">com.palantir.object.abstract</param>
+			</rowprocessor>
+			<rowprocessor
+				class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+				<param key="parentObjectName">REPORT_</param>
+				<param key="parentKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+				<param key="childObjectName">REPORT_SECTION_</param>
+				<param key="childKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+				<param key="linkRole">com.palantir.role.none</param>
+				<param key="linkType">com.palantir.link.Simple</param>
+				<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear,UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+				<param key="linkName">BelongsTo_</param>	
+				<param key="linkText">BelongsTo</param>		
+			</rowprocessor>		  	
+      </rowprocessorSet>      
+    </table>
+  </tables>
+</kite>
+

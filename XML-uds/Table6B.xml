@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 1.	This code and matching ontology is developed by Artemis Ozten for Direct Relief 	-->
+<!-- 2.	This work includes the following: 									-->
+<!--  	a. 11 years HRSA UDS reports and the matching relational databases were examined to correctly name properties, and, maintain yearly changes.-->
+<!-- 		That is to say, it has been made sure that throughout 11 year history, a property indicates semantically the same data.   -->
+<!-- 		So, if age ranges were changed or adjusted, or data was split (or joined) amongst different ethnic or racial groups,  -->
+<!-- 		either the new properties were added, or, existing properties were combined, or, some properties were discontinued.   -->
+<!-- 	b. Iterative consulting with expert business users was conducted to define the scope: -->
+<!-- 		a.	Irrelevant data was left out  -->
+<!-- 		b.	All  relevant data was retrieved   -->
+<!-- 		c.	Clinic level aggregates were determined -->
+<kite  xmlns="http://www.palantirtech.com/pg/schema/kite/">
+<config>
+     <batchSize>1000</batchSize>
+    <batchSleepTime>0</batchSleepTime>
+    <connection>
+	  <driverName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverName>   
+	   <!-- <driverName>net.sourceforge.jtds.jdbc.Driver</driverName> -->
+       <!-- <url>jdbc:jtds:sqlserver://DRISQLHAPRD:1433;DatabaseName=InformationExplorer</url> -->
+	<url>jdbc:sqlserver://DRISQLHAPRD:1433;DatabaseName=HRSA_UDS_2011</url>
+      <!-- DRISQLHAPRD -->
+      <username>palantir</username>
+      <plaintextPassword>paloalto</plaintextPassword>
+    </connection>
+    <repository>
+      <path>
+        <directory>/opt/palantir/pXML-Prod/HRSA-UDS</directory>
+        <levels>2</levels>
+      </path>
+    </repository>
+  </config>
+<tables>
+ <!--                            I M P O R T    T A B L E    6B       -->
+  
+<!--                            2 0 0 8                         -->
+<table >
+      <description>HRSA REPORT TABLE 6B 2008</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">      
+          	SELECT [HRSA_UDS_2008].[dbo].tblGranteeInfo.gi_txtUDS
+				  ,'2008' as ry_lngReportingYear
+				  ,'01/01/2008' as ReportingPeriodBegin, '12/31/2008' as ReportingPeriodEnd     
+				  ,[HRSA_UDS_2008].[dbo].tblGranteeInfo.[gi_txtName]
+				  ,'6B' as UDSTableType
+				  ,'TABLE 6B-QUALITY OF CARE INDICATORS-' + [HRSA_UDS_2008].[dbo].tblGranteeInfo.[gi_txtName] + '-2008' as  ReportSectionName 				  
+			      ,[T6b_L1_CSAa]
+			      ,[T6b_L2_CSAa]
+			      ,[T6b_L3_CSAa]
+			      ,[T6b_L4_CSAa]
+			      ,[T6b_L5_CSAa]
+			      ,[T6b_L6_CSAa]
+			      ,[T6b_L7_CSBa]
+			      ,[T6b_L7_CSBb]
+			      ,[T6b_L8_CSBa]
+			      ,[T6b_L8_CSBb]
+			      ,[T6b_L9_CSBa]
+			      ,[T6b_L9_CSBb]
+			      ,[T6b_L10_CSCa]
+			      ,[T6b_L10_CSCb]
+			      ,[T6b_L10_CSCc]
+			      ,[T6b_L11_CSDa]
+			      ,[T6b_L11_CSDb]
+			      ,[T6b_L11_CSDc]
+			 FROM [HRSA_UDS_2008].[dbo].[tblTable6B],[HRSA_UDS_2008].[dbo].tblGranteeInfo
+			where [HRSA_UDS_2008].[dbo].[tblTable6B].[gi_lnggranteeid] = [HRSA_UDS_2008].[dbo].tblGranteeInfo.[gi_lnggranteeid]
+		</param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_SECTION_</param> 
+	      <param key="documentIdColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_SECTION_</param>
+	      <param key="objectType">com.palantir.object.UDSReportSection</param>
+      </globalParams>
+      <rowprocessorSet>
+      <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>     
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportSectionName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportSectionName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">UDSTableType_</param>
+			<param key="propertyType">com.palantir.property.UDSTableType</param>
+			<param key="propertyValueColumn">UDSTableType</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>    
+  		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L1_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L1_Ca</param>
+			<param key="propertyValueColumn">T6b_L1_CSAa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L2_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L2_Ca</param>
+			<param key="propertyValueColumn">T6b_L2_CSAa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L3_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L3_Ca</param>
+			<param key="propertyValueColumn">T6b_L3_CSAa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L4_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L4_Ca</param>
+			<param key="propertyValueColumn">T6b_L4_CSAa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L5_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L5_Ca</param>
+			<param key="propertyValueColumn">T6b_L5_CSAa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L6_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L6_Ca</param>
+			<param key="propertyValueColumn">T6b_L6_CSAa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L7_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L7_Ca</param>
+			<param key="propertyValueColumn">T6b_L7_CSBa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L7_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6b_L7_Cb</param>
+			<param key="propertyValueColumn">T6b_L7_CSBb</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L8_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L8_Ca</param>
+			<param key="propertyValueColumn">T6b_L8_CSBa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L8_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6b_L8_Cb</param>
+			<param key="propertyValueColumn">T6b_L8_CSBb</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L9_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L9_Ca</param>
+			<param key="propertyValueColumn">T6b_L9_CSBa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L9_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6b_L9_Cb</param>
+			<param key="propertyValueColumn">T6b_L9_CSBb</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L10_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L10_Ca</param>
+			<param key="propertyValueColumn">T6b_L10_CSCa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L10_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6b_L10_Cb</param>
+			<param key="propertyValueColumn">T6b_L10_CSCb</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L10_Cc_</param>
+			<param key="propertyType">com.palantir.property.T6b_L10_Cc</param>
+			<param key="propertyValueColumn">T6b_L10_CSCc</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L11_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L11_Ca2008</param>
+			<param key="propertyValueColumn">T6b_L11_CSDa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L11_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6b_L11_Cb2008</param>
+			<param key="propertyValueColumn">T6b_L11_CSDb</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L11_Cc_</param>
+			<param key="propertyType">com.palantir.property.T6b_L11_Cc2008</param>
+			<param key="propertyValueColumn">T6b_L11_CSDc</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">REPORT_</param>
+			<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">REPORT_</param>
+			<param key="parentKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="childObjectName">REPORT_SECTION_</param>
+			<param key="childKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear,UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">BelongsTo_</param>	
+			<param key="linkText">BelongsTo</param>		
+		</rowprocessor>		  				
+     </rowprocessorSet>
+    </table>
+    
+ <!--                            2 0 0 9                         -->
+ <table >
+      <description>HRSA REPORT TABLE 6B 2009</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">SELECT [HRSA_UDS_2009].[dbo].tblGranteeInfo.gi_txtUDS
+					  ,'2009' as ry_lngReportingYear
+					  ,'01/01/2009' as ReportingPeriodBegin, '12/31/2009' as ReportingPeriodEnd     
+					  ,[HRSA_UDS_2009].[dbo].tblGranteeInfo.[gi_txtName]
+					  ,'6B' as UDSTableType
+					  ,'TABLE 6B-QUALITY OF CARE INDICATORS-' + [HRSA_UDS_2009].[dbo].tblGranteeInfo.[gi_txtName] + '-2009' as  ReportSectionName 				  					  
+				      ,[T6b_L1_CSAa]
+				      ,[T6b_L2_CSAa]
+				      ,[T6b_L3_CSAa]
+				      ,[T6b_L4_CSAa]
+				      ,[T6b_L5_CSAa]
+				      ,[T6b_L6_CSAa]
+				      ,[T6b_L7_CSBa]
+				      ,[T6b_L7_CSBb]
+				      ,[T6b_L8_CSBa]
+				      ,[T6b_L8_CSBb]
+				      ,[T6b_L9_CSBa]
+				      ,[T6b_L9_CSBb]
+				      ,[T6b_L10_CSCa]
+				      ,[T6b_L10_CSCb]
+				      ,[T6b_L10_CSCc]
+				      ,[T6b_L11_CSDa]
+				      ,[T6b_L11_CSDb]
+				      ,[T6b_L11_CSDc]
+				 FROM [HRSA_UDS_2009].[dbo].[tblTable6B],[HRSA_UDS_2009].[dbo].tblGranteeInfo
+					where [HRSA_UDS_2009].[dbo].[tblTable6B].[gi_lnggranteeid] = [HRSA_UDS_2009].[dbo].tblGranteeInfo.[gi_lnggranteeid]
+          </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_SECTION_</param> 
+	      <param key="documentIdColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_SECTION_</param>
+	      <param key="objectType">com.palantir.object.UDSReportSection</param>
+      </globalParams>
+      <rowprocessorSet>
+      <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>     
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportSectionName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportSectionName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">UDSTableType_</param>
+			<param key="propertyType">com.palantir.property.UDSTableType</param>
+			<param key="propertyValueColumn">UDSTableType</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>    
+ 
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L1_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L1_Ca</param>
+			<param key="propertyValueColumn">T6b_L1_CSAa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L2_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L2_Ca</param>
+			<param key="propertyValueColumn">T6b_L2_CSAa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L3_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L3_Ca</param>
+			<param key="propertyValueColumn">T6b_L3_CSAa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L4_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L4_Ca</param>
+			<param key="propertyValueColumn">T6b_L4_CSAa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L5_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L5_Ca</param>
+			<param key="propertyValueColumn">T6b_L5_CSAa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L6_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L6_Ca</param>
+			<param key="propertyValueColumn">T6b_L6_CSAa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L7_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L7_Ca</param>
+			<param key="propertyValueColumn">T6b_L7_CSBa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L7_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6b_L7_Cb</param>
+			<param key="propertyValueColumn">T6b_L7_CSBb</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L8_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L8_Ca</param>
+			<param key="propertyValueColumn">T6b_L8_CSBa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L8_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6b_L8_Cb</param>
+			<param key="propertyValueColumn">T6b_L8_CSBb</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L9_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L9_Ca</param>
+			<param key="propertyValueColumn">T6b_L9_CSBa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L9_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6b_L9_Cb</param>
+			<param key="propertyValueColumn">T6b_L9_CSBb</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L10_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L10_Ca</param>
+			<param key="propertyValueColumn">T6b_L10_CSCa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L10_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6b_L10_Cb</param>
+			<param key="propertyValueColumn">T6b_L10_CSCb</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L10_Cc_</param>
+			<param key="propertyType">com.palantir.property.T6b_L10_Cc</param>
+			<param key="propertyValueColumn">T6b_L10_CSCc</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L11_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L11_Ca</param>
+			<param key="propertyValueColumn">T6b_L11_CSDa</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L11_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6b_L11_Cb</param>
+			<param key="propertyValueColumn">T6b_L11_CSDb</param>
+		</rowprocessor>		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L11_Cc_</param>
+			<param key="propertyType">com.palantir.property.T6b_L11_Cc</param>
+			<param key="propertyValueColumn">T6b_L11_CSDc</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">REPORT_</param>
+			<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">REPORT_</param>
+			<param key="parentKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="childObjectName">REPORT_SECTION_</param>
+			<param key="childKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear,UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">BelongsTo_</param>	
+			<param key="linkText">BelongsTo</param>		
+		</rowprocessor>		  		
+     </rowprocessorSet>
+    </table>
+   
+<!--                            2 0 1 0                         -->
+<table>
+      <description>HRSA REPORT TABLE 6B 2010</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> SELECT [HRSA_UDS_2010].[dbo].tblGranteeInfo.gi_txtUDS
+				  ,'2010' as ry_lngReportingYear				  					 
+				  ,'01/01/2010' as ReportingPeriodBegin, '12/31/2010' as ReportingPeriodEnd     
+				  ,[HRSA_UDS_2010].[dbo].tblGranteeInfo.[gi_txtName]
+				  ,'6B' as UDSTableType
+				  ,'TABLE 6B-QUALITY OF CARE INDICATORS-' + [HRSA_UDS_2010].[dbo].tblGranteeInfo.[gi_txtName] + '-2010' as  ReportSectionName 				  					  				  
+			      ,[T6b_L1_Ca]
+			      ,[T6b_L2_Ca]
+			      ,[T6b_L3_Ca]
+			      ,[T6b_L4_Ca]
+			      ,[T6b_L5_Ca]
+			      ,[T6b_L6_Ca]
+			      ,[T6b_L7_Ca]
+			      ,[T6b_L7_Cb]
+			      ,[T6b_L8_Ca]
+			      ,[T6b_L8_Cb]
+			      ,[T6b_L9_Ca]
+			      ,[T6b_L9_Cb]
+			      ,[T6b_L10_Ca]
+			      ,[T6b_L10_Cb]
+			      ,[T6b_L10_Cc]
+			      ,[T6b_L11_Ca]
+			      ,[T6b_L11_Cb]
+			      ,[T6b_L11_Cc]
+			 FROM [HRSA_UDS_2010].[dbo].[tblTable6B],[HRSA_UDS_2010].[dbo].tblGranteeInfo
+				where [HRSA_UDS_2010].[dbo].[tblTable6B].[gi_lnggranteeid] = [HRSA_UDS_2010].[dbo].tblGranteeInfo.[gi_lnggranteeid]
+          </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_SECTION_</param> 
+	      <param key="documentIdColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_SECTION_</param>
+	      <param key="objectType">com.palantir.object.UDSReportSection</param>
+      </globalParams>
+      <rowprocessorSet>
+      <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>     
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportSectionName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportSectionName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">UDSTableType_</param>
+			<param key="propertyType">com.palantir.property.UDSTableType</param>
+			<param key="propertyValueColumn">UDSTableType</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>    
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L1_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L1_Ca</param>
+			<param key="propertyValueColumn">T6b_L1_Ca</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L2_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L2_Ca</param>
+			<param key="propertyValueColumn">T6b_L2_Ca</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L3_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L3_Ca</param>
+			<param key="propertyValueColumn">T6b_L3_Ca</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L4_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L4_Ca</param>
+			<param key="propertyValueColumn">T6b_L4_Ca</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L5_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L5_Ca</param>
+			<param key="propertyValueColumn">T6b_L5_Ca</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L6_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L6_Ca</param>
+			<param key="propertyValueColumn">T6b_L6_Ca</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L7_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L7_Ca</param>
+			<param key="propertyValueColumn">T6b_L7_Ca</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L7_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6b_L7_Cb</param>
+			<param key="propertyValueColumn">T6b_L7_Cb</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L8_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L8_Ca</param>
+			<param key="propertyValueColumn">T6b_L8_Ca</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L8_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6b_L8_Cb</param>
+			<param key="propertyValueColumn">T6b_L8_Cb</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L9_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L9_Ca</param>
+			<param key="propertyValueColumn">T6b_L9_Ca</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L9_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6b_L9_Cb</param>
+			<param key="propertyValueColumn">T6b_L9_Cb</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L10_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L10_Ca</param>
+			<param key="propertyValueColumn">T6b_L10_Ca</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L10_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6b_L10_Cb</param>
+			<param key="propertyValueColumn">T6b_L10_Cb</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L10_Cc_</param>
+			<param key="propertyType">com.palantir.property.T6b_L10_Cc</param>
+			<param key="propertyValueColumn">T6b_L10_Cc</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L11_Ca_</param>
+			<param key="propertyType">com.palantir.property.T6b_L11_Ca</param>
+			<param key="propertyValueColumn">T6b_L11_Ca</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L11_Cb_</param>
+			<param key="propertyType">com.palantir.property.T6b_L11_Cb</param>
+			<param key="propertyValueColumn">T6b_L11_Cb</param>
+		</rowprocessor>
+		
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T6b_L11_Cc_</param>
+			<param key="propertyType">com.palantir.property.T6b_L11_Cc</param>
+			<param key="propertyValueColumn">T6b_L11_Cc</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">REPORT_</param>
+			<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">REPORT_</param>
+			<param key="parentKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="childObjectName">REPORT_SECTION_</param>
+			<param key="childKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear,UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">BelongsTo_</param>	
+			<param key="linkText">BelongsTo</param>		
+		</rowprocessor>		  		
+      </rowprocessorSet>      
+    </table>
+  </tables>
+</kite>
+
+

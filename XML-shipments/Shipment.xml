@@ -1,0 +1,350 @@
+<?xml version="1.0"?>
+<kite xmlns="http://www.palantirtech.com/pg/schema/kite/">
+  <config>
+    <batchSize>1000</batchSize>
+    <batchSleepTime>0</batchSleepTime>
+    <connection>
+      <driverName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverName> 
+<!--      <driverName>net.sourceforge.jtds.jdbc.Driver</driverName> -->
+<!--       <url>jdbc:sqlserver://DRISQL1QAS:1433;DatabaseName=TEVA_PRODUCT_OFFERS</url> -->
+<!--       <url>jdbc:jtds:sqlserver://DRISQL1QAS:1433;DatabaseName=TEVA_PRODUCT_OFFERS</url> -->
+      <url>jdbc:sqlserver://DRISQL1PRD:1433;DatabaseName=InformationExplorer</url>
+      <username>palantir</username>
+      <plaintextPassword>paloalto</plaintextPassword>
+    </connection>
+    <repository>
+      <path>
+        <directory>/opt/palantir/pXML-Prod/shipments</directory>
+        <levels>5</levels>
+      </path>
+    </repository>
+  </config>
+<tables>
+<!--                           I M P O R T   S H I P M E N T S       -->
+                
+<table>
+      <description>Shipments</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">          
+    	SELECT   distinct   
+			  case when [SalesOrderPGId].deliveryid = 'OLDJV' then 0 else CONVERT(bigint , [SalesOrderPGId].[DeliveryID] ) end [DeliveryID]
+			, isnull(CONVERT(bigint , [ShipToID]), 0) [ShipToID]			      
+			, max([PlantID])  [PlantID]			     				  
+			, max([OrderTypeCategory])   [OrderTypeCategory]
+			, max([ShippingTypeID]) [ShippingTypeID]
+			, max([SalesOrderPGId].[SalesOrg]) [SalesOrg]				        
+			, sum (value) TotalValue
+			, max(currency) currency
+			, max(CONVERT(DATE, d.DatePGI))  [DatePGI]
+			, max(d.[WeightUnit]) [WeightUnit]
+			, max(d.[VolumeUnit]) [VolumeUnit]
+			, CAST(max(d.[PackageTotal]) AS DECIMAL(7,0)) [PackageTotal]
+			, max(d.[TrackingNumber]) [TrackingNumber]
+			, max(d.[WeightFinal]) [WeightFinal]
+			, max(d.[VolumeFinal]) [VolumeFinal]
+			, CAST(max(d.[PalletsTotal]) AS DECIMAL(7,0)) [PalletsTotal]
+			, CAST(max(d.[CartonsTotal]) AS DECIMAL(7,0)) [CartonsTotal]
+			, max(p1.Street) as ShipToStreet   
+			, max(p1.Street2)  as ShipToStreet2 
+			, max(p1.City) as ShipToCity
+			, max(p1.RegionCode) ShipToState
+			, max(p1.PostalCode) as ShipToZipCode
+			, max(p1.CountryCodeISO2) as ShipToCountry				  
+			, max(p1.Latitude) as ShipToLatitude
+			, max(p1.Longitude) as ShipToLongitude
+			, isnull(max(p1.NamePrimary), max(p1.FirstName + ' ' + p1.LastName)) NamePrimary
+			, isnull(max(p1.NamePrimary + p1.NameSecondary), max(p1.FirstName + ' ' + p1.LastName)) as ShipToName
+			, case when [SalesOrderPGId].deliveryid = 'OLDJV' then 'OLD JV' else 'Shipment to '+  isnull(max(p1.NamePrimary + p1.NameSecondary), max(p1.FirstName +' '+ p1.LastName)) end as [Title]
+		FROM [dbo].[SalesOrderPGId] left outer join dbo.Partner p1 on [dbo].[SalesOrderPGId].ShipToID =  p1.PartnerID 	
+			left outer join dbo.DeliveryHeader d on [dbo].[SalesOrderPGId].DeliveryId =  d.DeliveryId 			  
+			where (salesorderid is not null) and ([SalesOrderPGId].DeliveryID is not null) and d.DatePGI &#60;&#62; '00000000' 
+			group by [SalesOrderPGId].[DeliveryID], [ShipToID]      
+			</param>            
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">DeliveryID, ShipToID</param> 
+	      <param key="documentName">Shipment_</param> 
+	      <param key="documentIdColumns">DeliveryID, ShipToID</param>
+	      <param key="objectName">Shipment_</param>
+	      <param key="objectType">com.palantir.object.Shipment</param>
+   
+	      <param key="foreignObjectName">Shipment_</param>   
+  
+	      <param key="foreignKeyColumns">DeliveryID, ShipToID</param> 
+	      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DeliveryID_</param>
+			<param key="propertyType">com.palantir.property.DeliveryID</param>
+			<param key="propertyValueColumn">DeliveryID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ShipToID_</param>
+			<param key="propertyType">com.palantir.property.ShipToID</param>
+			<param key="propertyValueColumn">ShipToID</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PlantID_</param>
+			<param key="propertyType">com.palantir.property.PlantID</param>
+			 <param key="propertyValueColumn">PlantID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrderTypeCategory_</param>
+			<param key="propertyType">com.palantir.property.OrderTypeCategory</param>
+			<param key="propertyValueColumn">OrderTypeCategory</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ShippingType_</param>
+			<param key="propertyType">com.palantir.property.ShippingType</param>
+			<param key="propertyValueColumn">ShippingTypeID</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">SalesOrg_</param>
+			<param key="propertyType">com.palantir.property.SalesOrgCRM</param>
+			<param key="propertyValueColumn">SalesOrg</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">MONEY_</param>
+			<param key="propertyType">com.palantir.property.Money</param>
+			<param key="componentColumns">Currency,TotalValue</param>
+			<param key="componentTypes">CURRENCY_CODE, CURRENCY_AMOUNT</param>
+		</rowprocessor>	
+	<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">DatePGI_</param>
+			<param key="propertyType">com.palantir.property.DateofIssue</param>
+			<param key="beginDateColumn">DatePGI</param>
+			 <param key="endDateColumn">DatePGI</param>
+			  <param key="inputDateFormat">yyyy-MM-dd</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PackageTotal_</param>
+			<param key="propertyType">com.palantir.property.PackageTotal</param>
+			<param key="propertyValueColumn">PackageTotal</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PalletsTotal_</param>
+			<param key="propertyType">com.palantir.property.PalletsTotal</param>
+			<param key="propertyValueColumn">PalletsTotal</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">CartonsTotal_</param>
+			<param key="propertyType">com.palantir.property.CartonsTotal</param>
+			<param key="propertyValueColumn">CartonsTotal</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">TrackingNumber_</param>
+			<param key="propertyType">com.palantir.property.TrackingNumber</param>
+			<param key="propertyValueColumn">TrackingNumber</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">WEIGHT_</param>
+			<param key="propertyType">com.palantir.property.Weight</param>
+			<param key="componentColumns">WeightFinal,WeightUnit</param>
+			<param key="componentTypes">WEIGHT_NUMBER,WEIGHT_UNIT</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">VOLUME_</param>
+			<param key="propertyType">com.palantir.property.Volume</param>
+			<param key="componentColumns">VolumeFinal,VolumeUnit</param>
+			<param key="componentTypes">VOLUME_NUMBER,VOLUME_UNIT</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.ShippingAddress</param>
+			<param key="componentColumns">ShipToStreet,ShipToStreet2,ShipToCity,ShipToState,ShipToZipCode,ShipToCountry</param>
+			<param key="componentTypes">ADDRESS1,ADDRESS2,CITY,STATE,ZIP,COUNTRY</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Country_</param>
+			<param key="propertyType">com.palantir.property.Country</param>
+			<param key="propertyValueColumn">ShipToCountry</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">City_</param>
+			<param key="propertyType">com.palantir.property.city</param>
+			<param key="propertyValueColumn">ShipToCity</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Region_</param>
+			<param key="propertyType">com.palantir.property.region</param>
+			<param key="propertyValueColumn">ShipToState</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">ShipToLatitude</param>
+			<param key="longitudeColumn">ShipToLongitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ShipToName_</param>
+			<param key="propertyType">com.palantir.property.ShipToName</param>
+			<param key="propertyValueColumn">ShipToName</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">EventTitle_</param>
+			<param key="propertyType">com.palantir.property.EventTitle</param>
+			<param key="propertyValueColumn">Title</param>
+		</rowprocessor>	
+		</rowprocessorSet>
+    </table>      
+    <!--      I M P O R T   S H I P M E N T   P R O P E R T I E S   W I T H   M U L T I P L I C I T Y        -->  
+	<table >
+      <description>SHIPMENT PROPERTIES WITH MULTIPLICITY</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+          	 SELECT   distinct  
+			       case when [SalesOrderPGId].deliveryid = 'OLDJV' then   0 else CONVERT(bigint ,  [SalesOrderPGId].[DeliveryID] )  end [DeliveryID] 
+			      ,isnull(CONVERT(bigint , [ShipToID]), 0) [ShipToID] 			      
+			      ,isnull(CONVERT(bigint ,[SoldtoID]), 0) [SoldtoID]
+			      ,isnull(CONVERT(bigint ,[FinalRecipientID]), 0)    [FinalRecipientID]
+			      , case when SalesOrderID = 'OLDJV' then   0 else CONVERT(bigint , [SalesOrderID]) end [SalesOrderID]		      
+				  , [StorageLocationID]
+				  , 'SLID' + ISNULL(StorageLocationID,'0') StorageLocationIDColumn
+			      , CONVERT(bigint , [CostCenter])   [CostCenter]
+			      , CONVERT(bigint ,InternalOrderOnDelivery) InternalOrderOnDelivery
+			      , CONVERT(bigint ,InternalOrderOnSalesOrder) InternalOrderOnSalesOrder
+			      , 'IOD' + ISNULL(InternalOrderOnDelivery,'0') InternalOrderOnDeliveryColumn
+			      , 'IOS' + ISNULL(InternalOrderOnSalesOrder,'0') InternalOrderOnSalesOrderColumn
+				  , ioe1.InternalOrderDescription as InternalOrderOnDeliveryDesc
+				  , ioe2.InternalOrderDescription as InternalOrderOnSalesOrderDesc
+			      , isnull(p1.NamePrimary + p1.NameSecondary, isnull((p1.FirstName + ' ' + p1.LastName),'N/A')) as SoldToName
+				  , isnull(p2.NamePrimary + p2.NameSecondary, isnull((p2.FirstName + ' ' + p2.LastName), 'N/A')) as FRName
+			  FROM [dbo].[SalesOrderPGId] left outer join dbo.Partner p1 on [dbo].[SalesOrderPGId].SoldToID =  p1.PartnerID 
+			  left outer join dbo.Partner p2 on [dbo].[SalesOrderPGId].FinalRecipientID =  p2.PartnerID 	
+			  left outer join dbo.InternalOrderEnum ioe1 on [dbo].[SalesOrderPGId].InternalOrderOnDelivery =  ioe1.InternalOrderID
+			  left outer join dbo.InternalOrderEnum ioe2 on [dbo].[SalesOrderPGId].InternalOrderOnSalesOrder =  ioe2.InternalOrderID
+			  left outer join dbo.DeliveryHeader d on [dbo].[SalesOrderPGId].DeliveryId =  d.DeliveryId					  
+			  where (salesorderid is not null) and ([SalesOrderPGId].DeliveryID is not null) and d.DatePGI &#60;&#62; '00000000' 
+            </param>            
+        </rowprovider>
+      </rowproviderSet>
+ 	<globalParams>
+	      <param key="primaryKeyColumns">DeliveryID, ShipToID</param> 
+	      <param key="documentName">Shipment_</param> 
+	      <param key="documentIdColumns">DeliveryID, ShipToID</param>
+	      <param key="objectName">Shipment_</param>
+	      <param key="objectType">com.palantir.object.Shipment</param>	      
+	      <param key="foreignObjectName">Shipment_</param>   	     
+	      <param key="foreignKeyColumns">DeliveryID, ShipToID</param> 
+	  </globalParams>
+      <rowprocessorSet>
+	      <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DeliveryID_</param>
+			<param key="propertyType">com.palantir.property.DeliveryID</param>
+			<param key="propertyValueColumn">DeliveryID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ShipToID_</param>
+			<param key="propertyType">com.palantir.property.ShipToID</param>
+			<param key="propertyValueColumn">ShipToID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">SoldtoID_</param>
+			<param key="propertyNameColumns">SoldtoID</param>
+			<param key="propertyType">com.palantir.property.SoldtoID</param>
+			<param key="propertyValueColumn">SoldtoID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">FinalRecipientID_</param>
+			<param key="propertyNameColumns">FinalRecipientID</param>
+			<param key="propertyType">com.palantir.property.FinalRecipientID</param>
+			<param key="propertyValueColumn">FinalRecipientID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">SalesOrderID_</param>
+			<param key="propertyNameColumns">SalesOrderID</param>
+			<param key="propertyType">com.palantir.property.SalesOrderID</param>
+			<param key="propertyValueColumn">SalesOrderID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">StorageLocation_</param>
+			<param key="propertyNameColumns">StorageLocationIDColumn</param>
+			<param key="propertyType">com.palantir.property.StorageLocation</param>
+			<param key="propertyValueColumn">StorageLocationID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">CostCenter_</param>
+			<param key="propertyNameColumns">CostCenter</param>
+			<param key="propertyType">com.palantir.property.CostCenter</param>
+			<param key="propertyValueColumn">CostCenter</param>
+		</rowprocessor>			
+<!-- 		<rowprocessor -->
+<!-- 			class="com.palantir.kite.processor.importresync.PropertyRawProcessor"> -->
+<!-- 			<param key="propertyName">InternalOrderOnDelivery_</param> -->
+<!-- 			<param key="propertyNameColumns">InternalOrderOnDeliveryColumn</param> -->
+<!-- 			<param key="propertyType">com.palantir.property.InternalOrderOnDelivery</param> -->
+<!-- 			<param key="propertyValueColumn">InternalOrderOnDelivery</param> -->
+<!-- 		</rowprocessor>		 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">INTERNALORDERONDELIVERY_</param>
+			<param key="propertyNameColumns">InternalOrderOnDeliveryColumn</param>
+			<param key="propertyType">com.palantir.property.InternalOrderOnDelivery2</param>
+			<param key="componentColumns">InternalOrderOnDelivery,InternalOrderOnDeliveryDesc</param>
+			<param key="componentTypes">INTERNAL_ORDER_NUMBER, INTERNAL_ORDER_NAME</param>
+		</rowprocessor>
+<!-- 		<rowprocessor -->
+<!-- 			class="com.palantir.kite.processor.importresync.PropertyRawProcessor"> -->
+<!-- 			<param key="propertyName">InternalOrderOnSalesOrder_</param> -->
+<!-- 			<param key="propertyNameColumns">InternalOrderOnSalesOrderColumn</param> -->
+<!-- 			<param key="propertyType">com.palantir.property.InternalOrderOnSalesOrder</param> -->
+<!-- 			<param key="propertyValueColumn">InternalOrderOnSalesOrder</param> -->
+<!-- 		</rowprocessor> -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">INTERNALORDERONSO_</param>
+			<param key="propertyNameColumns">InternalOrderOnSalesOrderColumn</param>
+			<param key="propertyType">com.palantir.property.InternalOrderonSalesOrder2</param>
+			<param key="componentColumns">InternalOrderOnSalesOrder,InternalOrderOnSalesOrderDesc</param>
+			<param key="componentTypes">INTERNAL_ORDER_NUMBER, INTERNAL_ORDER_NAME</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">SoldToName_</param>
+			<param key="propertyNameColumns">SoldToName</param>
+			<param key="propertyType">com.palantir.property.SoldToName</param>
+			<param key="propertyValueColumn">SoldToName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">FinalRecipientName_</param>
+			<param key="propertyNameColumns">FRName</param>
+			<param key="propertyType">com.palantir.property.FinalRecipientName</param>
+			<param key="propertyValueColumn">FRName</param>
+		</rowprocessor>			
+	</rowprocessorSet>
+  </table>      
+</tables>  
+</kite>

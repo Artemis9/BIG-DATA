@@ -1,0 +1,1721 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 1.	This code and matching ontology is developed by Artemis Ozten for Direct Relief 	-->
+<!-- 2.	This work includes the following: 									-->
+<!--  	a. 11 years HRSA UDS reports and the matching relational databases were examined to correctly name properties, and, maintain yearly changes.-->
+<!-- 		That is to say, it has been made sure that throughout 11 year history, a property indicates semantically the same data.   -->
+<!-- 		So, if age ranges were changed or adjusted, or data was split (or joined) amongst different ethnic or racial groups,  -->
+<!-- 		either the new properties were added, or, existing properties were combined, or, some properties were discontinued.   -->
+<!-- 	b. Iterative consulting with expert business users was conducted to define the scope: -->
+<!-- 		a.	Irrelevant data was left out  -->
+<!-- 		b.	All  relevant data was retrieved   -->
+<!-- 		c.	Clinic level aggregates were determined -->
+<kite  xmlns="http://www.palantirtech.com/pg/schema/kite/">
+<config>
+     <batchSize>1000</batchSize>
+    <batchSleepTime>0</batchSleepTime>
+    <connection>
+	  <driverName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverName>  
+	   <!-- <driverName>net.sourceforge.jtds.jdbc.Driver</driverName> -->
+<!--       <url>jdbc:jtds:sqlserver://DRI020:1433;DatabaseName=HRSA_UDS_2010;Instance=QA</url>  -->
+       <url>jdbc:sqlserver://DRISQL1PRD:1433;DatabaseName=HRSA_UDS_2012</url> 
+      <username>palantir</username> 
+      <plaintextPassword>paloalto</plaintextPassword>  
+    </connection>
+    <repository>
+      <path>
+        <directory>/opt/palantir/pXML-Prod/HRSA-UDS</directory>
+        <levels>2</levels>
+      </path>
+    </repository>
+  </config>
+ <tables>
+ <!--                            I M P O R T    T A B L E    7      -->
+<!--                            2 0 1 2                         -->
+<table>
+      <description>HRSA REPORT TABLE 7 2012</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+          
+ SELECT hci.[BHCMISID]
+				  ,'2012' as ry_lngReportingYear
+				  ,'01/01/2012' as ReportingPeriodBegin, '12/31/2012' as ReportingPeriodEnd     
+				  ,hci.HealthCenterName
+				  ,'7' as UDSTableType
+				  ,'TABLE 7-HEALTH OUTCOMES AND DISPARITIES-' + hci.HealthCenterName + '-2012' as  ReportSectionName 	
+,T7_L0_C0 --HIV Positive Pregnant Women Total'	
+,T7_L1a_C1a --Prenatal Care Patients Delivered in Year Asian-Hispanic/Latino'	
+,T7_L1a_C1b --Live Births less than 1500 gr Asian-Hispanic/Latino'	
+,T7_L1a_C1c --Live Births 1500-2499 gr Asian-Hispanic/Latino'	
+,T7_L1a_C1d --Live Births greater than or equal to  2500 gr Asian-Hispanic/Latino'	
+,T7_L1a_C2a --Hypertensive Patients Asian-Hispanic/Latino Total'	
+,T7_L1a_C2c --Patients w/ HTN controlled  Asian-Hispanic/Latino'	
+,T7_L1a_C3a --Patients w/ Diabetes Asian-Hispanic/Latino Total'	
+,T7_L1a_C3c --Patients w/ HBA1C less than 7pc Asian-Hispanic/Latino'	
+,T7_L1a_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc Asian-Hispanic/Latino'	
+,T7_L1a_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc Asian-Hispanic/Latino'	
+,T7_L1a_C3f --Patients w/ HBA1C  greater than 9pc Or No Test During Year Asian-Hispanic/Latino'	
+,T7_L1b1_C1a --Prenatal Care Patients Delivered in Year Native Hawaiian-Hispanic/Latino'	
+,T7_L1b1_C1b --Live Births less than 1500 gr Native Hawaiian-Hispanic/Latino'	
+,T7_L1b1_C1c --Live Births 1500-2499 gr Native Hawaiian-Hispanic/Latino'	
+,T7_L1b1_C1d --Live Births greater than or equal to 2500 gr Native Hawaiian-Hispanic/Latino'	
+,T7_L1b1_C2a --Hypertensive Patients Native Hawaiian-Hispanic/Latino Total'	
+,T7_L1b1_C2c --Patients w/ HTN controlled  Native Hawaiian-Hispanic/Latino'	
+,T7_L1b1_C3a --Patients w/ Diabetes Native Hawaiian-Hispanic/Latino Total'	
+,T7_L1b1_C3c --Patients w/ HBA1C  less than 7pc Native Hawaiian-Hispanic/Latino'	
+,T7_L1b1_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc Native Hawaiian-Hispanic/Latino'	
+,T7_L1b1_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc Native Hawaiian-Hispanic/Latino'	
+,T7_L1b1_C3f --Patients w/ HBA1C greater than 9pc Or No Test During Year Native Hawaiian-Hispanic/Latino'	
+,T7_L1b2_C1a --Prenatal Care Patients Delivered in Year Pacific Islander-Hispanic/Latino'	
+,T7_L1b2_C1b --Live Births less than 1500 gr Pacific Islander-Hispanic/Latino'	
+,T7_L1b2_C1c --Live Births 1500-2499 gr Pacific Islander-Hispanic/Latino'	
+,T7_L1b2_C1d --Live Births greater than or equal to 2500 gr Pacific Islander-Hispanic/Latino'	
+,T7_L1b2_C2a --Hypertensive Patients Pacific Islander-Hispanic/Latino Total'	
+,T7_L1b2_C2c --Patients w/ HTN controlled  Pacific Islander-Hispanic/Latino'	
+,T7_L1b2_C3a --Patients w/ Diabetes Pacific Islander-Hispanic/Latino Total'	
+,T7_L1b2_C3c --Patients w/ HBA1C less than 7pc Pacific Islander-Hispanic/Latino'	
+,T7_L1b2_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc Pacific Islander-Hispanic/Latino'	
+,T7_L1b2_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc Pacific Islander-Hispanic/Latino'	
+,T7_L1b2_C3f --Patients w/ HBA1C  greater than 9pc Or No Test During Year Pacific Islander-Hispanic/Latino'	
+,T7_L1c_C1a --Prenatal Care Patients Delivered in Year Black/African American-Hispanic/Latino'	
+,T7_L1c_C1b --Live Births less than 1500 gr Black/African American-Hispanic/Latino'	
+,T7_L1c_C1c --Live Births 1500-2499 gr Black/African American-Hispanic/Latino'	
+,T7_L1c_C1d --Live Births greater than or equal to 2500 gr Black/African American-Hispanic/Latino'	
+,T7_L1c_C2a --Hypertensive Patients Black/African American-Hispanic/Latino Total'	
+,T7_L1c_C2c --Patients w/ HTN controlled  Black/African American-Hispanic/Latino'	
+,T7_L1c_C3a --Patients w/ Diabetes Black/African American-Hispanic/Latino Total'	
+,T7_L1c_C3c --Patients w/ HBA1C less than 7pc Black/African American-Hispanic/Latino'	
+,T7_L1c_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc Black/African American-Hispanic/Latino'	,T7_L1c_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc Black/African American-Hispanic/Latino'
+,T7_L1c_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc Black/African American-Hispanic/Latino'	,T7_L1c_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc Black/African American-Hispanic/Latino'
+,T7_L1c_C3f --Patients w/ HBA1C  greater than 9pc Or No Test During Year Black/African American-Hispanic/Latino'	
+,T7_L1d_C1a --Prenatal Care Patients Delivered in Year American Indian/Alaska Native-Hispanic/Latino'	
+,T7_L1d_C1b --Live Births less than 1500 gr American Indian-Alaska Native-Hispanic/Latino'	
+,T7_L1d_C1c --Live Births 1500-2499 gr American Indian-Alaska Native-Hispanic/Latino'	
+,T7_L1d_C1d --Live Births greater than or equal to 2500 gr American Indian-Alaska Native-Hispanic/Latino'	
+,T7_L1d_C2a --Hypertensive Patients American Indian-Alaska Native-Hispanic/Latino Total'	
+,T7_L1d_C2c --Patients w/ HTN controlled  American Indian-Alaska Native-Hispanic/Latino'	
+,T7_L1d_C3a --Patients w/ Diabetes American Indian-Alaska Native-Hispanic/Latino Total'	
+,T7_L1d_C3c --Patients w/ HBA1C  less than 7pc American Indian-Alaska Native-Hispanic/Latino'	
+,T7_L1d_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc American Indian-Alaska Native-Hispanic/Latino'	
+,T7_L1d_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc American Indian-Alaska Native-Hispanic/Latino'	
+,T7_L1d_C3f --Patients w/ HBA1C greater than 9pc Or No Test During Year American Indian-Alaska Native-Hispanic/Latino'	
+,T7_L1e_C1a --Prenatal Care Patients Delivered in Year White-Hispanic/Latino'	
+,T7_L1e_C1b --Live Births less than 1500 gr White-Hispanic/Latino'	
+,T7_L1e_C1c --Live Births 1500-2499 gr White-Hispanic/Latino'	
+,T7_L1e_C1d --Live Births greater than or equal to 2500 gr White-Hispanic/Latino'	
+,T7_L1e_C2a --Hypertensive Patients White-Hispanic/Latino Total Total'	
+,T7_L1e_C2c --Patients w/ HTN controlled  White-Hispanic/Latino'	
+,T7_L1e_C3a --Patients w/ Diabetes White-Hispanic/Latino Total'	
+,T7_L1e_C3c --Patients w/ HBA1C  less than 7pc White-Hispanic/Latino'	
+,T7_L1e_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc White-Hispanic/Latino'	
+,T7_L1e_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc White-Hispanic/Latino'	
+,T7_L1e_C3f --Patients w/ HBA1C  greater than 9pc Or No Test During Year White-Hispanic/Latino'	
+,T7_L1f_C1a --Prenatal Care Patients Delivered in Year More than one race-Hispanic/Latino'	
+,T7_L1f_C1b --Live Births less than 1500 gr More than one race-Hispanic/Latino'	
+,T7_L1f_C1c --Live Births 1500-2499 gr More than one race-Hispanic/Latino'	
+,T7_L1f_C1d --Live Births greater than or equal to 2500 gr More than one race-Hispanic/Latino'	
+,T7_L1f_C2a --Hypertensive Patients More than one race-Hispanic/Latino Total'	
+,T7_L1f_C2c --Patients w/ HTN controlled  More than one race-Hispanic/Latino'	
+,T7_L1f_C3a --Patients w/ Diabetes More than one race-Hispanic/Latino Total '	
+,T7_L1f_C3c --Patients w/ HBA1C less than 7pc More than one race-Hispanic/Latino'	
+,T7_L1f_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc More than one race-Hispanic/Latino'	
+,T7_L1f_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc More than one race-Hispanic/Latino'	
+,T7_L1f_C3f --Patients w/ HBA1C greater than 9pc Or No Test During Year More than one race-Hispanic/Latino'	
+,T7_L1g_C1a --Prenatal Care Patients Delivered in Year Unreported/Refused to Report Race-Hispanic/Latino'	
+,T7_L1g_C1b --Live Births less than 1500 gr Unreported/Refused to Report Race-Hispanic/Latino'	
+,T7_L1g_C1c --Live Births 1500-2499 gr Unreported/Refused to Report Race-Hispanic/Latino'	
+,T7_L1g_C1d --Live Births  greater than or equal to 2500 gr Unreported/Refused to Report Race-Hispanic/Latino'	
+,T7_L1g_C2a --Hypertensive Patients Unreported/Refused to Report Race-Hispanic/Latino Total'	
+,T7_L1g_C2c --Patients w/ HTN controlled Unreported/Refused to Report Race-Hispanic/Latino'	
+,T7_L1g_C3a --Patients w/ Diabetes Unreported/Refused to Report Race-Hispanic/Latino Total'	
+,T7_L1g_C3c --Patients w/ HBA1C  less than 7pc Unreported/Refused to Report Race-Hispanic/Latino'	
+,T7_L1g_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc Unreported/Refused to Report Race-Hispanic/Latino'	
+,T7_L1g_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc Unreported/Refused to Report Race-Hispanic/Latino'	
+,T7_L1g_C3f --Patients w/ HBA1C  greater than 9pc Or No Test During Year Unreported/Refused to Report Race-Hispanic/Latino'	
+,T7_L2_C0 -- Deliveries performed by Grantee Provider Total'	
+,T7_L2a_C1a --Prenatal Care Patients Delivered in Year Asian-Non-Hispanic/Latino'	
+,T7_L2a_C1b --Live Births  less than 1500 gr Asian-Non-Hispanic/Latino'	
+,T7_L2a_C1c --Live Births 1500-2499 gr Asian-Non-Hispanic/Latino'	
+,T7_L2a_C1d --Live Births greater than or equal to 2500 gr Asian-Non-Hispanic/Latino'	
+,T7_L2a_C2a --Hypertensive Patients Asian-Non-Hispanic/Latino Total'	
+,T7_L2a_C2c --Patients w/ HTN controlled  Asian-Non-Hispanic/Latino'	
+,T7_L2a_C3a --Patients w/ Diabetes Asian-Non-Hispanic/Latino Total'	
+,T7_L2a_C3c --Patients w/ HBA1C  less 7pc Asian-Non-Hispanic/Latino'	
+,T7_L2a_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc Asian-Non-Hispanic/Latino'	
+,T7_L2a_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc Asian-Non-Hispanic/Latino'	
+,T7_L2a_C3f --Patients w/ HBA1C  greater than 9pc Or No Test During Year Asian-Non-Hispanic/Latino'	
+,T7_L2b1_C1a --Prenatal Care Patients Delivered in Year Native Hawaiian-Non-Hispanic/Latino'	
+,T7_L2b1_C1b --Live Births less than 1500 gr Native Hawaiian-Non-Hispanic/Latino'	
+,T7_L2b1_C1c --Live Births 1500-2499 gr  Native Hawaiian-Non-Hispanic/Latino'	
+,T7_L2b1_C1d --Live Births greater than or equal to 2500 gr Native Hawaiian-Non-Hispanic/Latino'	
+,T7_L2b1_C2a --Hypertensive Patients Native Hawaiian-Non-Hispanic/Latino Total'	
+,T7_L2b1_C2c --Patients w/ HTN controlled  Native Hawaiian-Non-Hispanic/Latino'	
+,T7_L2b1_C3a --Patients w/ Diabetes Native Hawaiian-Non-Hispanic/Latino Total'	
+,T7_L2b1_C3c --Patients w/ HBA1C  less than 7pc Native Hawaiian-Non-Hispanic/Latino'	
+,T7_L2b1_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc Native Hawaiian-Non-Hispanic/Latino'	
+,T7_L2b1_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc Native Hawaiian-Non-Hispanic/Latino'	
+,T7_L2b1_C3f --Patients w/ HBA1C  greater than 9pc Or No Test During Year Native Hawaiian-Non-Hispanic/Latino'	
+,T7_L2b2_C1a --Prenatal Care Patients Delivered in Year Pacific Islander-Non-Hispanic/Latino'	
+,T7_L2b2_C1b --Live Births  less than 1500 gr Pacific Islander-Non-Hispanic/Latino'	
+,T7_L2b2_C1c --Live Births 1500-2499 gr  Pacific Islander-Non-Hispanic/Latino'	
+,T7_L2b2_C1d --Live Births greater than or equal to  2500 gr Pacific Islander-Non-Hispanic/Latino'	
+,T7_L2b2_C2a --Hypertensive Patients Pacific Islander-Non-Hispanic/Latino Total'	
+,T7_L2b2_C2c --Patients w/ HTN controlled  Pacific Islander-Non-Hispanic/Latino'	
+,T7_L2b2_C3a --Patients w/ Diabetes Pacific Islander-Non-Hispanic/Latino Total'	
+,T7_L2b2_C3c --Patients w/ HBA1C less 7pc Pacific Islander-Non-Hispanic/Latino'	
+,T7_L2b2_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc Pacific Islander-Non-Hispanic/Latino'	
+,T7_L2b2_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc Pacific Islander-Non-Hispanic/Latino'	
+,T7_L2b2_C3f --Patients w/ HBA1C  greater 9pc Or No Test During Year Pacific Islander-Non-Hispanic/Latino'	
+,T7_L2c_C1a --Prenatal Care Patients Delivered in Year Black/African American-Non-Hispanic/Latino'	
+,T7_L2c_C1b --Live Births  less than 1500 gr Black/African American-Non-Hispanic/Latino'	
+,T7_L2c_C1c --Live Births 1500-2499 gr  Black/African American-Non-Hispanic/Latino'	
+,T7_L2c_C1d --Live Births greater than or equal to  2500 gr Black/African American-Non-Hispanic/Latino'	
+,T7_L2c_C2a --Hypertensive Patients Black/African American-Non-Hispanic/Latino Total'	
+,T7_L2c_C2c --Patients w/ HTN controlled  Black/African American-Non-Hispanic/Latino'	
+,T7_L2c_C3a --Patients w/ Diabetes Black/African American-Non-Hispanic/Latino Total'	
+,T7_L2c_C3c --Patients w/ HBA1C less than 7pc Black/African American-Non-Hispanic/Latino'	
+,T7_L2c_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc Black/African American-Non-Hispanic/Latino'	
+,T7_L2c_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc Black/African American-Non-Hispanic/Latino'	
+,T7_L2c_C3f --Patients w/ HBA1C greater than 9pc Or No Test During Year Black/African American-Non-Hispanic/Latino'	
+,T7_L2d_C1a --Prenatal Care Patients Delivered in Year American Indian-Alaska Native-Non-Hispanic/Latino'	
+,T7_L2d_C1b --Live Births less than 1500 gr American Indian-Alaska Native-Non-Hispanic/Latino'	
+,T7_L2d_C1c --Live Births 1500-2499 gr American Indian-Alaska Native-Non-Hispanic/Latino'	
+,T7_L2d_C1d --Live Births  greater than or equal to  2500 gr American Indian-Alaska Native-Non-Hispanic/Latino'	
+,T7_L2d_C2a --Hypertensive Patients American Indian-Alaska Native-Non-Hispanic/Latino Total'	
+,T7_L2d_C2c --Patients w/ HTN controlled  American Indian-Alaska Native-Non-Hispanic/Latino'	
+,T7_L2d_C3a --Patients w/ Diabetes American Indian-Alaska Native-Non-Hispanic/Latino Total'	
+,T7_L2d_C3c --Patients w/ HBA1C  less than 7pc American Indian-Alaska Native-Non-Hispanic/Latino'	
+,T7_L2d_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc American Indian-Alaska Native-Non-Hispanic/Latino'	
+,T7_L2d_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc American Indian-Alaska Native-Non-Hispanic/Latino'	
+,T7_L2d_C3f --Patients w/ HBA1C  greater than 9pc Or No Test During Year American Indian-Alaska Native-Non-Hispanic/Latino'	
+,T7_L2e_C1a --Prenatal Care Patients Delivered in Year White-Non-Hispanic/Latino'	
+,T7_L2e_C1b --Live Births  less than 1500 gr White-Non-Hispanic/Latino'	
+,T7_L2e_C1c --Live Births 1500-2499 gr White-Non-Hispanic/Latino'	
+,T7_L2e_C1d --Live Births greater than or equal to  2500 gr White-Non-Hispanic/Latino'	
+,T7_L2e_C2a --Hypertensive Patients White-Non-Hispanic/Latino Total'	
+,T7_L2e_C2c --Patients w/ HTN controlled  White-Non-Hispanic/Latino'	
+,T7_L2e_C3a -- Patients w/ Diabetes White-Non-Hispanic/Latino 'Total'	
+,T7_L2e_C3c --Patients w/ HBA1C  less than 7pc White-Non-Hispanic/Latino'	
+,T7_L2e_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc White-Non-Hispanic/Latino'	
+,T7_L2e_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc White-Non-Hispanic/Latino'	
+,T7_L2e_C3f --Patients w/ HBA1C  greater than 9pc Or No Test During Year White-Non-Hispanic/Latino'	
+,T7_L2f_C1a --Prenatal Care Patients Delivered in Year More than one race-Non-Hispanic/Latino'	
+,T7_L2f_C1b --Live Births less than 1500 gr More than one race-Non-Hispanic/Latino'	
+,T7_L2f_C1c --Live Births 1500-2499 gr More than one race-Non-Hispanic/Latino'	
+,T7_L2f_C1d --Live Births greater than or equal to  2500 gr More than one race-Non-Hispanic/Latino'	
+,T7_L2f_C2a --Hypertensive Patients More than one race-Non-Hispanic/Latino Total'	
+,T7_L2f_C2c --Patients w/ HTN controlled  More than one race-Non-Hispanic/Latino'	
+,T7_L2f_C3a --Patients w/ Diabetes More than one race-Non-Hispanic/Latino Total'	
+,T7_L2f_C3c --Patients w/ HBA1C  less than 7pc More than one race-Non-Hispanic/Latino'	
+,T7_L2f_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc More than one race-Non-Hispanic/Latino'	
+,T7_L2f_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc More than one race-Non-Hispanic/Latino'	
+,T7_L2f_C3f --Patients w/ HBA1C  greater than 9pc Or No Test During Year More than one race-Non-Hispanic/Latino'	
+,T7_L2g_C1a --Prenatal Care Patients Delivered in Year Unreported/Refused to Report Race-Non-Hispanic/Latino'	
+,T7_L2g_C1b --Live Births  less than 1500 gr Unreported/Refused to Report Race-Non-Hispanic/Latino'	
+,T7_L2g_C1c --Live Births 1500-2499 gr Unreported/Refused to Report Race-Non-Hispanic/Latino'	
+,T7_L2g_C1d --Live Births greater than or equal to 2500 gr Unreported/Refused to Report Race-Non-Hispanic/Latino'	
+,T7_L2g_C2a --Hypertensive Patients Unreported/Refused to Report Race-Non-Hispanic/Latino Total'	
+,T7_L2g_C2c --Patients w/ HTN controlled  Unreported/Refused to Report Race-Non-Hispanic/Latino'	
+,T7_L2g_C3a --Patients w/ Diabetes Unreported/Refused to Report Race-Non-Hispanic/Latino Total'	
+,T7_L2g_C3c --Patients w/ HBA1C less than 7pc Unreported/Refused to Report Race-Non-Hispanic/Latino'	
+,T7_L2g_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc Unreported/Refused to Report Race-Non-Hispanic/Latino'	
+,T7_L2g_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc Unreported/Refused to Report Race-Non-Hispanic/Latino'	
+,T7_L2g_C3f --Patients w/ HBA1C  greater than 9pc Or No Test During Year Unreported/Refused to Report Race-Non-Hispanic/Latino'	
+,T7_Lh_C1a --Prenatal Care Patients Delivered in Year Unreported/Refused to Report Race and Ethnicity'	
+,T7_Lh_C1b --Live Births  less than 1500 gr Unreported/Refused to Report Race and Ethnicity'	
+,T7_Lh_C1c --Live Births 1500-2499 gr Unreported/Refused to Report Race and Ethnicity'	
+,T7_Lh_C1d --Live Births greater than or equal to 2500 gr Unreported/Refused to Report Race and Ethnicity'	
+,T7_Lh_C2a --Hypertensive Patients Unreported/Refused to Report Race and Ethnicity Total'	
+,T7_Lh_C2c --Patients w/ HTN controlled  Unreported/Refused to Report Race and Ethnicity'	
+,T7_Lh_C3a --Patients w/ Diabetes Unreported/Refused to Report Race and Ethnicity Total'	
+,T7_Lh_C3c --Patients w/ HBA1C less than 7pc Unreported/Refused to Report Race and Ethnicity'	
+,T7_Lh_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc Unreported/Refused to Report Race and Ethnicity'	
+,T7_Lh_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc Unreported/Refused to Report Race and Ethnicity'	
+,T7_Lh_C3f --Patients w/ HBA1C greater than 9pc Or No Test During Year Unreported/Refused to Report Race and Ethnicity'	
+,T7_Li_C1a --Prenatal Care Patients Delivered in Year Total'	
+,T7_Li_C1b --Live Births less than 1500 gr Total'	
+,T7_Li_C1c --Live Births 1500-2499 gr Total'	
+,T7_Li_C1d --Live Births greater than or equal to  2500 gr Total'	
+,T7_Li_C2a --Hypertensive Patients Total'	
+,T7_Li_C2c --Patients w/ HTN controlled  Total'	
+,T7_Li_C3a --Patients w/ Diabetes Total'	
+,T7_Li_C3b --Charts Sampled or EHR total Total'	
+,T7_Li_C3c --Patients w/ HBA1C  less than 7pc Total'	
+,T7_Li_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc Total'	
+,T7_Li_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc Total'	
+,T7_Li_C3f --Patients w/ HBA1C  greater than 9pc Or No Test During Year Total'	
+,T7_LSTHL_C1a --Prenatal Care Patients Delivered in Year Subtotal Hispanic/Latino'	
+,T7_LSTHL_C1b --Live Births  less than 1500 gr Subtotal Hispanic/Latino'	
+,T7_LSTHL_C1c --Live Births 1500-2499 gr Subtotal Hispanic/Latino'	
+,T7_LSTHL_C1d --Live Births greater than or equal to  2500 gr Subtotal Hispanic/Latino'	
+,T7_LSTHL_C2a --Hypertensive Patients Subtotal Hispanic/Latino Total'	
+,T7_LSTHL_C2c --Patients w/ HTN controlled  Subtotal Hispanic/Latino'	
+,T7_LSTHL_C3a --Patients w/ Diabetes Subtotal Hispanic/Latino Total'	
+,T7_LSTHL_C3c --Patients w/ HBA1C  less than 7pc Subtotal Hispanic/Latino'	
+,T7_LSTHL_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc Subtotal Hispanic/Latino'	
+,T7_LSTHL_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc Subtotal Hispanic/Latino'	
+,T7_LSTHL_C3f --Patients w/ HBA1C  greater than 9pc Or No Test During Year Subtotal Hispanic/Latino'	
+,T7_LSTNHL_C1a --Prenatal Care Patients Delivered in Year Subtotal Non-Hispanic/Latino'	
+,T7_LSTNHL_C1b --Live Births  less than 1500 gr Subtotal Non-Hispanic/Latino'	
+,T7_LSTNHL_C1c --Live Births 1500-2499 gr Subtotal Non-Hispanic/Latino'	
+,T7_LSTNHL_C1d --Live Births greater than or equal to  2500 gr Subtotal Non-Hispanic/Latino'	
+,T7_LSTNHL_C2a --Hypertensive Patients Subtotal Non-Hispanic/Latino Total'	
+,T7_LSTNHL_C2c --Patients w/ HTN controlled Subtotal Non-Hispanic/Latino'	
+,T7_LSTNHL_C3a --Patients w/ Diabetes Subtotal Non-Hispanic/Latino Total'	
+,T7_LSTNHL_C3c --Patients w/ HBA1C  less than 7pc Subtotal Non-Hispanic/Latino'	
+,T7_LSTNHL_C3d --Patients w/ HBA1C equal to 7pc or between 7-8pc Subtotal Non-Hispanic/Latino'	
+,T7_LSTNHL_C3e --Patients w/ HBA1C equal to 8pc or between 8-9pc or equal to 9pc Subtotal Non-Hispanic/Latino'	
+,T7_LSTNHL_C3f --Patients w/ HBA1C  greater than 9pc Or No Test During Year Subtotal Non-Hispanic/Latino')
+ ,hci.[HealthCenterStreetAddress]
+ -- ,hci.[HealthCenterOtherAddress]
+  ,hci.[HealthCenterCity]
+  ,hci.[HealthCenterState]
+  ,hci.[HealthCenterZIPCode]
+  ,'US' as Country	
+  ,hci.GrantNumber
+  , hci.Longitude, hci.Latitude
+FROM [HRSA_UDS_2012].[dbo].[Table7_1],[HRSA_UDS_2012].[dbo].[Table7_2], [HRSA_UDS_2012].[dbo].TBLGRANTEEINFOGEOCODED hci
+					where [HRSA_UDS_2012].[dbo].[Table7_1].[BHCMISID] = hci.[BHCMISID]
+					and  [HRSA_UDS_2012].[dbo].[Table7_2].[BHCMISID] = hci.[BHCMISID]
+          </param>
+        </rowprovider>
+      </rowproviderSet>
+       <globalParams>
+	      <param key="primaryKeyColumns">UDSTableType,BHCMISID,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_SECTION_</param> 
+	      <param key="documentIdColumns">UDSTableType,BHCMISID,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_SECTION_</param>
+	      <param key="objectType">com.palantir.object.UDSReportSection</param>
+      </globalParams>
+      <rowprocessorSet>
+      	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">HealthCenterName</param>
+		</rowprocessor>     
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportSectionName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportSectionName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">BHCMISID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">UDSTableType_</param>
+			<param key="propertyType">com.palantir.property.UDSTableType</param>
+			<param key="propertyValueColumn">UDSTableType</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L0_C0_</param>
+	<param key="propertyType">com.palantir.property.T7_L0_C0</param>
+	<param key="propertyValueColumn">T7_L0_C0</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1a_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1a_C1a</param>
+	<param key="propertyValueColumn">T7_L1a_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1a_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L1a_C1b</param>
+	<param key="propertyValueColumn">T7_L1a_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1a_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1a_C1c</param>
+	<param key="propertyValueColumn">T7_L1a_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1a_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1a_C1d</param>
+	<param key="propertyValueColumn">T7_L1a_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1a_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1a_C2a</param>
+	<param key="propertyValueColumn">T7_L1a_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1a_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1a_C2c</param>
+	<param key="propertyValueColumn">T7_L1a_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1a_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1a_C3a</param>
+	<param key="propertyValueColumn">T7_L1a_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1a_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1a_C3c</param>
+	<param key="propertyValueColumn">T7_L1a_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1a_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1a_C3d</param>
+	<param key="propertyValueColumn">T7_L1a_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1a_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L1a_C3e</param>
+	<param key="propertyValueColumn">T7_L1a_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1a_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L1a_C3f</param>
+	<param key="propertyValueColumn">T7_L1a_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b1_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b1_C1a</param>
+	<param key="propertyValueColumn">T7_L1b1_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b1_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b1_C1b</param>
+	<param key="propertyValueColumn">T7_L1b1_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b1_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b1_C1c</param>
+	<param key="propertyValueColumn">T7_L1b1_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b1_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b1_C1d</param>
+	<param key="propertyValueColumn">T7_L1b1_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b1_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b1_C2a</param>
+	<param key="propertyValueColumn">T7_L1b1_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b1_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b1_C2c</param>
+	<param key="propertyValueColumn">T7_L1b1_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b1_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b1_C3a</param>
+	<param key="propertyValueColumn">T7_L1b1_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b1_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b1_C3c</param>
+	<param key="propertyValueColumn">T7_L1b1_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b1_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b1_C3d</param>
+	<param key="propertyValueColumn">T7_L1b1_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b1_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b1_C3e</param>
+	<param key="propertyValueColumn">T7_L1b1_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b1_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b1_C3f</param>
+	<param key="propertyValueColumn">T7_L1b1_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b2_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b2_C1a</param>
+	<param key="propertyValueColumn">T7_L1b2_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b2_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b2_C1b</param>
+	<param key="propertyValueColumn">T7_L1b2_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b2_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b2_C1c</param>
+	<param key="propertyValueColumn">T7_L1b2_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b2_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b2_C1d</param>
+	<param key="propertyValueColumn">T7_L1b2_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b2_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b2_C2a</param>
+	<param key="propertyValueColumn">T7_L1b2_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b2_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b2_C2c</param>
+	<param key="propertyValueColumn">T7_L1b2_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b2_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b2_C3a</param>
+	<param key="propertyValueColumn">T7_L1b2_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b2_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b2_C3c</param>
+	<param key="propertyValueColumn">T7_L1b2_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b2_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b2_C3d</param>
+	<param key="propertyValueColumn">T7_L1b2_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b2_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b2_C3e</param>
+	<param key="propertyValueColumn">T7_L1b2_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1b2_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L1b2_C3f</param>
+	<param key="propertyValueColumn">T7_L1b2_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1c_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1c_C1a</param>
+	<param key="propertyValueColumn">T7_L1c_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1c_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L1c_C1b</param>
+	<param key="propertyValueColumn">T7_L1c_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1c_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1c_C1c</param>
+	<param key="propertyValueColumn">T7_L1c_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1c_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1c_C1d</param>
+	<param key="propertyValueColumn">T7_L1c_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1c_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1c_C2a</param>
+	<param key="propertyValueColumn">T7_L1c_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1c_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1c_C2c</param>
+	<param key="propertyValueColumn">T7_L1c_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1c_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1c_C3a</param>
+	<param key="propertyValueColumn">T7_L1c_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1c_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1c_C3c</param>
+	<param key="propertyValueColumn">T7_L1c_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1c_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1c_C3d</param>
+	<param key="propertyValueColumn">T7_L1c_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1c_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L1c_C3e</param>
+	<param key="propertyValueColumn">T7_L1c_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1c_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L1c_C3f</param>
+	<param key="propertyValueColumn">T7_L1c_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1d_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1d_C1a</param>
+	<param key="propertyValueColumn">T7_L1d_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1d_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L1d_C1b</param>
+	<param key="propertyValueColumn">T7_L1d_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1d_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1d_C1c</param>
+	<param key="propertyValueColumn">T7_L1d_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1d_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1d_C1d</param>
+	<param key="propertyValueColumn">T7_L1d_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1d_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1d_C2a</param>
+	<param key="propertyValueColumn">T7_L1d_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1d_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1d_C2c</param>
+	<param key="propertyValueColumn">T7_L1d_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1d_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1d_C3a</param>
+	<param key="propertyValueColumn">T7_L1d_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1d_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1d_C3c</param>
+	<param key="propertyValueColumn">T7_L1d_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1d_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1d_C3d</param>
+	<param key="propertyValueColumn">T7_L1d_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1d_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L1d_C3e</param>
+	<param key="propertyValueColumn">T7_L1d_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1d_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L1d_C3f</param>
+	<param key="propertyValueColumn">T7_L1d_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1e_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1e_C1a</param>
+	<param key="propertyValueColumn">T7_L1e_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1e_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L1e_C1b</param>
+	<param key="propertyValueColumn">T7_L1e_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1e_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1e_C1c</param>
+	<param key="propertyValueColumn">T7_L1e_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1e_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1e_C1d</param>
+	<param key="propertyValueColumn">T7_L1e_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1e_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1e_C2a</param>
+	<param key="propertyValueColumn">T7_L1e_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1e_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1e_C2c</param>
+	<param key="propertyValueColumn">T7_L1e_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1e_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1e_C3a</param>
+	<param key="propertyValueColumn">T7_L1e_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1e_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1e_C3c</param>
+	<param key="propertyValueColumn">T7_L1e_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1e_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1e_C3d</param>
+	<param key="propertyValueColumn">T7_L1e_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1e_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L1e_C3e</param>
+	<param key="propertyValueColumn">T7_L1e_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1e_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L1e_C3f</param>
+	<param key="propertyValueColumn">T7_L1e_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1f_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1f_C1a</param>
+	<param key="propertyValueColumn">T7_L1f_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1f_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L1f_C1b</param>
+	<param key="propertyValueColumn">T7_L1f_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1f_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1f_C1c</param>
+	<param key="propertyValueColumn">T7_L1f_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1f_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1f_C1d</param>
+	<param key="propertyValueColumn">T7_L1f_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1f_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1f_C2a</param>
+	<param key="propertyValueColumn">T7_L1f_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1f_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1f_C2c</param>
+	<param key="propertyValueColumn">T7_L1f_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1f_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1f_C3a</param>
+	<param key="propertyValueColumn">T7_L1f_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1f_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1f_C3c</param>
+	<param key="propertyValueColumn">T7_L1f_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1f_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1f_C3d</param>
+	<param key="propertyValueColumn">T7_L1f_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1f_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L1f_C3e</param>
+	<param key="propertyValueColumn">T7_L1f_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1f_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L1f_C3f</param>
+	<param key="propertyValueColumn">T7_L1f_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1g_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1g_C1a</param>
+	<param key="propertyValueColumn">T7_L1g_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1g_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L1g_C1b</param>
+	<param key="propertyValueColumn">T7_L1g_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1g_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1g_C1c</param>
+	<param key="propertyValueColumn">T7_L1g_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1g_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1g_C1d</param>
+	<param key="propertyValueColumn">T7_L1g_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1g_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1g_C2a</param>
+	<param key="propertyValueColumn">T7_L1g_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1g_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1g_C2c</param>
+	<param key="propertyValueColumn">T7_L1g_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1g_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L1g_C3a</param>
+	<param key="propertyValueColumn">T7_L1g_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1g_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L1g_C3c</param>
+	<param key="propertyValueColumn">T7_L1g_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1g_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L1g_C3d</param>
+	<param key="propertyValueColumn">T7_L1g_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1g_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L1g_C3e</param>
+	<param key="propertyValueColumn">T7_L1g_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L1g_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L1g_C3f</param>
+	<param key="propertyValueColumn">T7_L1g_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2_C0_</param>
+	<param key="propertyType">com.palantir.property.T7_L2_C0</param>
+	<param key="propertyValueColumn">T7_L2_C0</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2a_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2a_C1a</param>
+	<param key="propertyValueColumn">T7_L2a_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2a_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L2a_C1b</param>
+	<param key="propertyValueColumn">T7_L2a_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2a_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2a_C1c</param>
+	<param key="propertyValueColumn">T7_L2a_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2a_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2a_C1d</param>
+	<param key="propertyValueColumn">T7_L2a_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2a_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2a_C2a</param>
+	<param key="propertyValueColumn">T7_L2a_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2a_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2a_C2c</param>
+	<param key="propertyValueColumn">T7_L2a_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2a_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2a_C3a</param>
+	<param key="propertyValueColumn">T7_L2a_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2a_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2a_C3c</param>
+	<param key="propertyValueColumn">T7_L2a_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2a_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2a_C3d</param>
+	<param key="propertyValueColumn">T7_L2a_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2a_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L2a_C3e</param>
+	<param key="propertyValueColumn">T7_L2a_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2a_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L2a_C3f</param>
+	<param key="propertyValueColumn">T7_L2a_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b1_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b1_C1a</param>
+	<param key="propertyValueColumn">T7_L2b1_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b1_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b1_C1b</param>
+	<param key="propertyValueColumn">T7_L2b1_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b1_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b1_C1c</param>
+	<param key="propertyValueColumn">T7_L2b1_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b1_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b1_C1d</param>
+	<param key="propertyValueColumn">T7_L2b1_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b1_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b1_C2a</param>
+	<param key="propertyValueColumn">T7_L2b1_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b1_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b1_C2c</param>
+	<param key="propertyValueColumn">T7_L2b1_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b1_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b1_C3a</param>
+	<param key="propertyValueColumn">T7_L2b1_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b1_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b1_C3c</param>
+	<param key="propertyValueColumn">T7_L2b1_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b1_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b1_C3d</param>
+	<param key="propertyValueColumn">T7_L2b1_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b1_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b1_C3e</param>
+	<param key="propertyValueColumn">T7_L2b1_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b1_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b1_C3f</param>
+	<param key="propertyValueColumn">T7_L2b1_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b2_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b2_C1a</param>
+	<param key="propertyValueColumn">T7_L2b2_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b2_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b2_C1b</param>
+	<param key="propertyValueColumn">T7_L2b2_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b2_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b2_C1c</param>
+	<param key="propertyValueColumn">T7_L2b2_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b2_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b2_C1d</param>
+	<param key="propertyValueColumn">T7_L2b2_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b2_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b2_C2a</param>
+	<param key="propertyValueColumn">T7_L2b2_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b2_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b2_C2c</param>
+	<param key="propertyValueColumn">T7_L2b2_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b2_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b2_C3a</param>
+	<param key="propertyValueColumn">T7_L2b2_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b2_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b2_C3c</param>
+	<param key="propertyValueColumn">T7_L2b2_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b2_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b2_C3d</param>
+	<param key="propertyValueColumn">T7_L2b2_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b2_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b2_C3e</param>
+	<param key="propertyValueColumn">T7_L2b2_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2b2_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L2b2_C3f</param>
+	<param key="propertyValueColumn">T7_L2b2_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2c_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2c_C1a</param>
+	<param key="propertyValueColumn">T7_L2c_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2c_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L2c_C1b</param>
+	<param key="propertyValueColumn">T7_L2c_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2c_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2c_C1c</param>
+	<param key="propertyValueColumn">T7_L2c_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2c_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2c_C1d</param>
+	<param key="propertyValueColumn">T7_L2c_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2c_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2c_C2a</param>
+	<param key="propertyValueColumn">T7_L2c_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2c_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2c_C2c</param>
+	<param key="propertyValueColumn">T7_L2c_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2c_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2c_C3a</param>
+	<param key="propertyValueColumn">T7_L2c_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2c_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2c_C3c</param>
+	<param key="propertyValueColumn">T7_L2c_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2c_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2c_C3d</param>
+	<param key="propertyValueColumn">T7_L2c_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2c_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L2c_C3e</param>
+	<param key="propertyValueColumn">T7_L2c_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2c_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L2c_C3f</param>
+	<param key="propertyValueColumn">T7_L2c_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2d_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2d_C1a</param>
+	<param key="propertyValueColumn">T7_L2d_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2d_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L2d_C1b</param>
+	<param key="propertyValueColumn">T7_L2d_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2d_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2d_C1c</param>
+	<param key="propertyValueColumn">T7_L2d_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2d_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2d_C1d</param>
+	<param key="propertyValueColumn">T7_L2d_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2d_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2d_C2a</param>
+	<param key="propertyValueColumn">T7_L2d_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2d_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2d_C2c</param>
+	<param key="propertyValueColumn">T7_L2d_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2d_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2d_C3a</param>
+	<param key="propertyValueColumn">T7_L2d_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2d_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2d_C3c</param>
+	<param key="propertyValueColumn">T7_L2d_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2d_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2d_C3d</param>
+	<param key="propertyValueColumn">T7_L2d_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2d_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L2d_C3e</param>
+	<param key="propertyValueColumn">T7_L2d_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2d_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L2d_C3f</param>
+	<param key="propertyValueColumn">T7_L2d_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2e_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2e_C1a</param>
+	<param key="propertyValueColumn">T7_L2e_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2e_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L2e_C1b</param>
+	<param key="propertyValueColumn">T7_L2e_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2e_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2e_C1c</param>
+	<param key="propertyValueColumn">T7_L2e_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2e_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2e_C1d</param>
+	<param key="propertyValueColumn">T7_L2e_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2e_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2e_C2a</param>
+	<param key="propertyValueColumn">T7_L2e_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2e_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2e_C2c</param>
+	<param key="propertyValueColumn">T7_L2e_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2e_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2e_C3a</param>
+	<param key="propertyValueColumn">T7_L2e_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2e_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2e_C3c</param>
+	<param key="propertyValueColumn">T7_L2e_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2e_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2e_C3d</param>
+	<param key="propertyValueColumn">T7_L2e_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2e_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L2e_C3e</param>
+	<param key="propertyValueColumn">T7_L2e_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2e_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L2e_C3f</param>
+	<param key="propertyValueColumn">T7_L2e_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2f_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2f_C1a</param>
+	<param key="propertyValueColumn">T7_L2f_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2f_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L2f_C1b</param>
+	<param key="propertyValueColumn">T7_L2f_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2f_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2f_C1c</param>
+	<param key="propertyValueColumn">T7_L2f_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2f_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2f_C1d</param>
+	<param key="propertyValueColumn">T7_L2f_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2f_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2f_C2a</param>
+	<param key="propertyValueColumn">T7_L2f_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2f_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2f_C2c</param>
+	<param key="propertyValueColumn">T7_L2f_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2f_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2f_C3a</param>
+	<param key="propertyValueColumn">T7_L2f_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2f_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2f_C3c</param>
+	<param key="propertyValueColumn">T7_L2f_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2f_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2f_C3d</param>
+	<param key="propertyValueColumn">T7_L2f_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2f_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L2f_C3e</param>
+	<param key="propertyValueColumn">T7_L2f_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2f_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L2f_C3f</param>
+	<param key="propertyValueColumn">T7_L2f_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2g_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2g_C1a</param>
+	<param key="propertyValueColumn">T7_L2g_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2g_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_L2g_C1b</param>
+	<param key="propertyValueColumn">T7_L2g_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2g_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2g_C1c</param>
+	<param key="propertyValueColumn">T7_L2g_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2g_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2g_C1d</param>
+	<param key="propertyValueColumn">T7_L2g_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2g_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2g_C2a</param>
+	<param key="propertyValueColumn">T7_L2g_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2g_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2g_C2c</param>
+	<param key="propertyValueColumn">T7_L2g_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2g_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_L2g_C3a</param>
+	<param key="propertyValueColumn">T7_L2g_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2g_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_L2g_C3c</param>
+	<param key="propertyValueColumn">T7_L2g_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2g_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_L2g_C3d</param>
+	<param key="propertyValueColumn">T7_L2g_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2g_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_L2g_C3e</param>
+	<param key="propertyValueColumn">T7_L2g_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_L2g_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_L2g_C3f</param>
+	<param key="propertyValueColumn">T7_L2g_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Lh_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_Lh_C1a</param>
+	<param key="propertyValueColumn">T7_Lh_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Lh_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_Lh_C1b</param>
+	<param key="propertyValueColumn">T7_Lh_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Lh_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_Lh_C1c</param>
+	<param key="propertyValueColumn">T7_Lh_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Lh_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_Lh_C1d</param>
+	<param key="propertyValueColumn">T7_Lh_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Lh_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_Lh_C2a</param>
+	<param key="propertyValueColumn">T7_Lh_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Lh_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_Lh_C2c</param>
+	<param key="propertyValueColumn">T7_Lh_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Lh_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_Lh_C3a</param>
+	<param key="propertyValueColumn">T7_Lh_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Lh_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_Lh_C3c</param>
+	<param key="propertyValueColumn">T7_Lh_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Lh_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_Lh_C3d</param>
+	<param key="propertyValueColumn">T7_Lh_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Lh_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_Lh_C3e</param>
+	<param key="propertyValueColumn">T7_Lh_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Lh_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_Lh_C3f</param>
+	<param key="propertyValueColumn">T7_Lh_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Li_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_Li_C1a</param>
+	<param key="propertyValueColumn">T7_Li_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Li_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_Li_C1b</param>
+	<param key="propertyValueColumn">T7_Li_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Li_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_Li_C1c</param>
+	<param key="propertyValueColumn">T7_Li_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Li_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_Li_C1d</param>
+	<param key="propertyValueColumn">T7_Li_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Li_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_Li_C2a</param>
+	<param key="propertyValueColumn">T7_Li_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Li_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_Li_C2c</param>
+	<param key="propertyValueColumn">T7_Li_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Li_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_Li_C3a</param>
+	<param key="propertyValueColumn">T7_Li_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Li_C3b_</param>
+	<param key="propertyType">com.palantir.property.T7_Li_C3b</param>
+	<param key="propertyValueColumn">T7_Li_C3b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Li_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_Li_C3c</param>
+	<param key="propertyValueColumn">T7_Li_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Li_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_Li_C3d</param>
+	<param key="propertyValueColumn">T7_Li_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Li_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_Li_C3e</param>
+	<param key="propertyValueColumn">T7_Li_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_Li_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_Li_C3f</param>
+	<param key="propertyValueColumn">T7_Li_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTHL_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTHL_C1a</param>
+	<param key="propertyValueColumn">T7_LSTHL_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTHL_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTHL_C1b</param>
+	<param key="propertyValueColumn">T7_LSTHL_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTHL_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTHL_C1c</param>
+	<param key="propertyValueColumn">T7_LSTHL_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTHL_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTHL_C1d</param>
+	<param key="propertyValueColumn">T7_LSTHL_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTHL_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTHL_C2a</param>
+	<param key="propertyValueColumn">T7_LSTHL_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTHL_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTHL_C2c</param>
+	<param key="propertyValueColumn">T7_LSTHL_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTHL_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTHL_C3a</param>
+	<param key="propertyValueColumn">T7_LSTHL_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTHL_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTHL_C3c</param>
+	<param key="propertyValueColumn">T7_LSTHL_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTHL_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTHL_C3d</param>
+	<param key="propertyValueColumn">T7_LSTHL_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTHL_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTHL_C3e</param>
+	<param key="propertyValueColumn">T7_LSTHL_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTHL_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTHL_C3f</param>
+	<param key="propertyValueColumn">T7_LSTHL_C3f</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTNHL_C1a_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTNHL_C1a</param>
+	<param key="propertyValueColumn">T7_LSTNHL_C1a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTNHL_C1b_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTNHL_C1b</param>
+	<param key="propertyValueColumn">T7_LSTNHL_C1b</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTNHL_C1c_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTNHL_C1c</param>
+	<param key="propertyValueColumn">T7_LSTNHL_C1c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTNHL_C1d_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTNHL_C1d</param>
+	<param key="propertyValueColumn">T7_LSTNHL_C1d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTNHL_C2a_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTNHL_C2a</param>
+	<param key="propertyValueColumn">T7_LSTNHL_C2a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTNHL_C2c_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTNHL_C2c</param>
+	<param key="propertyValueColumn">T7_LSTNHL_C2c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTNHL_C3a_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTNHL_C3a</param>
+	<param key="propertyValueColumn">T7_LSTNHL_C3a</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTNHL_C3c_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTNHL_C3c</param>
+	<param key="propertyValueColumn">T7_LSTNHL_C3c</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTNHL_C3d_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTNHL_C3d</param>
+	<param key="propertyValueColumn">T7_LSTNHL_C3d</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTNHL_C3e_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTNHL_C3e</param>
+	<param key="propertyValueColumn">T7_LSTNHL_C3e</param>
+</rowprocessor>
+
+<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+	<param key="propertyName">REPORT_T7_LSTNHL_C3f_</param>
+	<param key="propertyType">com.palantir.property.T7_LSTNHL_C3f</param>
+	<param key="propertyValueColumn">T7_LSTNHL_C3f</param>
+</rowprocessor>
+<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">HealthCenterStreetAddress,HealthCenterCity,HealthCenterState,HealthCenterZipCode</param>
+			<param key="componentTypes">ADDRESS1,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Country_</param>
+			<param key="propertyType">com.palantir.property.Country</param>
+			<param key="propertyValueColumn">Country</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">City_</param>
+			<param key="propertyType">com.palantir.property.city</param>
+			<param key="propertyValueColumn">HealthCenterCity</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Region_</param>
+			<param key="propertyType">com.palantir.property.region</param>
+			<param key="propertyValueColumn">HealthCenterState</param>
+		</rowprocessor> 
+		 <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">EHBGrantId_</param>
+			<param key="propertyType">com.palantir.property.EHBGrantID</param>
+			<param key="propertyValueColumn">GrantNumber</param>
+		</rowprocessor>
+<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		<rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+				<param key="objectName">REPORT_</param>
+				<param key="primaryKeyColumns">BHCMISID,ry_lngReportingYear</param>
+				<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+				class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+				<param key="parentObjectName">REPORT_</param>
+				<param key="parentKeyColumns">BHCMISID,ry_lngReportingYear</param>
+				<param key="childObjectName">REPORT_SECTION_</param>
+				<param key="childKeyColumns">UDSTableType,BHCMISID,ry_lngReportingYear</param>
+				<param key="linkRole">com.palantir.role.none</param>
+				<param key="linkType">com.palantir.link.Simple</param>
+				<param key="primaryKeyColumns">BHCMISID,ry_lngReportingYear,UDSTableType,BHCMISID,ry_lngReportingYear</param>
+				<param key="linkName">BelongsTo_</param>	
+				<param key="linkText">BelongsTo</param>		
+		</rowprocessor>		  
+      </rowprocessorSet>      
+    </table>
+  </tables>
+</kite>

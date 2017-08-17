@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<kite  xmlns="http://www.palantirtech.com/pg/schema/kite/">
+<config>
+     <batchSize>1000</batchSize>
+    <batchSleepTime>0</batchSleepTime>
+    <connection>
+	  <driverName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverName>   
+	   <!-- <driverName>net.sourceforge.jtds.jdbc.Driver</driverName> -->
+       <!-- <url>jdbc:jtds:sqlserver://DRISQLHAPRD:1433;DatabaseName=InformationExplorer</url> -->
+	<url>jdbc:sqlserver://DRISQLHAPRD:1433;DatabaseName=InformationExplorer</url>
+      <!-- DRISQLHAPRD -->
+      <username>palantir</username>
+      <plaintextPassword>paloalto</plaintextPassword>
+    </connection>
+    <repository>
+      <path>
+        <directory>/opt/palantir/pXML-Prod/CMSPartner</directory>
+        <levels>2</levels>
+      </path>
+    </repository>
+  </config>
+    <tables>
+ <!--                            I M P O R T   S U P P L I E R            -->
+  <table >
+      <description>SUPPLIER</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+          			SELECT CONVERT(bigint ,PartnerID) PartnerID
+					  -- ,[PartnerCategory]  
+				      ,[PartnerType]
+				      ,[NamePrimary]+' '+[NameSecondary] as OrganizationName
+				      --,[FirstName]
+				      --,[LastName]
+				      ,[CareOf]
+				      ,[Street]
+				      ,[Street2]
+				      ,[Street3]
+				      ,[Street4]
+				      ,[City]
+				      ,[RegionCode]
+				      ,[PostalCode]
+				      --,[CountryCode]
+				      ,[CountryCodeISO2]
+				      --,[Language]
+				      ,[Latitude]
+				      ,[Longitude]
+				      ,[Email]
+				      ,[Fax]
+				      ,[Phone]
+				      --,[AcademicTitleSuffix]
+				      ,[DonorAllowsINTYN]
+				      ,[DonorAllowsUSYN]
+				      ,[DonorAllowsINTEmergYN]
+				      ,[DonorAllowsUSEmergYN]
+				      --,[IndustryCode]
+				      --,[InternetLoginID]
+				      --,[GroupName1]
+				      --,[GroupName2]
+				      --,[TaxNumber]
+				      --,[TaxCategory]
+				      ,[TimeZone]
+				      --,[MedLicNumber]
+				      --,[MedLicExpDate]
+				      --,[MOUNumber]
+				      --,[MOUValidityDate]
+				      --,[Name1]
+				      --,[Name2]
+				      --,[Name3]
+				      --,[Name4]
+				      --,[NonPrescriptionPartnerYN]
+				      --,[RaisersEdgeID]
+				      --,[UDSGranteeID]
+				      ,[Website]
+				      ,[DeleteFlagYN]
+				       ,case DateLastChanged when  '00000000' then NULL else CONVERT(DATE, DateLastChanged) end DateLastChanged
+				      --,[LastChangedTime]
+				      ,[LastChangedBy]
+				       ,  CONVERT(DATE,DateCreated)  DateCreated
+				      --,[CreatedTime]
+				      ,[CreatedBy]
+				      --,[DateTimeLoaded]
+				  FROM [dbo].[Partner]
+				  Where [PartnerCategory]= '2' and [PartnerType] in ('Z1','Z2')
+            </param>            
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">PartnerID</param> 
+	      <param key="documentName">PARTNER_SUP_</param> 
+	      <param key="documentIdColumns">PartnerID</param>
+	      <param key="objectName">Partner__internalexternalID__</param>
+	      <param key="objectType">com.palantir.object.Supplier</param>
+	      <!-- resolvesTo string -->   
+	      <param key="foreignObjectName">Partner__internalexternalID__</param>   
+	      <!-- resolvesTo value -->   
+	      <param key="foreignKeyColumns">PartnerID</param> 
+	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param>
+	      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PartnerID_</param>
+			<param key="propertyType">com.palantir.property.PartnerID</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">SupplierID_</param>
+			<param key="propertyType">com.palantir.property.SupplierID</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationID_</param>
+			<param key="propertyType">com.palantir.property.OrganizationID</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">OrganizationName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">Street,Street2,Street3, Street4,City,RegionCode,PostalCode,CountryCodeISO2</param>
+			<param key="componentTypes">ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,CITY,STATE,ZIP,COUNTRY</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Country_</param>
+			<param key="propertyType">com.palantir.property.Country</param>
+			<param key="propertyValueColumn">CountryCodeISO2</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">City_</param>
+			<param key="propertyType">com.palantir.property.city</param>
+			<param key="propertyValueColumn">City</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Region_</param>
+			<param key="propertyType">com.palantir.property.region</param>
+			<param key="propertyValueColumn">RegionCode</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">CreatedBy_</param>
+			<param key="propertyType">com.palantir.property.CreatedBy</param>
+			<param key="propertyValueColumn">CreatedBy</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DateCreated_</param>
+			<param key="propertyType">com.palantir.property.DateCreated</param>
+			<param key="propertyValueColumn">DateCreated</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DeleteFlagYN_</param>
+			<param key="propertyType">com.palantir.property.DeletionFlag</param>
+			<param key="propertyValueColumn">DeleteFlagYN</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Phone_</param>
+			<param key="propertyType">com.palantir.property.Phone</param>
+			<param key="propertyValueColumn">Phone</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Email_</param>
+			<param key="propertyType">com.palantir.property.Email</param>
+			<param key="propertyValueColumn">Email</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Fax_</param>
+			<param key="propertyType">com.palantir.property.Fax</param>
+			<param key="propertyValueColumn">Fax</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Website_</param>
+			<param key="propertyType">com.palantir.property.URL</param>
+			<param key="propertyValueColumn">Website</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">TimeZone_</param>
+			<param key="propertyType">com.palantir.property.TimeZone</param>
+			<param key="propertyValueColumn">TimeZone</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PartnerType</param>
+			<param key="propertyType">com.palantir.property.PartnerType</param>
+			<param key="propertyValueColumn">PartnerType</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">LastChangedBy_</param>
+			<param key="propertyType">com.palantir.property.LastChangedBy</param>
+			<param key="propertyValueColumn">LastChangedBy</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DateLastChanged_</param>
+			<param key="propertyType">com.palantir.property.DateLastChanged</param>
+			<param key="propertyValueColumn">DateLastChanged</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DonorAllowsINTYN_</param>
+			<param key="propertyType">com.palantir.property.DonorAllowsInternationalYN</param>
+			<param key="propertyValueColumn">DonorAllowsINTYN</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DonorAllowsUSYN_</param>
+			<param key="propertyType">com.palantir.property.DonorAllowsUSYN</param>
+			<param key="propertyValueColumn">DonorAllowsUSYN</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DonorAllowsINTEmergYN_</param>
+			<param key="propertyType">com.palantir.property.DonorAllowsInternationalEmergencyYN</param>
+			<param key="propertyValueColumn">DonorAllowsINTEmergYN</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DonorAllowsUSEmergYN_</param>
+			<param key="propertyType">com.palantir.property.DonorAllowsUSEmergencyYN</param>
+			<param key="propertyValueColumn">DonorAllowsUSEmergYN</param>
+		</rowprocessor>
+		</rowprocessorSet>
+    </table>  
+    <!--                            I M P O R T   S U P P L I E R   R O L E S                        -->
+  
+<table >
+      <description>SUPPLIER ROLES</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+          			 SELECT CONVERT(bigint ,[dbo].[PartnerRole].PartnerID) PartnerID
+						,[dbo].[PartnerRole].[RoleCode]
+						FROM [dbo].[PartnerRole] , [dbo].[Partner] 
+						where [dbo].[Partner].PartnerID=[dbo].[PartnerRole].PartnerID and
+						
+						[dbo].[Partner].PartnerCategory = '2' and  [dbo].[Partner].[PartnerType] in ('Z1','Z2')
+            </param>            
+        </rowprovider>
+      </rowproviderSet>
+ 	<globalParams>
+	      <param key="primaryKeyColumns">PartnerID</param> 
+	      <param key="documentName">PARTNER_SUP_</param> 
+	      <param key="documentIdColumns">PartnerID</param>
+	      <param key="objectName">Partner__internalexternalID__</param>
+	      <param key="objectType">com.palantir.object.Supplier</param>
+<!-- 	      resolvesTo string    -->
+	      <param key="foreignObjectName">Partner__internalexternalID__</param>   
+<!-- 	      resolvesTo value    -->
+	      <param key="foreignKeyColumns">PartnerID</param> 
+	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param>
+	  </globalParams>
+      <rowprocessorSet>
+	      <rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">RoleCode_</param>
+				<param key="propertyNameColumns">RoleCode</param>
+				<param key="propertyType">com.palantir.property.RoleCode</param>
+				<param key="propertyValueColumn">RoleCode</param>
+		</rowprocessor>
+	</rowprocessorSet>
+  </table>  
+    <!--                            I M P O R T  S U P P L I E R  P A R T N E R  A T T R I B U T E S           -->
+  
+  <table >
+      <description>Supplier Partner Attributes</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+	SELECT CONVERT(bigint ,A.PartnerID)  PartnerID
+					      ,A.[MarketingAttribute]+[Counter] as [MarketingAttributeLabel]
+					       ,case A.[MarketingAttribute] when 'PD_MANUFACTURED_MATERIAL_GROUP' then [AttributeValueChar] else null end as  ManufacturedMaterialGroups
+						   ,case A.[MarketingAttribute] when 'PD_PRODUCE_TO_GIVE' then [AttributeValueChar] else null end as  ProducetoGive
+						   ,case A.[MarketingAttribute] when 'SAP_0000001692' then [AttributeValueChar] else null end as  ReceivedMaterialGroups
+						   ,case A.[MarketingAttribute] when 'SAP_0000001708' then [AttributeValueChar] else null end as  DoesnotCoverInboundTransportation
+						   ,case A.[MarketingAttribute] when 'SAP_0000001710' then [AttributeValueChar] else null end as  ColdChainShippingDelivery
+						   ,case A.[MarketingAttribute] when 'SAP_0000001751' then [AttributeValueDesc] else null end as  TypeofDonor
+					  FROM [dbo].[PartnerAttribute] A, [dbo].MarketingAttributeEnum AE, [dbo].Partner P
+					  where p.PartnerType in ('Z1','Z2') and p.[PartnerCategory]= '2' -- has to be a supplier partner
+					  and (department='PI') 	
+					  and A.MarketingAttribute=AE.MarketingAttribute  
+					  and p.partnerid=a.PartnerID  				  
+		    </param>            
+        </rowprovider>
+      </rowproviderSet>
+       <globalParams>
+	      <param key="primaryKeyColumns">PartnerID</param> 
+	      <param key="documentName">PARTNER_SUP_</param> 
+	      <param key="documentIdColumns">PartnerID</param>
+	      <param key="objectName">Partner__internalexternalID__</param>
+	      <param key="objectType">com.palantir.object.Supplier</param>
+<!-- 	      resolvesTo string    -->
+	      <param key="foreignObjectName">Partner__internalexternalID__</param>   
+<!-- 	      resolvesTo value    -->
+	      <param key="foreignKeyColumns">PartnerID</param> 
+	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param>
+	  </globalParams>
+      <rowprocessorSet>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ManufacturedMaterialGroups_</param>
+			<param key="propertyNameColumns">MarketingAttributeLabel</param>
+			<param key="propertyType">com.palantir.property.ManufacturedMaterialGroups</param>
+			<param key="propertyValueColumn">ManufacturedMaterialGroups</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ProducetoGive_</param>
+			<param key="propertyNameColumns">MarketingAttributeLabel</param>
+			<param key="propertyType">com.palantir.property.ProducetoGive</param>
+			<param key="propertyValueColumn">ProducetoGive</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReceivedMaterialGroups_</param>
+			<param key="propertyNameColumns">MarketingAttributeLabel</param>
+			<param key="propertyType">com.palantir.property.ReceivedMaterialGroups</param>
+			<param key="propertyValueColumn">ReceivedMaterialGroups</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DoesnotCoverInboundTransportation_</param>
+			<param key="propertyNameColumns">MarketingAttributeLabel</param>
+			<param key="propertyType">com.palantir.property.DoesnotCoverInboundTransportation</param>
+			<param key="propertyValueColumn">DoesnotCoverInboundTransportation</param>
+		</rowprocessor>	
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ColdChainShippingDelivery_</param>
+			<param key="propertyNameColumns">MarketingAttributeLabel</param>
+			<param key="propertyType">com.palantir.property.ColdChainShippingDelivery</param>
+			<param key="propertyValueColumn">ColdChainShippingDelivery</param>
+		</rowprocessor>	
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">TypeofDonor_</param>
+			<param key="propertyNameColumns">MarketingAttributeLabel</param>
+			<param key="propertyType">com.palantir.property.TypeofDonor</param>
+			<param key="propertyValueColumn">TypeofDonor</param>
+		</rowprocessor>	
+		</rowprocessorSet>
+    </table>   
+    </tables>  
+</kite>

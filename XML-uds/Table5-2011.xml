@@ -1,0 +1,760 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 1.	This code and matching ontology is developed by Artemis Ozten for Direct Relief 	-->
+<!-- 2.	This work includes the following: 									-->
+<!--  	a. 11 years HRSA UDS reports and the matching relational databases were examined to correctly name properties, and, maintain yearly changes.-->
+<!-- 		That is to say, it has been made sure that throughout 11 year history, a property indicates semantically the same data.   -->
+<!-- 		So, if age ranges were changed or adjusted, or data was split (or joined) amongst different ethnic or racial groups,  -->
+<!-- 		either the new properties were added, or, existing properties were combined, or, some properties were discontinued.   -->
+<!-- 	b. Iterative consulting with expert business users was conducted to define the scope: -->
+<!-- 		a.	Irrelevant data was left out  -->
+<!-- 		b.	All  relevant data was retrieved   -->
+<!-- 		c.	Clinic level aggregates were determined -->
+<kite  xmlns="http://www.palantirtech.com/pg/schema/kite/">
+<config>
+     <batchSize>1000</batchSize>
+    <batchSleepTime>0</batchSleepTime>
+    <connection>
+	  <driverName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverName>   
+	   <!-- <driverName>net.sourceforge.jtds.jdbc.Driver</driverName> -->
+       <!-- <url>jdbc:jtds:sqlserver://DRISQLHAPRD:1433;DatabaseName=InformationExplorer</url> -->
+	<url>jdbc:sqlserver://DRISQLHAPRD:1433;DatabaseName=HRSA_UDS_2011</url>
+      <!-- DRISQLHAPRD -->
+      <username>palantir</username>
+      <plaintextPassword>paloalto</plaintextPassword>
+    </connection>
+    <repository>
+      <path>
+        <directory>/opt/palantir/pXML-Prod/HRSA-UDS</directory>
+        <levels>2</levels>
+      </path>
+    </repository>
+  </config>
+ <tables>
+<!--                            2 0 1 1                         -->
+<table>
+      <description>HRSA REPORT TABLE 5 2011</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+                   SELECT   [HRSA_UDS_2011].[dbo].GranteeInfo.[BHCMISID]
+				  ,'2011' as ry_lngReportingYear
+				  ,'01/01/2011' as ReportingPeriodBegin, '12/31/2011' as ReportingPeriodEnd     
+				  ,[HRSA_UDS_2011].[dbo].GranteeInfo.[GranteeName]
+				  ,'5' as UDSTableType
+				  ,'TABLE 5-STAFFING AND UTILIZATION-' + [HRSA_UDS_2011].[dbo].GranteeInfo.[GranteeName] + '-2011' as  ReportSectionName 				  
+			      ,[T5_L1_Ca]
+			      ,[T5_L1_Cb]
+			      ,[T5_L2_Ca]
+			      ,[T5_L2_Cb]
+			      ,[T5_L3_Ca]
+			      ,[T5_L3_Cb]
+			      ,[T5_L4_Ca]
+			      ,[T5_L4_Cb]
+			      ,[T5_L5_Ca]
+			      ,[T5_L5_Cb]
+			      ,[T5_L7_Ca]
+			      ,[T5_L7_Cb]
+			      ,[T5_L8_Ca]
+			      ,[T5_L8_Cb]
+			      ,[T5_L9a_Ca]
+			      ,[T5_L9a_Cb]
+			      ,[T5_L9b_Ca]
+			      ,[T5_L9b_Cb]
+			      ,[T5_L10_Ca]
+			      ,[T5_L10_Cb]
+			      ,[T5_L10a_Ca]
+			      ,[T5_L10a_Cb]
+			      ,[T5_L11_Ca]
+			      ,[T5_L11_Cb]
+			      ,[T5_L12_Ca]
+			      ,[T5_L13_Ca]
+			      ,[T5_L14_Ca]
+			      ,[T5_L15_Ca]
+			      ,[T5_L15_Cb]
+			      ,[T5_L15_Cc]
+			      ,[T5_L16_Ca]
+			      ,[T5_L16_Cb]
+			      ,[T5_L17_Ca]
+			      ,[T5_L17_Cb]
+			      ,[T5_L18_Ca]
+			      ,[T5_L19_Ca]
+			      ,[T5_L19_Cb]
+			      ,[T5_L19_Cc]
+			      ,[T5_L20_Ca]
+			      ,[T5_L20_Cb]
+			      ,[T5_L20_Cc]
+			      ,[T5_L20a_Ca]
+			      ,[T5_L20a_Cb]
+			      ,[T5_L20a1_Ca]
+			      ,[T5_L20a1_Cb]
+			      ,[T5_L20a2_Ca]
+			      ,[T5_L20a2_Cb]
+			      ,[T5_L20b_Ca]
+			      ,[T5_L20b_Cb]
+			      ,[T5_L20c_Ca]
+			      ,[T5_L20c_Cb]
+			      ,[T5_L21_Ca]
+			      ,[T5_L21_Cb]
+			      ,[T5_L21_Cc]
+			      ,[T5_L22_Ca]
+			      ,[T5_L22_Cb]
+			      ,[T5_L22_Cc]
+			      ,[T5_L22a_Ca]
+			      ,[T5_L22a_Cb]
+			      ,[T5_L22b_Ca]
+			      ,[T5_L22b_Cb]
+			      ,[T5_L22c_Ca]
+			      ,[T5_L22c_Cb]
+			      ,[T5_L22d_Ca]
+			      ,[T5_L22d_Cb]
+			      ,[T5_L22d_Cc]
+			      ,[T5_L23_Ca]
+			      ,[T5_L24_Ca]
+			      ,[T5_L24_Cb]
+			      ,[T5_L25_Ca]
+			      ,[T5_L25_Cb]
+			      ,[T5_L26_Ca]
+			      ,[T5_L27_Ca]
+			      ,[T5_L27a_Ca]
+			      ,[T5_L27b_Ca]
+			      ,[T5_L28_Ca]
+			      ,[T5_L29_Ca]
+			      ,[T5_L29_Cb]
+			      ,[T5_L29_Cc]
+			      ,[T5_L29a_Ca]
+			      ,[T5_L30_Ca]
+			      ,[T5_L30a_Ca]
+			      ,[T5_L30b_Ca]
+			      ,[T5_L30c_Ca]
+			      ,[T5_L31_Ca]
+			      ,[T5_L32_Ca]
+			      ,[T5_L33_Ca]
+			      ,[T5_L34_Ca]
+			      ,[T5_L34_Cb]
+			      --,[T5_L22_Other]
+			      --,[T5_L28_Other]
+			      --,[T5_L29a_Other]
+			   FROM [HRSA_UDS_2011].[dbo].[Table5],[HRSA_UDS_2011].[dbo].GranteeInfo
+				where [HRSA_UDS_2011].[dbo].[Table5].[BHCMISID] = [HRSA_UDS_2011].[dbo].GranteeInfo.[BHCMISID]
+          </param>
+        </rowprovider>
+      </rowproviderSet>
+       <globalParams>
+	      <param key="primaryKeyColumns">UDSTableType,BHCMISID,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_SECTION_</param> 
+	      <param key="documentIdColumns">UDSTableType,BHCMISID,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_SECTION_</param>
+	      <param key="objectType">com.palantir.object.UDSReportSection</param>
+      </globalParams>
+      <rowprocessorSet>
+      	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">GranteeName</param>
+		</rowprocessor>     
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportSectionName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportSectionName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">BHCMISID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">UDSTableType_</param>
+			<param key="propertyType">com.palantir.property.UDSTableType</param>
+			<param key="propertyValueColumn">UDSTableType</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L1_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L1_Ca</param>
+				<param key="propertyValueColumn">T5_L1_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L1_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L1_Cb</param>
+				<param key="propertyValueColumn">T5_L1_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L10_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L10_Ca</param>
+				<param key="propertyValueColumn">T5_L10_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L10_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L10_Cb</param>
+				<param key="propertyValueColumn">T5_L10_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L10a_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L10a_Ca</param>
+				<param key="propertyValueColumn">T5_L10a_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L10a_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L10a_Cb</param>
+				<param key="propertyValueColumn">T5_L10a_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L11_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L11_Ca</param>
+				<param key="propertyValueColumn">T5_L11_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L11_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L11_Cb</param>
+				<param key="propertyValueColumn">T5_L11_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L12_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L12_Ca</param>
+				<param key="propertyValueColumn">T5_L12_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L13_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L13_Ca</param>
+				<param key="propertyValueColumn">T5_L13_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L14_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L14_Ca</param>
+				<param key="propertyValueColumn">T5_L14_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L15_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L15_Ca</param>
+				<param key="propertyValueColumn">T5_L15_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L15_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L15_Cb</param>
+				<param key="propertyValueColumn">T5_L15_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L15_Cc_</param>
+				<param key="propertyType">com.palantir.property.T5_L15_Cc</param>
+				<param key="propertyValueColumn">T5_L15_Cc</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L16_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L16_Ca</param>
+				<param key="propertyValueColumn">T5_L16_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L16_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L16_Cb</param>
+				<param key="propertyValueColumn">T5_L16_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L17_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L17_Ca</param>
+				<param key="propertyValueColumn">T5_L17_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L17_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L17_Cb</param>
+				<param key="propertyValueColumn">T5_L17_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L18_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L18_Ca</param>
+				<param key="propertyValueColumn">T5_L18_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L19_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L19_Ca</param>
+				<param key="propertyValueColumn">T5_L19_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L19_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L19_Cb</param>
+				<param key="propertyValueColumn">T5_L19_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L19_Cc_</param>
+				<param key="propertyType">com.palantir.property.T5_L19_Cc</param>
+				<param key="propertyValueColumn">T5_L19_Cc</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L2_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L2_Ca</param>
+				<param key="propertyValueColumn">T5_L2_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L2_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L2_Cb</param>
+				<param key="propertyValueColumn">T5_L2_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L20_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L20_Ca</param>
+				<param key="propertyValueColumn">T5_L20_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L20_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L20_Cb</param>
+				<param key="propertyValueColumn">T5_L20_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L20_Cc_</param>
+				<param key="propertyType">com.palantir.property.T5_L20_Cc</param>
+				<param key="propertyValueColumn">T5_L20_Cc</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L20a_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L20a_Ca</param>
+				<param key="propertyValueColumn">T5_L20a_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L20a_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L20a_Cb</param>
+				<param key="propertyValueColumn">T5_L20a_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L20a1_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L20a1_Ca</param>
+				<param key="propertyValueColumn">T5_L20a1_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L20a1_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L20a1_Cb</param>
+				<param key="propertyValueColumn">T5_L20a1_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L20a2_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L20a2_Ca</param>
+				<param key="propertyValueColumn">T5_L20a2_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L20a2_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L20a2_Cb</param>
+				<param key="propertyValueColumn">T5_L20a2_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L20b_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L20b_Ca</param>
+				<param key="propertyValueColumn">T5_L20b_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L20b_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L20b_Cb</param>
+				<param key="propertyValueColumn">T5_L20b_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L20c_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L20c_Ca</param>
+				<param key="propertyValueColumn">T5_L20c_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L20c_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L20c_Cb</param>
+				<param key="propertyValueColumn">T5_L20c_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L21_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L21_Ca</param>
+				<param key="propertyValueColumn">T5_L21_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L21_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L21_Cb</param>
+				<param key="propertyValueColumn">T5_L21_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L21_Cc_</param>
+				<param key="propertyType">com.palantir.property.T5_L21_Cc</param>
+				<param key="propertyValueColumn">T5_L21_Cc</param>
+			</rowprocessor>
+			
+<!-- 			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor"> -->
+<!-- 				<param key="propertyName">T5_L22_CO_</param> -->
+<!-- 				<param key="propertyType">com.palantir.property.T5_L22_C0</param> -->
+<!-- 				<param key="propertyValueColumn">T5_L22_Other</param> -->
+<!-- 			</rowprocessor> -->
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L22_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L22_Ca</param>
+				<param key="propertyValueColumn">T5_L22_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L22_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L22_Cb</param>
+				<param key="propertyValueColumn">T5_L22_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L22_Cc_</param>
+				<param key="propertyType">com.palantir.property.T5_L22_Cc</param>
+				<param key="propertyValueColumn">T5_L22_Cc</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L22a_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L22a_Ca</param>
+				<param key="propertyValueColumn">T5_L22a_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L22a_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L22a_Cb</param>
+				<param key="propertyValueColumn">T5_L22a_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L22b_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L22b_Ca</param>
+				<param key="propertyValueColumn">T5_L22b_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L22b_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L22b_Cb</param>
+				<param key="propertyValueColumn">T5_L22b_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L22c_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L22c_Ca</param>
+				<param key="propertyValueColumn">T5_L22c_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L22c_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L22c_Cb</param>
+				<param key="propertyValueColumn">T5_L22c_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L22d_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L22d_Ca</param>
+				<param key="propertyValueColumn">T5_L22d_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L22d_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L22d_Cb</param>
+				<param key="propertyValueColumn">T5_L22d_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L22d_Cc_</param>
+				<param key="propertyType">com.palantir.property.T5_L22d_Cc</param>
+				<param key="propertyValueColumn">T5_L22d_Cc</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L23_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L23_Ca</param>
+				<param key="propertyValueColumn">T5_L23_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L24_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L24_Ca</param>
+				<param key="propertyValueColumn">T5_L24_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L24_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L24_Cb</param>
+				<param key="propertyValueColumn">T5_L24_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L25_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L25_Ca</param>
+				<param key="propertyValueColumn">T5_L25_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L25_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L25_Cb</param>
+				<param key="propertyValueColumn">T5_L25_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L26_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L26_Ca</param>
+				<param key="propertyValueColumn">T5_L26_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L27_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L27_Ca</param>
+				<param key="propertyValueColumn">T5_L27_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L27a_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L27a_Ca</param>
+				<param key="propertyValueColumn">T5_L27a_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L27b_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L27b_Ca</param>
+				<param key="propertyValueColumn">T5_L27b_Ca</param>
+			</rowprocessor>
+			
+<!-- 			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor"> -->
+<!-- 				<param key="propertyName">T5_L28_C0_</param> -->
+<!-- 				<param key="propertyType">com.palantir.property.T5_L28_C0</param> -->
+<!-- 				<param key="propertyValueColumn">T5_L28_Other</param> -->
+<!-- 			</rowprocessor> -->
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L28_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L28_Ca</param>
+				<param key="propertyValueColumn">T5_L28_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L29_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L29_Ca</param>
+				<param key="propertyValueColumn">T5_L29_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L29_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L29_Cb</param>
+				<param key="propertyValueColumn">T5_L29_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L29_Cc_</param>
+				<param key="propertyType">com.palantir.property.T5_L29_Cc</param>
+				<param key="propertyValueColumn">T5_L29_Cc</param>
+			</rowprocessor>
+			
+<!-- 			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor"> -->
+<!-- 				<param key="propertyName">T5_L29a_C0_</param> -->
+<!-- 				<param key="propertyType">com.palantir.property.T5_L29a_C0</param> -->
+<!-- 				<param key="propertyValueColumn">T5_L29a_Other</param> -->
+<!-- 			</rowprocessor> -->
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L29a_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L29a_Ca</param>
+				<param key="propertyValueColumn">T5_L29a_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L3_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L3_Ca</param>
+				<param key="propertyValueColumn">T5_L3_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L3_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L3_Cb</param>
+				<param key="propertyValueColumn">T5_L3_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L30_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L30_Ca</param>
+				<param key="propertyValueColumn">T5_L30_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L30a_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L30a_Ca</param>
+				<param key="propertyValueColumn">T5_L30a_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L30b_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L30b_Ca</param>
+				<param key="propertyValueColumn">T5_L30b_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L30c_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L30c_Ca</param>
+				<param key="propertyValueColumn">T5_L30c_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L31_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L31_Ca</param>
+				<param key="propertyValueColumn">T5_L31_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L32_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L32_Ca</param>
+				<param key="propertyValueColumn">T5_L32_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L33_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L33_Ca</param>
+				<param key="propertyValueColumn">T5_L33_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L34_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L34_Ca</param>
+				<param key="propertyValueColumn">T5_L34_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L34_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L34_Cb</param>
+				<param key="propertyValueColumn">T5_L34_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L4_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L4_Ca</param>
+				<param key="propertyValueColumn">T5_L4_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L4_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L4_Cb</param>
+				<param key="propertyValueColumn">T5_L4_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L5_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L5_Ca</param>
+				<param key="propertyValueColumn">T5_L5_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L5_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L5_Cb</param>
+				<param key="propertyValueColumn">T5_L5_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L7_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L7_Ca</param>
+				<param key="propertyValueColumn">T5_L7_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L7_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L7_Cb</param>
+				<param key="propertyValueColumn">T5_L7_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L8_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L8_Ca</param>
+				<param key="propertyValueColumn">T5_L8_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L8_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L8_Cb</param>
+				<param key="propertyValueColumn">T5_L8_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L9a_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L9a_Ca</param>
+				<param key="propertyValueColumn">T5_L9a_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L9a_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L9a_Cb</param>
+				<param key="propertyValueColumn">T5_L9a_Cb</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L9b_Ca_</param>
+				<param key="propertyType">com.palantir.property.T5_L9b_Ca</param>
+				<param key="propertyValueColumn">T5_L9b_Ca</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T5_L9b_Cb_</param>
+				<param key="propertyType">com.palantir.property.T5_L9b_Cb</param>
+				<param key="propertyValueColumn">T5_L9b_Cb</param>
+			</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		<rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+				<param key="objectName">REPORT_</param>
+				<param key="primaryKeyColumns">BHCMISID,ry_lngReportingYear</param>
+				<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+				class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+				<param key="parentObjectName">REPORT_</param>
+				<param key="parentKeyColumns">BHCMISID,ry_lngReportingYear</param>
+				<param key="childObjectName">REPORT_SECTION_</param>
+				<param key="childKeyColumns">UDSTableType,BHCMISID,ry_lngReportingYear</param>
+				<param key="linkRole">com.palantir.role.none</param>
+				<param key="linkType">com.palantir.link.Simple</param>
+				<param key="primaryKeyColumns">BHCMISID,ry_lngReportingYear,UDSTableType,BHCMISID,ry_lngReportingYear</param>
+				<param key="linkName">BelongsTo_</param>	
+				<param key="linkText">BelongsTo</param>		
+		</rowprocessor>		  
+      </rowprocessorSet>      
+    </table>
+  </tables>
+</kite>
+
+
+
+

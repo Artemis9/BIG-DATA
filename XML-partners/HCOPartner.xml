@@ -1,0 +1,816 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<kite  xmlns="http://www.palantirtech.com/pg/schema/kite/">
+<config>
+     <batchSize>1000</batchSize>
+    <batchSleepTime>0</batchSleepTime>
+    <connection>
+	  <driverName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverName>   
+	   <!-- <driverName>net.sourceforge.jtds.jdbc.Driver</driverName> -->
+       <!-- <url>jdbc:jtds:sqlserver://DRISQLHAPRD:1433;DatabaseName=InformationExplorer</url> -->
+	<url>jdbc:sqlserver://DRISQLHAPRD:1433;DatabaseName=InformationExplorer</url>
+      <!-- DRISQLHAPRD -->
+      <username>palantir</username>
+      <plaintextPassword>paloalto</plaintextPassword>
+    </connection>
+    <repository>
+      <path>
+        <directory>/opt/palantir/pXML-Prod/CMSPartner</directory>
+        <levels>2</levels>
+      </path>
+    </repository>
+  </config>
+    <tables>
+  <!--                            I M P O R T   H C O            -->
+  
+<table >
+      <description>HCO</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+		          SELECT   CONVERT(bigint ,[dbo].[Partner].PartnerID) PartnerID
+					  -- ,[PartnerCategory]  
+				      ,[PartnerType]
+				      ,[NamePrimary]+' '+[NameSecondary] as OrganizationName
+				      --,[FirstName]
+				      --,[LastName]
+				      ,[CareOf]
+				      ,[Street]
+				      ,[Street2]
+				      ,[Street3]
+				      ,[Street4]
+				      ,[City]
+				      ,[RegionCode]
+				      ,[PostalCode]
+				      --,[CountryCode]
+				      ,[CountryCodeISO2]
+				      --,[Language]
+				      ,[Latitude]
+				      ,[Longitude]
+				      ,[Email]
+				      ,[Fax]
+				      ,[Phone]
+				      --,[AcademicTitleSuffix]
+				      --,[DonorAllowsINTYN]
+				      --,[DonorAllowsUSYN]
+				      --,[DonorAllowsINTEmergYN]
+				      --,[DonorAllowsUSEmergYN]
+				      ,[IndustryCode]
+				      --,[InternetLoginID]
+				      --,[GroupName1]
+				      --,[GroupName2]
+				      ,[TaxNumber]
+				      ,[TaxCategory]
+				      ,[TimeZone]
+				      --,[MedLicNumber]
+				      --,[MedLicExpDate]
+				      --,[MOUNumber]
+					  ,case [MOUValidityDate] when  '00000000' then NULL else CONVERT(DATE, [MOUValidityDate]) end [MOUValidityDate]
+				      --,[Name1]
+				      --,[Name2]
+				      --,[Name3]
+				      --,[Name4]
+				      ,[NonPrescriptionPartnerYN]
+				      --,[RaisersEdgeID]
+				      ,[UDSGranteeID]
+				      ,[Website]
+				      ,[DeleteFlagYN]
+				       ,case DateLastChanged when  '00000000' then NULL else CONVERT(DATE, DateLastChanged) end DateLastChanged
+				      --,[LastChangedTime]
+				      ,[LastChangedBy]
+				       ,  CONVERT(DATE,DateCreated)  DateCreated
+				      --,[CreatedTime]
+				      ,[CreatedBy]
+				      --,[DateTimeLoaded]
+				  FROM [dbo].[Partner] 
+				  Where [PartnerCategory]= '2' and ([PartnerType] ='0001' or [PartnerType] ='Y001')  				    
+		  -- and [dbo].[Partner].PartnerID not in  (
+			-- SELECT   [dbo].[Partner].PartnerID 
+				-- FROM [dbo].[Partner], [dbo].PartnerRole 
+				 -- Where [PartnerCategory]= '2' and ([PartnerType] ='0001' or [PartnerType] ='Y001') and  
+				-- [dbo].[Partner].PartnerID = [dbo].PartnerRole.PartnerID and  [dbo].PartnerRole.RoleCode='ZGRNTE'   
+				--  and [dbo].[Partner].PartnerID in  (
+					--    SELECT [dbo].[Partner].[PartnerID] 
+					--	FROM [dbo].[Partner], [dbo].PartnerRole 
+					--	Where [PartnerCategory]= '2' and ([PartnerType] ='0001' or [PartnerType] ='Y001') and  
+					--	[dbo].[Partner].PartnerID = [dbo].PartnerRole.PartnerID 
+					--	group by [dbo].[Partner].[PartnerID] having count (PartnerRole.RoleCode ) = 1) )
+          </param>            
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">PartnerID</param> 
+	      <param key="documentName">PARTNER_HCO_</param> 
+	      <param key="documentIdColumns">PartnerID</param>
+	      <param key="objectName">Partner__internalexternalID__</param>
+	      <param key="objectType">com.palantir.object.HealthcareOrganization</param>
+	      <!-- resolvesTo string -->   
+	      <param key="foreignObjectName">Partner__internalexternalID__</param>   
+	      <!-- resolvesTo value -->   
+	      <param key="foreignKeyColumns">PartnerID</param> 
+	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param>
+	      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PartnerID_</param>
+			<param key="propertyType">com.palantir.property.PartnerID</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationID_</param>
+			<param key="propertyType">com.palantir.property.OrganizationID</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">OrganizationName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">Street,Street2,Street3, Street4,City,RegionCode,PostalCode,CountryCodeISO2</param>
+			<param key="componentTypes">ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,CITY,STATE,ZIP,COUNTRY</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Country_</param>
+			<param key="propertyType">com.palantir.property.Country</param>
+			<param key="propertyValueColumn">CountryCodeISO2</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">City_</param>
+			<param key="propertyType">com.palantir.property.city</param>
+			<param key="propertyValueColumn">City</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Region_</param>
+			<param key="propertyType">com.palantir.property.region</param>
+			<param key="propertyValueColumn">RegionCode</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">CreatedBy_</param>
+			<param key="propertyType">com.palantir.property.CreatedBy</param>
+			<param key="propertyValueColumn">CreatedBy</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DateCreated_</param>
+			<param key="propertyType">com.palantir.property.DateCreated</param>
+			<param key="propertyValueColumn">DateCreated</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DeleteFlagYN_</param>
+			<param key="propertyType">com.palantir.property.DeletionFlag</param>
+			<param key="propertyValueColumn">DeleteFlagYN</param>
+		</rowprocessor>
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Phone_</param>
+			<param key="propertyType">com.palantir.property.Phone</param>
+			<param key="propertyValueColumn">Phone</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Email_</param>
+			<param key="propertyType">com.palantir.property.Email</param>
+			<param key="propertyValueColumn">Email</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Fax_</param>
+			<param key="propertyType">com.palantir.property.Fax</param>
+			<param key="propertyValueColumn">Fax</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Website_</param>
+			<param key="propertyType">com.palantir.property.URL</param>
+			<param key="propertyValueColumn">Website</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">TimeZone_</param>
+			<param key="propertyType">com.palantir.property.TimeZone</param>
+			<param key="propertyValueColumn">TimeZone</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PartnerType</param>
+			<param key="propertyType">com.palantir.property.PartnerType</param>
+			<param key="propertyValueColumn">PartnerType</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">LastChangedBy_</param>
+			<param key="propertyType">com.palantir.property.LastChangedBy</param>
+			<param key="propertyValueColumn">LastChangedBy</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DateLastChanged_</param>
+			<param key="propertyType">com.palantir.property.DateLastChanged</param>
+			<param key="propertyValueColumn">DateLastChanged</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">IndustryCode_</param>
+			<param key="propertyType">com.palantir.property.IndustryCode</param>
+			<param key="propertyValueColumn">IndustryCode</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">TaxNumber_</param>
+			<param key="propertyType">com.palantir.property.TaxNumber</param>
+			<param key="propertyValueColumn">TaxNumber</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">TaxCategory_</param>
+			<param key="propertyType">com.palantir.property.TaxCategory</param>
+			<param key="propertyValueColumn">TaxCategory</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">MOUValidityDate_</param>
+			<param key="propertyType">com.palantir.property.MOUValidityDate</param>
+			<param key="propertyValueColumn">MOUValidityDate</param>
+		</rowprocessor>
+		 
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">NonprescriptionPartner_</param>
+			<param key="propertyType">com.palantir.property.NonprescriptionPartner</param>
+			<param key="propertyValueColumn">NonPrescriptionPartnerYN</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">UDSGranteeID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeID</param>
+			<param key="propertyValueColumn">UDSGranteeID</param>
+		</rowprocessor>
+		</rowprocessorSet>
+    </table>  
+    <!--            I M P O R T   H C O   R O L E S - I N I T I L I Z E   S H I P-T O   S O L D-T O   F I N A L-R E C I P I E N T   I D S           -->  
+<table >
+      <description>HCO ROLES, SHIP-TO, SOLD-TO, FINAL RECEIPIENT IDS</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+			SELECT   CONVERT(bigint ,[dbo].[PartnerRole].PartnerID) PartnerID
+						 ,[dbo].[PartnerRole].[RoleCode]
+						 , case ([dbo].[PartnerRole].[RoleCode]) when 'ZUSREP'   then CONVERT(bigint ,[dbo].[PartnerRole].PartnerID) else null end as repshiptoID
+						 , case ([dbo].[PartnerRole].[RoleCode]) when 'CRM002'   then CONVERT(bigint ,[dbo].[PartnerRole].PartnerID) else null end as shiptoID
+						 , case ([dbo].[PartnerRole].[RoleCode]) when 'ZREC'   then CONVERT(bigint ,[dbo].[PartnerRole].PartnerID) else null end as recipientID
+						 , case ([dbo].[PartnerRole].[RoleCode]) when 'CRM000'   then CONVERT(bigint ,[dbo].[PartnerRole].PartnerID) else null end as soldtoID
+						 , [dbo].[PartnerRole].[RoleCode] + [dbo].[PartnerRole].PartnerID  as rowCode
+						FROM [dbo].[PartnerRole] , [dbo].[Partner] 
+						where [dbo].[Partner].PartnerID=[dbo].[PartnerRole].PartnerID and
+						[dbo].[Partner].PartnerCategory = '2' and  [dbo].[Partner].[PartnerType] in ('Y001', '0001') 
+						and [dbo].[Partner].PartnerID not in  (
+			SELECT   [dbo].[Partner].PartnerID 
+				 FROM [dbo].[Partner], [dbo].PartnerRole 
+				  Where [PartnerCategory]= '2' and ([PartnerType] ='0001' or [PartnerType] ='Y001') and  
+				 [dbo].[Partner].PartnerID = [dbo].PartnerRole.PartnerID and  [dbo].PartnerRole.RoleCode='ZGRNTE'   
+				  and [dbo].[Partner].PartnerID in  (
+					    SELECT [dbo].[Partner].[PartnerID] 
+						FROM [dbo].[Partner], [dbo].PartnerRole 
+						Where [PartnerCategory]= '2' and ([PartnerType] ='0001' or [PartnerType] ='Y001') and  
+						[dbo].[Partner].PartnerID = [dbo].PartnerRole.PartnerID 
+						group by [dbo].[Partner].[PartnerID] having count (PartnerRole.RoleCode ) = 1) )	
+            </param>            
+        </rowprovider>
+      </rowproviderSet>
+ 	<globalParams>
+	      <param key="primaryKeyColumns">PartnerID</param> 
+	      <param key="documentName">PARTNER_HCO_</param> 
+	      <param key="documentIdColumns">PartnerID</param>
+	      <param key="objectName">Partner__internalexternalID__</param>
+	      <param key="objectType">com.palantir.object.HealthcareOrganization</param>
+<!-- 	      resolvesTo string    -->
+	      <param key="foreignObjectName">Partner__internalexternalID__</param>   
+<!-- 	      resolvesTo value    -->
+	      <param key="foreignKeyColumns">PartnerID</param> 
+	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param>
+	  </globalParams>
+      <rowprocessorSet>
+	      <rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">RoleCode_</param>	
+				<param key="propertyNameColumns">rowCode</param>			
+				<param key="propertyType">com.palantir.property.RoleCode</param>
+				<param key="propertyValueColumn">RoleCode</param>
+		</rowprocessor>
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">shiptoID_</param>
+				<param key="propertyNameColumns">rowCode</param>
+				<param key="propertyType">com.palantir.property.ShipToID</param>
+				<param key="propertyValueColumn">shiptoID</param>
+		</rowprocessor>
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">repshiptoID_</param>
+				<param key="propertyNameColumns">rowCode</param>
+				<param key="propertyType">com.palantir.property.ShipToID</param>
+				<param key="propertyValueColumn">repshiptoID</param>
+		</rowprocessor>
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">recipientID_</param>
+				<param key="propertyNameColumns">rowCode</param>
+				<param key="propertyType">com.palantir.property.FinalRecipientID</param>
+				<param key="propertyValueColumn">recipientID</param>
+		</rowprocessor>
+		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">soldtoID_</param>
+				<param key="propertyNameColumns">rowCode</param>
+				<param key="propertyType">com.palantir.property.SoldToID</param>
+				<param key="propertyValueColumn">soldtoID</param>
+		</rowprocessor>
+	</rowprocessorSet>
+  </table>  
+  <!--                            I M P O R T   P A R T N E R   A T T R I B U T E S           -->  
+  <table >
+      <description>Partner Attributes</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+	SELECT CONVERT(bigint ,A.PartnerID)  PartnerID
+					      --,AE.AttributeName AttributeName 
+					      ,A.[MarketingAttribute]+[Counter] as [MarketingAttributeLabel]
+					     -- ,[AttributeValueChar]
+					     -- ,[AttributeValueDesc]
+					      --,CONVERT(DATE, [DatetimeLoaded])   [DatetimeLoaded]
+					       ,case A.[MarketingAttribute] when 'SAP_0000001101' then [AttributeValueChar] else null end as  DoesClinicHaveCapacityStoreRefrigerated
+						   ,case A.[MarketingAttribute] when 'SAP_0000000273' then [AttributeValueChar] else null end as  Howmanypalletscanyoustore
+
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_FREE_SERVICES' then [AttributeValueChar] else null end as  FreeServices
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_FULL_FEE_SERVICES' then [AttributeValueChar] else null end as  Fullpriceservices
+
+						   ,case A.[MarketingAttribute] when 'SAP_0000001621' then [AttributeValueChar] else null end as  OtherFacilitytype
+						   ,case A.[MarketingAttribute] when 'SAP_0000000005' then [AttributeValueDesc] 
+														when 'HP_INT_REC_FACILITY_TYPE' then [AttributeValueDesc] 
+														when 'HP_INT_REC_FACILITY_TYPE_OTHER' then [AttributeValueDesc] 
+														else null end as  TypeofFacility
+
+						   ,case A.[MarketingAttribute] when 'HP_INT_SH_MIN_SLED' then [AttributeValueChar] else null end as  Minimumshelfliferequireduponarrival
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_NUMBEROFBEDS' then [AttributeValueChar] else null end as  NumberofBeds
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_CHWS' then [AttributeValueChar] else null end as  NumberofCommunityHealthWorkers
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_MIDWIVES' then [AttributeValueChar] else null end as NumberofMidwives
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_NURSES' then [AttributeValueChar] else null end as NumberofNurses
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_PHARMACISTS' then [AttributeValueChar] else null end as NumberofPharmacists
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_PHYSICIANS' then [AttributeValueChar] else null end as NumberofPhysicians
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_SURGEONS' then [AttributeValueChar] else null end as NumberofSurgeons
+
+						   ,case A.[MarketingAttribute] when 'SAP_0000001421' then [AttributeValueDesc] else null end as Isyourclinicmemberanynationalassociation
+						   ,case A.[MarketingAttribute] when 'SAP_0000001428' then [AttributeValueDesc] else null end as Isyourclinicmemberanystateassociation
+						   ,case A.[MarketingAttribute] when 'SAP_0000001154' then [AttributeValueChar] else null end as nachcid
+
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_REDUCED_FEE_SERVIC' then [AttributeValueChar] else null end as Reducedfeeservices
+						   ,case A.[MarketingAttribute] when 'SAP_0000001472' then [AttributeValueChar] 
+														when 'SAP_0000001473'then [AttributeValueChar]	
+														when 'SAP_0000001474' then [AttributeValueChar]
+								else null end as Otherprofessionalassociations						   
+						   ,case A.[MarketingAttribute] when 'SAP_0000000020' then [AttributeValueDesc] else null end as Doesyourorganizationhavecomputerizedprescriptionrecs
+						   ,case A.[MarketingAttribute] when 'SAP_0000000008' then [AttributeValueChar] else null end as TotalNumberofHealthService
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_TOTAL_INPATIENTS_VI' then [AttributeValueChar] else null end as Totalnumberofinpatientvisits
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_TOTAL_INPATIENTS' then [AttributeValueChar] else null end as Totalnumberofinpatients
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_TOTAL_PATIENT_VISIT' then [AttributeValueChar] else null end as Totalnumberofpatientvisits
+						   ,case A.[MarketingAttribute] when 'SAP_0000001363' then [AttributeValueChar] else null end as Totalnumberofpatients
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_TOTAL_OUTPATIENTS' then [AttributeValueChar] else null end as Totalnumberofoutpatients
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_TOTAL_OUTPATIENTS_V' then [AttributeValueChar] else null end as Totalnumberofoutpatientvisits
+						   ,case A.[MarketingAttribute] when 'SAP_0000001364' then [AttributeValueChar] else null end as Totalnumberofuninsuredpatients
+						   
+						   -- Here down below completing INT marketing attributes
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_AREA_SERVICE' then [AttributeValueDesc] else null end as AreasofService
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_DENTAL_SERVICES' then [AttributeValueDesc] else null end as DentalServices
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_HAS_SURGERY' then [AttributeValueDesc] else null end as Doyouperformsurgeryatthisfacility
+						   ,case A.[MarketingAttribute] when 'HP_INT_SH_DONATION_MANAGEMENT' then [AttributeValueDesc] else null end as DonationManagement 
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_ANESTHESIA_MACHINE' then [AttributeValueDesc] else null end as Facilityhaveaworkinganesthesiam 
+						   --,case A.[MarketingAttribute] when 'SAP_0000001356' then [AttributeValueChar] else null end as Howmanytimesperyearreceivedonatedmedical 
+						   ,case A.[MarketingAttribute] when 'HP_INT_REC_LAB_CAPACITY' then [AttributeValueDesc] else null end as LaboratoryCapacity
+						   ,case A.[MarketingAttribute] when 'HP_INT_SP_ORGTYPE' then [AttributeValueDesc]
+														 when 'HP_INT_SP_ORGTYPE_OTHER' then [AttributeValueDesc] 
+														else null end as OrganizationType														
+							,case A.[MarketingAttribute] when 'HP_INT_REC_OTHER_BIOPSY' then [AttributeValueDesc] else null end as OtherBiopsy
+							,case A.[MarketingAttribute] when 'HP_INT_REC_OTHER_SURGERIES' then [AttributeValueDesc] else null end as OtherSurgeries
+							,case A.[MarketingAttribute] when 'HP_INT_REC_ANNUAL_SHIPMENT' then [AttributeValueDesc] else null end as PreferredNumberofAnnualShipments 
+							,case A.[MarketingAttribute] when 'HP_INT_SH_PORT_OF_ENTRY' then [AttributeValueDesc] else null end as Preferredportofentry 
+							,case A.[MarketingAttribute] when 'HP_INT_REC_RADIOLOGY_EQUIPME' then [AttributeValueDesc] else null end as RadiologyEquipment 
+							,case A.[MarketingAttribute] when 'HP_INT_SP_DONATION_RECEIVED' then [AttributeValueDesc] else null end as ReceivedDonationMedSupplyPast3Year 
+							,case A.[MarketingAttribute] when 'HP_INT_SH_STORAGE_CAPTY' then [AttributeValueDesc] else null end as StorageCapacity 
+							,case A.[MarketingAttribute] when 'HP_INT_REC_SURGERIES_PERFORME' then [AttributeValueDesc] else null end as SurgeriesPerformed
+					  		,case A.[MarketingAttribute] when 'HP_INT_REC_TOTAL_PATIENTS' then [AttributeValueDesc] else null end as Totalnumberopatients
+							,case A.[MarketingAttribute] when 'HP_INT_REC_TYPEOFSERVICE' then [AttributeValueDesc] else null end as TypesofServices
+					  FROM [dbo].[PartnerAttribute] A, [dbo].MarketingAttributeEnum AE, [dbo].Partner P
+					  where A.MarketingAttribute=AE.MarketingAttribute and p.partnerid=a.PartnerID  
+					  and (department='US' or department='INT') 
+					  and p.PartnerType in ('0001','Y001') and p.[PartnerCategory]= '2' -- has to be an HCO partner			  
+			    </param>            
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">PartnerID</param> 
+	      <param key="documentName">PARTNER_HCO_</param> 
+	      <param key="documentIdColumns">PartnerID</param>
+	      <param key="objectName">Partner__internalexternalID__</param>
+	      <param key="objectType">com.palantir.object.HealthcareOrganization</param>
+<!-- 	      resolvesTo string    -->
+	      <param key="foreignObjectName">Partner__internalexternalID__</param>   
+<!-- 	      resolvesTo value    -->
+	      <param key="foreignKeyColumns">PartnerID</param> 
+	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param>
+	  </globalParams>
+      <rowprocessorSet>
+<!-- 		<rowprocessor -->
+<!-- 			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor"> -->
+<!-- 			<param key="propertyName">MarketingAttribute_</param> -->
+<!-- 			 -->
+<!-- 			<param key="propertyType">com.palantir.property.MarketingAttribute</param> -->
+<!-- 			<param key="componentColumns">AttributeName,AttributeValueChar,AttributeValueDesc</param> -->
+<!-- 			<param key="componentTypes">ATTRIBUTE_NAME,ATTRIBUTE_VALUE,ATTRIBUTE_VALUE_DESCRIPTION</param> -->
+<!-- 		</rowprocessor>	 -->
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DoesClinicHaveCapacityStoreRefrigerated_</param>
+			
+			<param key="propertyType">com.palantir.property.DoesClinicHaveCapacityStoreRefrigerated</param>
+			<param key="propertyValueColumn">DoesClinicHaveCapacityStoreRefrigerated</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Howmanypalletscanyoustore_</param>
+			
+			<param key="propertyType">com.palantir.property.Howmanypalletscanyoustore</param>
+			<param key="propertyValueColumn">Howmanypalletscanyoustore</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">FreeServices_</param>
+			
+			<param key="propertyType">com.palantir.property.FreeServices</param>
+			<param key="propertyValueColumn">FreeServices</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Fullpriceservices_</param>
+			
+			<param key="propertyType">com.palantir.property.Fullpriceservices</param>
+			<param key="propertyValueColumn">Fullpriceservices</param>
+		</rowprocessor>	
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OtherFacilitytype_</param>
+			
+			<param key="propertyType">com.palantir.property.OtherFacilitytype</param>
+			<param key="propertyValueColumn">OtherFacilitytype</param>
+		</rowprocessor>	
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">TypeofFacility_</param>
+			
+			<param key="propertyType">com.palantir.property.TypeofFacility</param>
+			<param key="propertyValueColumn">TypeofFacility</param>
+		</rowprocessor>	
+		
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Minimumshelfliferequireduponarrival_</param>
+			
+			<param key="propertyType">com.palantir.property.Minimumshelfliferequireduponarrival</param>
+			<param key="propertyValueColumn">Minimumshelfliferequireduponarrival</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">NumberofBeds_</param>
+			
+			<param key="propertyType">com.palantir.property.NumberofBeds</param>
+			<param key="propertyValueColumn">NumberofBeds</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">NumberofCommunityHealthWorkers_</param>
+			
+			<param key="propertyType">com.palantir.property.NumberofCommunityHealthWorkers</param>
+			<param key="propertyValueColumn">NumberofCommunityHealthWorkers</param>
+		</rowprocessor>			
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">NumberofMidwives_</param>
+			
+			<param key="propertyType">com.palantir.property.NumberofMidwives</param>
+			<param key="propertyValueColumn">NumberofMidwives</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">NumberofNurses_</param>
+			
+			<param key="propertyType">com.palantir.property.NumberofNurses</param>
+			<param key="propertyValueColumn">NumberofNurses</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">NumberofPharmacists_</param>
+			
+			<param key="propertyType">com.palantir.property.NumberofPharmacists</param>
+			<param key="propertyValueColumn">NumberofPharmacists</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">NumberofPhysicians_</param>
+			
+			<param key="propertyType">com.palantir.property.NumberofPhysicians</param>
+			<param key="propertyValueColumn">NumberofPhysicians</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">NumberofSurgeons_</param>
+			
+			<param key="propertyType">com.palantir.property.NumberofSurgeons</param>
+			<param key="propertyValueColumn">NumberofSurgeons</param>
+		</rowprocessor>		
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Isyourclinicmemberanynationalassociation_</param>
+			
+			<param key="propertyType">com.palantir.property.Isyourclinicmemberanynationalassociation</param>
+			<param key="propertyValueColumn">Isyourclinicmemberanynationalassociation</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Isyourclinicmemberanystateassociation_</param>
+			
+			<param key="propertyType">com.palantir.property.Isyourclinicmemberanystateassociation</param>
+			<param key="propertyValueColumn">Isyourclinicmemberanystateassociation</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">nachcid_</param>
+			
+			<param key="propertyType">com.palantir.property.nachcid</param>
+			<param key="propertyValueColumn">nachcid</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Otherprofessionalassociations_</param>
+			
+			<param key="propertyType">com.palantir.property.Otherprofessionalassociations</param>
+			<param key="propertyValueColumn">Otherprofessionalassociations</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Doesyourorganizationhavecomputerizedprescriptionrecs_</param>
+			
+			<param key="propertyType">com.palantir.property.Doesyourorganizationhavecomputerizedprescriptionrecs</param>
+			<param key="propertyValueColumn">Doesyourorganizationhavecomputerizedprescriptionrecs</param>
+		</rowprocessor>	
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Reducedfeeservices_</param>
+			
+			<param key="propertyType">com.palantir.property.Reducedfeeservices</param>
+			<param key="propertyValueColumn">Reducedfeeservices</param>
+		</rowprocessor>					
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">TotalNumberofHealthService_</param>
+			
+			<param key="propertyType">com.palantir.property.TotalNumberofHealthService</param>
+			<param key="propertyValueColumn">TotalNumberofHealthService</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Totalnumberofinpatientvisits_</param>
+			
+			<param key="propertyType">com.palantir.property.Totalnumberofinpatientvisits</param>
+			<param key="propertyValueColumn">Totalnumberofinpatientvisits</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Totalnumberofinpatients_</param>
+			
+			<param key="propertyType">com.palantir.property.Totalnumberofinpatients</param>
+			<param key="propertyValueColumn">Totalnumberofinpatients</param>
+		</rowprocessor>	
+        <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Totalnumberofpatients_</param>
+			
+			<param key="propertyType">com.palantir.property.Totalnumberofpatients</param>
+			<param key="propertyValueColumn">Totalnumberofpatients</param>
+		</rowprocessor>			
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Totalnumberofpatientvisits_</param>
+			
+			<param key="propertyType">com.palantir.property.Totalnumberofpatientvisits</param>
+			<param key="propertyValueColumn">Totalnumberofpatientvisits</param>
+		</rowprocessor>			
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Totalnumberofoutpatients</param>
+			
+			<param key="propertyType">com.palantir.property.Totalnumberofoutpatients</param>
+			<param key="propertyValueColumn">Totalnumberofoutpatients</param>
+		</rowprocessor>	 		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Totalnumberofoutpatientvisits_</param>
+			
+			<param key="propertyType">com.palantir.property.Totalnumberofoutpatientvisits</param>
+			<param key="propertyValueColumn">Totalnumberofoutpatientvisits</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Totalnumberofuninsuredpatients_</param>
+			
+			<param key="propertyType">com.palantir.property.Totalnumberofuninsuredpatients</param>
+			<param key="propertyValueColumn">Totalnumberofuninsuredpatients</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">AreasofService_</param>
+			
+			<param key="propertyType">com.palantir.property.AreasofService</param>
+			<param key="propertyValueColumn">AreasofService</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DentalServices_</param>
+			
+			<param key="propertyType">com.palantir.property.DentalServices</param>
+			<param key="propertyValueColumn">DentalServices</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Doyouperformsurgeryatthisfacility_</param>
+			
+			<param key="propertyType">com.palantir.property.Doyouperformsurgeryatthisfacility</param>
+			<param key="propertyValueColumn">Doyouperformsurgeryatthisfacility</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">DonationManagement_</param>
+			
+			<param key="propertyType">com.palantir.property.DonationManagement</param>
+			<param key="propertyValueColumn">DonationManagement</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Facilityhaveaworkinganesthesiam_</param>
+			
+			<param key="propertyType">com.palantir.property.Facilityhaveaworkinganesthesiam</param>
+			<param key="propertyValueColumn">Facilityhaveaworkinganesthesiam</param>
+		</rowprocessor>		
+<!-- 		<rowprocessor -->
+<!-- 			class="com.palantir.kite.processor.importresync.PropertyRawProcessor"> -->
+<!-- 			<param key="propertyName">Howmanytimesperyearreceivedonatedmedical_</param> -->
+<!-- 			 -->
+<!-- 			<param key="propertyType">com.palantir.property.Howmanytimesperyearreceivedonatedmedical</param> -->
+<!-- 			<param key="propertyValueColumn">Howmanytimesperyearreceivedonatedmedical</param> -->
+<!-- 		</rowprocessor>	 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">LaboratoryCapacity_</param>
+			
+			<param key="propertyType">com.palantir.property.LaboratoryCapacity</param>
+			<param key="propertyValueColumn">LaboratoryCapacity</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationType_</param>
+			
+			<param key="propertyType">com.palantir.property.OrganizationType</param>
+			<param key="propertyValueColumn">OrganizationType</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OtherBiopsy_</param>
+			
+			<param key="propertyType">com.palantir.property.OtherBiopsy</param>
+			<param key="propertyValueColumn">OtherBiopsy</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OtherSurgeries_</param>
+			
+			<param key="propertyType">com.palantir.property.OtherSurgeries</param>
+			<param key="propertyValueColumn">OtherSurgeries</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PreferredNumberofAnnualShipments_</param>
+			
+			<param key="propertyType">com.palantir.property.PreferredNumberofAnnualShipments</param>
+			<param key="propertyValueColumn">PreferredNumberofAnnualShipments</param>
+		</rowprocessor>			
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Preferredportofentry_</param>
+			
+			<param key="propertyType">com.palantir.property.Preferredportofentry</param>
+			<param key="propertyValueColumn">Preferredportofentry</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">RadiologyEquipment_</param>
+			
+			<param key="propertyType">com.palantir.property.RadiologyEquipment</param>
+			<param key="propertyValueColumn">RadiologyEquipment</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReceivedDonationMedSupplyPast3Year_</param>
+			
+			<param key="propertyType">com.palantir.property.ReceivedDonationMedSupplyPast3Year</param>
+			<param key="propertyValueColumn">ReceivedDonationMedSupplyPast3Year</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">StorageCapacity_</param>
+			
+			<param key="propertyType">com.palantir.property.StorageCapacity</param>
+			<param key="propertyValueColumn">StorageCapacity</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">SurgeriesPerformed_</param>
+			
+			<param key="propertyType">com.palantir.property.SurgeriesPerformed</param>
+			<param key="propertyValueColumn">SurgeriesPerformed</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Totalnumberopatients_</param>
+			
+			<param key="propertyType">com.palantir.property.Totalnumberofpatients</param>
+			<param key="propertyValueColumn">Totalnumberopatients</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">TypesofServices_</param>
+			
+			<param key="propertyType">com.palantir.property.TypesofServices</param>
+			<param key="propertyValueColumn">TypesofServices</param>
+		</rowprocessor>			
+		</rowprocessorSet>
+    </table> 
+	<!--               I M P O R T   H C O   S A L E S   O R G   A N D   P R O G R A M S               -->  
+    <table >
+      <description>HCO SALES ORGS AND PROGRAMS</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+          			 SELECT distinct CONVERT(bigint ,[dbo].[Partner].PartnerID) PartnerID	                    			   
+					  ,case ([dbo].[PartnerSalesOrg].SalesOrgCRM) when '50000002' then 'INTERNATIONAL' when '50000003' then 'US' else '' end  SalesOrg  
+					  ,ISNULL([dbo].[PartnerSalesOrg].PartnerProgram,'') PartnerProgram
+				  FROM [dbo].[Partner] left outer join [dbo].[PartnerSalesOrg] on [dbo].[Partner].partnerID = [dbo].[PartnerSalesOrg].PartnerID
+				  where  [PartnerCategory]= '2' and ([PartnerType] ='0001' or [PartnerType] ='Y001') 
+            </param>            
+        </rowprovider>
+      </rowproviderSet>
+ 	<globalParams>
+	      <param key="primaryKeyColumns">PartnerID</param> 
+	      <param key="documentName">PARTNER_HCO_</param> 
+	      <param key="documentIdColumns">PartnerID</param>
+	      <param key="objectName">Partner__internalexternalID__</param>
+	      <param key="objectType">com.palantir.object.HealthcareOrganization</param>
+<!-- 	      resolvesTo string    -->
+	      <param key="foreignObjectName">Partner__internalexternalID__</param>   
+<!-- 	      resolvesTo value    -->
+	      <param key="foreignKeyColumns">PartnerID</param> 
+	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param>
+	  </globalParams>
+      <rowprocessorSet>
+	      <rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">SalesOrg_</param>				
+				<param key="propertyType">com.palantir.property.SalesOrgCRM</param>
+				<param key="propertyValueColumn">SalesOrg</param>
+		</rowprocessor>
+		 <rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">PartnerProgram_</param>
+				<param key="propertyNameColumns">PartnerProgram</param>
+				<param key="propertyType">com.palantir.property.PartnerProgram</param>
+				<param key="propertyValueColumn">PartnerProgram</param>
+		</rowprocessor>
+	</rowprocessorSet>
+   </table>  
+   </tables>  
+</kite>

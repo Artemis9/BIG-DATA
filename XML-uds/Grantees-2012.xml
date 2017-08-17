@@ -1,0 +1,283 @@
+<!-- 1.	This code and matching ontology is developed by Artemis Ozten for Direct Relief 	-->
+<!-- 2.	This work includes the following: 									-->
+<!--  	a. 11 years HRSA UDS reports and the matching relational databases were examined to correctly name properties, and, maintain yearly changes.-->
+<!-- 		That is to say, it has been made sure that throughout 11 year history, a property indicates semantically the same data.   -->
+<!-- 		So, if age ranges were changed or adjusted, or data was split (or joined) amongst different ethnic or racial groups,  -->
+<!-- 		either the new properties were added, or, existing properties were combined, or, some properties were discontinued.   -->
+<!-- 	b. Iterative consulting with expert business users was conducted to define the scope: -->
+<!-- 		a.	Irrelevant data was left out  -->
+<!-- 		b.	All  relevant data was retrieved   -->
+<!-- 		c.	Clinic level aggregates were determined -->
+<kite  xmlns="http://www.palantirtech.com/pg/schema/kite/">
+<config>
+     <batchSize>1000</batchSize>
+    <batchSleepTime>0</batchSleepTime>
+    <connection>
+	  <driverName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverName> 
+	  <!-- <driverName>net.sourceforge.jtds.jdbc.Driver</driverName> -->
+	  <!-- <url>jdbc:sqlserver://DRI020:1433;DatabaseName=HRSA_UDS_2010</url> -->
+      <url>jdbc:sqlserver://DRISQL1PRD:1433;DatabaseName=HRSA_UDS_2012</url> 
+      <username>palantir</username> 
+      <plaintextPassword>paloalto</plaintextPassword>  
+    </connection>
+    <repository>
+      <path>
+        <directory>/opt/palantir/pXML-Prod/HRSA-UDS</directory>
+        <levels>2</levels>
+      </path>
+    </repository>
+  </config>
+<!--                            I M P O R T   2 0 1 2   G R A N T E E S                  -->
+<tables>
+<table>
+      <description>HRSA GRANTEES 2012 </description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">
+				 SELECT hci.[BHCMISID]
+				       ,hci.[GrantNumber]
+				       ,convert(bigint,p.partnerid) _partnerid 
+					   ,isnull (CONVERT(varchar, convert(bigint,p.partnerid)), 'UDS' + hci.[BHCMISID]) as pkey  
+					   ,'01/01/2012' as ReportingPeriodBegin, '12/31/2012' as ReportingPeriodEnd   
+				      ,hci.[HealthCenterName]  
+				      ,hci.[HealthCenterStreetAddress]
+				      ,hci.[HealthCenterCity]
+				      ,hci.[HealthCenterState]
+				      ,hci.[HealthCenterZIPCode]
+				      ,'US' as Country
+				      ,hci.[UrbanRuralFlag]
+					  , case when p.partnerid is  null then  geo.Longitude else null end as longitude  
+					  , case when p.partnerid is  null then  geo.Latitude else null end as Latitude
+				  FROM [HRSA_UDS_2012].[dbo].TBLGRANTEEINFOGEOCODED geo, [dbo].[HealthCenterInfo] hci
+				  left outer join InformationExplorer.dbo.Partner p on hci.[BHCMISID]=p.UDSGranteeID
+				  where hci.[BHCMISID] = geo.[BHCMISID]  
+				  -- and hci.[BHCMISID] = '04E00502'
+		</param>
+        </rowprovider>
+      </rowproviderSet>
+	  <!--  Grantees that are DRI partners have the SAP BP ID as object identifier -->      
+      <globalParams>
+	      <param key="primaryKeyColumns">pkey</param> 
+	      <param key="documentName">GRANTEE_</param> 
+	      <param key="documentIdColumns">pkey</param>
+	      <param key="objectName">Partner__internalexternalID__</param>
+	      <param key="objectType">com.palantir.object.HealthcareOrganization</param>
+	      <!-- resolvesTo string -->   
+	      <param key="foreignObjectName">Partner__internalexternalID__</param>   
+	      <!-- resolvesTo value -->   
+	      <param key="foreignKeyColumns">pkey</param> 
+      </globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeID</param>
+			<param key="propertyValueColumn">BHCMISID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">PartnerID_</param>
+			<param key="propertyType">com.palantir.property.OrganizationID</param>
+			<param key="propertyValueColumn">_partnerid</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+<!-- 	Here I am choosing the old EHB grand id field for GrantNumber which does not seem to have an equivalent format/value but perhaps similar meaning. -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">EHBGrantId_</param>
+			<param key="propertyType">com.palantir.property.EHBGrantID</param>
+			<param key="propertyValueColumn">GrantNumber</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">HRSAOrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">HealthCenterName</param>
+		</rowprocessor>
+<!-- 		No long/lat if already exists in our DB -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">HRSAADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">HealthCenterStreetAddress,HealthCenterCity,HealthCenterState,HealthCenterZIPCode</param>
+			<param key="componentTypes">ADDRESS1,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">HRSAADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Country_</param>
+			<param key="propertyType">com.palantir.property.Country</param>
+			<param key="propertyValueColumn">Country</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">City_</param>
+			<param key="propertyType">com.palantir.property.city</param>
+			<param key="propertyValueColumn">HealthCenterCity</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Region_</param>
+			<param key="propertyType">com.palantir.property.region</param>
+			<param key="propertyValueColumn">HealthCenterState</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">UrbanRural_</param>
+			<param key="propertyType">com.palantir.property.fUrbanRural</param>
+			<param key="propertyValueColumn">UrbanRuralFlag</param>
+		</rowprocessor>
+ 
+      </rowprocessorSet>
+    </table>  
+<!--                            2 0 1 2   S I T E S   M E R G E                         -->
+<table>
+      <description>HRSA GRANTEE/SITES 2012 MERGE</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">
+				SELECT hci.[BHCMISID]
+			      ,hci.GrantNumber
+				  ,isnull (CONVERT(varchar, convert(bigint,p.partnerid)), 'UDS' + hci.[BHCMISID]) as pkey  
+			      ,[SiteType]
+			      ,[SiteStatus]
+			      ,[LocationType]
+			      ,[LocationSetting]
+			      ,case([OperationalSchedule]) when 'Full-Time' then 1 else 0 end as OperationalSchedule
+			      ,[CalendarSchedule]
+			       ,CONVERT(INT, SUBSTRING(TotalWeeklyHoursOfOperation,1,2)) TotalWeeklyHoursOfOperation
+			      ,[SiteOperatedBy]
+			      ,[MailingStreetAddress]
+			      ,[MailingCity]
+			      ,[MailingState]
+			      ,[MailingZIPCode]
+			      ,[MedicaidNumber]
+			      ,[MedicaidPharmNumber]
+			  FROM  dbo.HealthCenterInfo hci 
+			  left outer join InformationExplorer.dbo.Partner p on hci.[BHCMISID]=p.UDSGranteeID, 
+			  [dbo].[HealthCenterSiteInfo] hcsi 
+			  where hcsi.BHCMISID = hci.BHCMISID and hcsi.GrantNumber = hci.GrantNumber and hcsi.HealthCenterName = hcsi.SiteName and hcsi.HealthCenterName = hci.HealthCenterName
+			  and hcsi.SiteType='Administrative/Service Delivery Site' 
+			  AND substring(HCSI.SITEzipcode,1,5) = HCI.HealthCenterZIPCode AND hcSI.sITEcITY=HCI.HealthCenterCity 
+			  and substring(SiteStreetAddress,1,5)=substring(HCI.HealthCenterStreetAddress,1,5) 
+			  and substring(p.postalcode,1,5)=substring(HCI.HealthCenterZIPCode,1,5) 
+			  and substring( p.street,1,5)=substring(HCI.HealthCenterStreetAddress,1,5)
+		</param>
+        </rowprovider>
+      </rowproviderSet>
+	  <!--  Grantees that are DRI partners have the SAP BP ID as object identifier -->      
+      <globalParams>
+	      <param key="primaryKeyColumns">pkey</param> 
+	      <param key="documentName">GRANTEE_</param> 
+	      <param key="documentIdColumns">pkey</param>
+	      <param key="objectName">Partner__internalexternalID__</param>
+	      <param key="objectType">com.palantir.object.HealthcareOrganization</param>
+	      <!-- resolvesTo string -->   
+	      <param key="foreignObjectName">Partner__internalexternalID__</param>   
+	      <!-- resolvesTo value -->   
+	      <param key="foreignKeyColumns">pkey</param> 
+      </globalParams>
+      <rowprocessorSet>	
+      <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeID</param>
+			<param key="propertyValueColumn">BHCMISID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">EHBGrantId_</param>
+			<param key="propertyType">com.palantir.property.EHBGrantID</param>
+			<param key="propertyValueColumn">GrantNumber</param>
+		</rowprocessor>	 
+<!-- 	Here I am choosing the old EHB grand id field for GrantNumber which does not seem to have an equivalent format/value but perhaps similar meaning. -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">SiteType_</param>
+			<param key="propertyType">com.palantir.property.SiteType</param>
+			<param key="propertyValueColumn">SiteType</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">SiteStatus_</param>
+			<param key="propertyType">com.palantir.property.SiteStatus</param>
+			<param key="propertyValueColumn">SiteStatus</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">LocationType_</param>
+			<param key="propertyType">com.palantir.property.LocationType</param>
+			<param key="propertyValueColumn">LocationType</param>
+		</rowprocessor>
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">LocationSetting_</param>
+			<param key="propertyType">com.palantir.property.LocationSetting</param>
+			<param key="propertyValueColumn">LocationSetting</param>
+		</rowprocessor> 
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OperationalSchedule_</param>
+			<param key="propertyType">com.palantir.property.fPartTime</param>
+			<param key="propertyValueColumn">OperationalSchedule</param>
+		</rowprocessor> 
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">CalendarSchedule_</param>
+			<param key="propertyType">com.palantir.property.CalendarSchedule</param>
+			<param key="propertyValueColumn">CalendarSchedule</param>
+		</rowprocessor> 
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">TotalWeeklyHoursOfOperation_</param>
+			<param key="propertyType">com.palantir.property.Hours</param>
+			<param key="propertyValueColumn">TotalWeeklyHoursOfOperation</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">SiteOperatedBy_</param>
+			<param key="propertyType">com.palantir.property.SiteOperatedBy</param>
+			<param key="propertyValueColumn">SiteOperatedBy</param>
+		</rowprocessor>
+<!-- 		No long/lat if already exists in our DB -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">GRANTEESITEMAILADDRESS_</param>
+			<param key="propertyType">com.palantir.property.MailAddress</param>
+			<param key="componentColumns">MailingStreetAddress,MailingCity,MailingState,MailingZIPCode</param>
+			<param key="componentTypes">ADDRESS1,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">MedicaidNumber_</param>
+			<param key="propertyType">com.palantir.property.MedicaidNumber</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">MedicaidNumber</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">MedicaidPharmNumber_</param>
+			<param key="propertyType">com.palantir.property.MedicaidPharmNumber</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">MedicaidPharmNumber</param>
+		</rowprocessor>
+      </rowprocessorSet>
+    </table>   
+     
+</tables>
+</kite>

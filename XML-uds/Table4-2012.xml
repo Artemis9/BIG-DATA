@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 1.	This code and matching ontology is developed by Artemis Ozten for Direct Relief 	-->
+<!-- 2.	This work includes the following: 									-->
+<!--  	a. 11 years HRSA UDS reports and the matching relational databases were examined to correctly name properties, and, maintain yearly changes.-->
+<!-- 		That is to say, it has been made sure that throughout 11 year history, a property indicates semantically the same data.   -->
+<!-- 		So, if age ranges were changed or adjusted, or data was split (or joined) amongst different ethnic or racial groups,  -->
+<!-- 		either the new properties were added, or, existing properties were combined, or, some properties were discontinued.   -->
+<!-- 	b. Iterative consulting with expert business users was conducted to define the scope: -->
+<!-- 		a.	Irrelevant data was left out  -->
+<!-- 		b.	All  relevant data was retrieved   -->
+<!-- 		c.	Clinic level aggregates were determined -->
+<kite  xmlns="http://www.palantirtech.com/pg/schema/kite/">
+<config>
+     <batchSize>1000</batchSize>
+    <batchSleepTime>0</batchSleepTime>
+    <connection>
+	   <driverName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverName>  
+	  <!-- <driverName>net.sourceforge.jtds.jdbc.Driver</driverName> -->
+	  <!-- <url>jdbc:sqlserver://DRI020:1433;DatabaseName=HRSA_UDS_2010</url> -->
+      <url>jdbc:sqlserver://DRISQL1PRD:1433;DatabaseName=HRSA_UDS_2012</url> 
+      <username>palantir</username> 
+      <plaintextPassword>paloalto</plaintextPassword>  
+    </connection>
+    <repository>
+      <path>
+        <directory>/opt/palantir/pXML-Prod/HRSA-UDS</directory>
+        <levels>2</levels>
+      </path>
+    </repository>
+  </config>
+  <tables>
+<!--                            I M P O R T    T A B L E   4                           -->
+<!--                            2 0 1 2                        -->
+<table>
+      <description>HRSA REPORT TABLE 4 2012</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+			SELECT hci.[BHCMISID]
+				  ,'2012' as ry_lngReportingYear
+				  ,'01/01/2012' as ReportingPeriodBegin, '12/31/2012' as ReportingPeriodEnd     
+				  ,hci.[HealthCenterName]
+				  ,'4' as UDSTableType
+				  ,'TABLE 4-SELECTED PATIENT CHARACTERISTICS-' + hci.[HealthCenterName] + '-2012' as  ReportSectionName 
+			      ,[T4_L1_Ca] -- Poverty Level  100 and below  Number of Patients
+			      ,[T4_L2_Ca] -- Poverty Level  101 150  Number of Patients
+			      ,[T4_L3_Ca] -- Poverty Level  151 200  Number of Patients
+			      ,[T4_L4_Ca] -- Poverty Level  over 200  Number of Patients
+			      ,[T4_L5_Ca] -- Poverty Level  unknown  Number of Patients
+			      ,[T4_L6_Ca] -- Poverty Level  Total  Number of Patients
+			      ,[HRSA_UDS_2012].[dbo].[Table4].[T4_L7_Ca] -- Principal 3rd party MI source None/Uninsured Age 0 19
+			      ,[HRSA_UDS_2012].[dbo].[Table4].[T4_L7_Cb] -- Principal 3rd party MI source None/Uninsured Age 20 older
+			      ,[HRSA_UDS_2012].[dbo].[Table4].[T4_L7_Ca]+[HRSA_UDS_2012].[dbo].[Table4].[T4_L7_Cb] T4_L7_CMIaPLUSb-- Principal 3rd party MI source None/Uninsured Total
+			      ,[HRSA_UDS_2012].[dbo].[Table4].[T4_L8_Ca] -- Principal 3rd party MI source Total Medicaid Age 0 19
+			      ,[HRSA_UDS_2012].[dbo].[Table4].[T4_L8_Cb] -- Principal 3rd party MI source Total Medicaid Age 20 older
+			      ,[HRSA_UDS_2012].[dbo].[Table4].[T4_L8_Ca]+[HRSA_UDS_2012].[dbo].[Table4].[T4_L8_Cb] T4_L8_CMIaPLUSb -- Principal 3rd party MI source Medicaid All Age Total
+			      ,[T4_L8a_Ca] -- Principal 3rd party MI source Regular Medicaid Age 0 19
+			      ,[T4_L8a_Cb] -- Principal 3rd party MI source Regular Medicaid Age 20 older
+			      ,[T4_L8a_Ca]+[T4_L8a_Cb] T4_L8a_CMIaPLUSb -- Principal 3rd party MI source Regular Medicaid Total
+			      ,[T4_L8b_Ca] -- Principal 3rd party MI source CHIP Medicaid Age 0 19
+			      ,[T4_L8b_Cb] -- Principal 3rd party MI source CHIP Medicaid Age 20 older
+			      ,[T4_L8b_Ca]+ [T4_L8b_Cb] T4_L8b_CMIaPLUSb -- Principal 3rd party MI source CHIP Medicaid Total
+			      ,[T4_L9_Ca] -- Principal 3rd party MI source Medicare Age 0 19
+			      ,[T4_L9_Cb] -- Principal 3rd party MI source Medicare Age 20 older
+			      ,[T4_L9_Ca]+[T4_L9_Cb] T4_L9_CMIaPLUSb -- Principal 3rd party MI source Medicare Total
+			      ,[T4_L10_Ca] -- Principal 3rd party MI source Total Public Insurance Age 0 19
+			      ,[T4_L10_Cb] -- Principal 3rd party MI source Total Public Insurance Age 20 older
+			      ,[T4_L10_Ca]+[T4_L10_Cb] T4_L10_CMIaPLUSb -- Principal 3rd party MI source Total Public Insurance All Age Total
+			      ,[T4_L10a_Ca] -- Principal 3rd party MI source Other PI non-CHIP Age 0 19
+			      ,[T4_L10a_Cb] -- Principal 3rd party MI source Other PI non-CHIP Age 20 older
+			      ,[T4_L10a_Ca] + [T4_L10a_Cb] T4_L10a_CMIaPLUSb -- Principal 3rd party MI source Other PI non-CHIP Total
+			      ,[T4_L10b_Ca] -- Principal 3rd party MI source Other PI CHIP Age 0 19
+			      ,[T4_L10b_Cb] -- Principal 3rd party MI source Other PI CHIP Age 20 older
+			      ,[T4_L10b_Ca] + [T4_L10b_Ca] T4_L10b_CMIaPLUSb -- Principal 3rd party MI source Other PI CHIP Total
+			      ,[T4_L11_Ca] -- Principal 3rd party MI source Private Insurance Age 0 19
+			      ,[T4_L11_Cb] -- Principal 3rd party MI source Private Insurance Age 20 older
+			      ,[T4_L11_Ca] + [T4_L11_Cb] T4_L11_CMIaPLUSb -- Principal 3rd party MI source Private Insurance Total
+			      ,[T4_L12_Ca] -- Principal 3rd party MI source Total Age 0 19
+			      ,[T4_L12_Cb] -- Principal 3rd party MI source Total Age 20 older
+			      ,[T4_L12_Ca]+ [T4_L12_Cb] T4_L12_CMIaPLUSb -- Principal 3rd party MI source Total All Age Total
+			      ,[T4_L14_Ca] -- Special Populations Migrant Nr Patients
+			      ,[T4_L15_Ca] -- Special Populations Seasonal Nr Patients
+			      ,[T4_L16_Ca] -- Special Populations Migrant/Seasonal Agr. Worker/Dependent Subtotal
+			      ,[T4_L17_Ca] -- Special Populations Homeless Shelter Nr Patients
+			      ,[T4_L18_Ca] -- Special Populations Transitional Nr Patients
+			      ,[T4_L19_Ca] -- Special Populations Doubling up Nr Patients
+			      ,[T4_L20_Ca] -- Special Populations Street Nr Patients
+			      ,[T4_L21_Ca] -- Special Populations Other Nr Patients
+			      ,[T4_L22_Ca] -- Special Populations Unknown Nr Patients
+			      ,[T4_L23_Ca] -- Special Populations Homeless Nr Patients Subtotal
+			      ,[T4_L24_Ca] -- Special Populations Total School Based Health Center Patients
+			      ,[T4_L25_Ca] -- Special Populations Total Veterans Patients			      
+				   ,hci.[HealthCenterStreetAddress]
+				   --,hci.[HealthCenterOtherAddress]
+				   ,hci.[HealthCenterCity]
+				   ,hci.[HealthCenterState]
+				   ,hci.[HealthCenterZIPCode]
+				   ,'US' as Country
+				    ,hci.GrantNumber
+				  ,hci.Longitude, hci.Latitude
+				  FROM [HRSA_UDS_2012].[dbo].[Table4], [HRSA_UDS_2012].[dbo].TBLGRANTEEINFOGEOCODED hci  
+				where [HRSA_UDS_2012].[dbo].[Table4].[BHCMISID] = hci.[BHCMISID]
+          </param>
+        </rowprovider>
+      </rowproviderSet>
+       <globalParams>
+	      <param key="primaryKeyColumns">UDSTableType,BHCMISID,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_SECTION_</param> 
+	      <param key="documentIdColumns">UDSTableType,BHCMISID,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_SECTION_</param>
+	      <param key="objectType">com.palantir.object.UDSReportSection</param>
+      </globalParams>
+      <rowprocessorSet>
+      	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">HealthCenterName</param>
+		</rowprocessor>     
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportSectionName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportSectionName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">BHCMISID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">UDSTableType_</param>
+			<param key="propertyType">com.palantir.property.UDSTableType</param>
+			<param key="propertyValueColumn">UDSTableType</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+	<!-- Poverty Level  100 and below  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L1_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L1_Ca</param>
+			<param key="propertyValueColumn">T4_L1_Ca</param>
+		</rowprocessor>
+		<!-- Poverty Level  101 150  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L2_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L2_Ca</param>
+			<param key="propertyValueColumn">T4_L2_Ca</param>
+		</rowprocessor>
+		<!-- Poverty Level  151 200  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L3_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L3_Ca</param>
+			<param key="propertyValueColumn">T4_L3_Ca</param>
+		</rowprocessor>
+		<!-- Poverty Level  over 200  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L4_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L4_Ca</param>
+			<param key="propertyValueColumn">T4_L4_Ca</param>
+		</rowprocessor>
+		<!-- Poverty Level  unknown  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L5_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L5_Ca</param>
+			<param key="propertyValueColumn">T4_L5_Ca</param>
+		</rowprocessor>
+		<!-- Poverty Level  Total  Number of Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L6_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L6_Ca</param>
+			<param key="propertyValueColumn">T4_L6_Ca</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source None/Uninsured Age 0 19 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L7_CMIa_</param>
+			<param key="propertyType">com.palantir.property.T4_L7_CMIa</param>
+			<param key="propertyValueColumn">T4_L7_Ca</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source None/Uninsured Age 20 older -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L7_CMIb_</param>
+			<param key="propertyType">com.palantir.property.T4_L7_CMIb</param>
+			<param key="propertyValueColumn">T4_L7_Cb</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source None/Uninsured  Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L7_CMIaPLUSb_</param>
+			<param key="propertyType">com.palantir.property.T4_L7_CMIaPLUSb</param>
+			<param key="propertyValueColumn">T4_L7_CMIaPLUSb</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Total Medicaid Age 0 19 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L8_CMIa_</param>
+			<param key="propertyType">com.palantir.property.T4_L8_CMIa</param>
+			<param key="propertyValueColumn">T4_L8_Ca</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Total Medicaid Age 20 older -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L8_CMIb_</param>
+			<param key="propertyType">com.palantir.property.T4_L8_CMIb</param>
+			<param key="propertyValueColumn">T4_L8_Cb</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Medicaid Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L8_CMIaPLUSb_</param>
+			<param key="propertyType">com.palantir.property.T4_L8_CMIaPLUSb</param>
+			<param key="propertyValueColumn">T4_L8_CMIaPLUSb</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Regular Medicaid Age 0 19 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L8a_CMIa_</param>
+			<param key="propertyType">com.palantir.property.T4_L8a_CMIa</param>
+			<param key="propertyValueColumn">T4_L8a_Ca</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Regular Medicaid Age 20 older -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L8a_CMIb_</param>
+			<param key="propertyType">com.palantir.property.T4_L8a_CMIb</param>
+			<param key="propertyValueColumn">T4_L8a_Cb</param>
+		</rowprocessor>
+<!-- 		Principal 3rd party MI source Regular Medicaid Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L8a_CMIaPLUSb_</param>
+			<param key="propertyType">com.palantir.property.T4_L8a_CMIaPLUSb</param>
+			<param key="propertyValueColumn">T4_L8a_CMIaPLUSb</param>
+		</rowprocessor>
+
+		<!-- Principal 3rd party MI source CHIP Medicaid Age 0 19 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L8b_CMIa_</param>
+			<param key="propertyType">com.palantir.property.T4_L8b_CMIa</param>
+			<param key="propertyValueColumn">T4_L8b_Ca</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source CHIP Medicaid Age 20 older -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L8b_CMIb_</param>
+			<param key="propertyType">com.palantir.property.T4_L8b_CMIb</param>
+			<param key="propertyValueColumn">T4_L8b_Cb</param>
+		</rowprocessor>
+<!-- 	Principal 3rd party MI source CHIP Medicaid Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L8b_CMIaPLUSb_</param>
+			<param key="propertyType">com.palantir.property.T4_L8b_CMIaPLUSb</param>
+			<param key="propertyValueColumn">T4_L8b_CMIaPLUSb</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Medicare Age 0 19 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L9_CMIa_</param>
+			<param key="propertyType">com.palantir.property.T4_L9_CMIa</param>
+			<param key="propertyValueColumn">T4_L9_Ca</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Medicare Age 20 older -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L9_CMIb_</param>
+			<param key="propertyType">com.palantir.property.T4_L9_CMIb</param>
+			<param key="propertyValueColumn">T4_L9_Cb</param>
+		</rowprocessor>
+<!-- 		Principal 3rd party MI source Medicare Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L9_CMIaPLUSb_</param>
+			<param key="propertyType">com.palantir.property.T4_L9_CMIaPLUSb</param>
+			<param key="propertyValueColumn">T4_L9_CMIaPLUSb</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Total Public Insurance Age 0 19 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L10_CMIa_</param>
+			<param key="propertyType">com.palantir.property.T4_L10_CMIa</param>
+			<param key="propertyValueColumn">T4_L10_Ca</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Total Public Insurance Age 20 older -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L10_CMIb_</param>
+			<param key="propertyType">com.palantir.property.T4_L10_CMIb</param>
+			<param key="propertyValueColumn">T4_L10_Cb</param>
+		</rowprocessor>
+<!-- 		Principal 3rd party MI source Total Public Insurance All Age Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L10_CMIaPLUSb_</param>
+			<param key="propertyType">com.palantir.property.T4_L10_CMIaPLUSb</param>
+			<param key="propertyValueColumn">T4_L10_CMIaPLUSb</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Other PI non-CHIP Age 0 19 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L10a_CMIa_</param>
+			<param key="propertyType">com.palantir.property.T4_L10a_CMIa</param>
+			<param key="propertyValueColumn">T4_L10a_Ca</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Other PI non-CHIP Age 20 older -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L10a_CMIb_</param>
+			<param key="propertyType">com.palantir.property.T4_L10a_CMIb</param>
+			<param key="propertyValueColumn">T4_L10a_Cb</param>
+		</rowprocessor>		
+		<!--  Principal 3rd party MI source Other PI non-CHIP Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L10a_CMIaPLUSb_</param>
+			<param key="propertyType">com.palantir.property.T4_L10a_CMIaPLUSb</param>
+			<param key="propertyValueColumn">T4_L10a_CMIaPLUSb</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Other PI CHIP Age 0 19 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L10b_CMIa_</param>
+			<param key="propertyType">com.palantir.property.T4_L10b_CMIa</param>
+			<param key="propertyValueColumn">T4_L10b_Ca</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Other PI CHIP Age 20 older -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L10b_CMIb_</param>
+			<param key="propertyType">com.palantir.property.T4_L10b_CMIb</param>
+			<param key="propertyValueColumn">T4_L10b_Cb</param>
+		</rowprocessor>
+<!-- 		 Principal 3rd party MI source Other PI CHIP Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L10b_CMIaPLUSb_</param>
+			<param key="propertyType">com.palantir.property.T4_L10b_CMIaPLUSb</param>
+			<param key="propertyValueColumn">T4_L10b_CMIaPLUSb</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Private Insurance Age 0 19 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L11_CMIa_</param>
+			<param key="propertyType">com.palantir.property.T4_L11_CMIa</param>
+			<param key="propertyValueColumn">T4_L11_Ca</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Private Insurance Age 20 older -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L11_CMIb_</param>
+			<param key="propertyType">com.palantir.property.T4_L11_CMIb</param>
+			<param key="propertyValueColumn">T4_L11_Cb</param>
+		</rowprocessor>
+<!--   Principal 3rd party MI source Private Insurance Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L11_CMIaPLUSb_</param>
+			<param key="propertyType">com.palantir.property.T4_L11_CMIaPLUSb</param>
+			<param key="propertyValueColumn">T4_L11_CMIaPLUSb</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Total Age 0 19 -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L12_CMIa_</param>
+			<param key="propertyType">com.palantir.property.T4_L12_CMIa</param>
+			<param key="propertyValueColumn">T4_L12_Ca</param>
+		</rowprocessor>
+		<!-- Principal 3rd party MI source Total Age 20 older -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L12_CMIb_</param>
+			<param key="propertyType">com.palantir.property.T4_L12_CMIb</param>
+			<param key="propertyValueColumn">T4_L12_Cb</param>
+		</rowprocessor>
+<!-- 		Principal 3rd party MI source Total All Age Total -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L12_CMIaPLUSb_</param>
+			<param key="propertyType">com.palantir.property.T4_L12_CMIaPLUSb</param>
+			<param key="propertyValueColumn">T4_L12_CMIaPLUSb</param>
+		</rowprocessor>
+		<!-- Special Populations Migrant Nr Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L14_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L14_Ca</param>
+			<param key="propertyValueColumn">T4_L14_Ca</param>
+		</rowprocessor>
+		<!-- Special Populations Seasonal Nr Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L15_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L15_Ca</param>
+			<param key="propertyValueColumn">T4_L15_Ca</param>
+		</rowprocessor>
+		<!-- Special Populations Migrant/Seasonal Agr. Worker/Dependent Subtotal -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L16_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L16_Ca</param>
+			<param key="propertyValueColumn">T4_L16_Ca</param>
+		</rowprocessor>
+		<!-- Special Populations Homeless Shelter Nr Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L17_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L17_Ca</param>
+			<param key="propertyValueColumn">T4_L17_Ca</param>
+		</rowprocessor>
+<!-- 		Special Populations Transitional Nr Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L18_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L18_Ca</param>
+			<param key="propertyValueColumn">T4_L18_Ca</param>
+		</rowprocessor>
+		<!-- 		Special Populations Doubling up Nr Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L19_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L19_Ca</param>
+			<param key="propertyValueColumn">T4_L19_Ca</param>
+		</rowprocessor>
+		<!-- 		Special Populations Street Nr Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L20_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L20_Ca</param>
+			<param key="propertyValueColumn">T4_L20_Ca</param>
+		</rowprocessor>
+		<!-- 		Special Populations Other Nr Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L21_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L21_Ca</param>
+			<param key="propertyValueColumn">T4_L21_Ca</param>
+		</rowprocessor>
+		<!-- 		Special Populations Unknown Nr Patients-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L22_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L22_Ca</param>
+			<param key="propertyValueColumn">T4_L22_Ca</param>
+		</rowprocessor>
+		<!-- 		Special Populations Unknown Nr Patients-->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L23_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L23_Ca</param>
+			<param key="propertyValueColumn">T4_L23_Ca</param>
+		</rowprocessor>
+		<!-- 	Special Populations Total School Based Health Center Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L24_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L24_Ca</param>
+			<param key="propertyValueColumn">T4_L24_Ca</param>
+		</rowprocessor>
+		<!-- 	Special Populations Total Veterans Patients -->
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">T4_L25_Ca_</param>
+			<param key="propertyType">com.palantir.property.T4_L25_Ca</param>
+			<param key="propertyValueColumn">T4_L25_Ca</param>
+		</rowprocessor>
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">HealthCenterStreetAddress,HealthCenterCity,HealthCenterState,HealthCenterZipCode</param>
+			<param key="componentTypes">ADDRESS1,CITY,STATE,ZIP</param>
+		</rowprocessor>
+				<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Country_</param>
+			<param key="propertyType">com.palantir.property.Country</param>
+			<param key="propertyValueColumn">Country</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">City_</param>
+			<param key="propertyType">com.palantir.property.city</param>
+			<param key="propertyValueColumn">HealthCenterCity</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">Region_</param>
+			<param key="propertyType">com.palantir.property.region</param>
+			<param key="propertyValueColumn">HealthCenterState</param>
+		</rowprocessor> 
+		 <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">EHBGrantId_</param>
+			<param key="propertyType">com.palantir.property.EHBGrantID</param>
+			<param key="propertyValueColumn">GrantNumber</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">REPORT_</param>
+			<param key="primaryKeyColumns">BHCMISID,ry_lngReportingYear</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">REPORT_</param>
+			<param key="parentKeyColumns">BHCMISID,ry_lngReportingYear</param>
+			<param key="childObjectName">REPORT_SECTION_</param>
+			<param key="childKeyColumns">UDSTableType,BHCMISID,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">BHCMISID,ry_lngReportingYear,UDSTableType,BHCMISID,ry_lngReportingYear</param>
+			<param key="linkName">BelongsTo_</param>	
+			<param key="linkText">BelongsTo</param>		
+		</rowprocessor>
+		
+      </rowprocessorSet>      
+    </table>
+  </tables>
+</kite>

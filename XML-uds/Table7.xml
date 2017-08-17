@@ -1,0 +1,3267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 1.	This code and matching ontology is developed by Artemis Ozten for Direct Relief 	-->
+<!-- 2.	This work includes the following: 									-->
+<!--  	a. 11 years HRSA UDS reports and the matching relational databases were examined to correctly name properties, and, maintain yearly changes.-->
+<!-- 		That is to say, it has been made sure that throughout 11 year history, a property indicates semantically the same data.   -->
+<!-- 		So, if age ranges were changed or adjusted, or data was split (or joined) amongst different ethnic or racial groups,  -->
+<!-- 		either the new properties were added, or, existing properties were combined, or, some properties were discontinued.   -->
+<!-- 	b. Iterative consulting with expert business users was conducted to define the scope: -->
+<!-- 		a.	Irrelevant data was left out  -->
+<!-- 		b.	All  relevant data was retrieved   -->
+<!-- 		c.	Clinic level aggregates were determined -->
+<kite  xmlns="http://www.palantirtech.com/pg/schema/kite/">
+<config>
+     <batchSize>1000</batchSize>
+    <batchSleepTime>0</batchSleepTime>
+    <connection>
+	  <driverName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverName>   
+	   <!-- <driverName>net.sourceforge.jtds.jdbc.Driver</driverName> -->
+       <!-- <url>jdbc:jtds:sqlserver://DRISQLHAPRD:1433;DatabaseName=InformationExplorer</url> -->
+	<url>jdbc:sqlserver://DRISQLHAPRD:1433;DatabaseName=HRSA_UDS_2011</url>
+      <!-- DRISQLHAPRD -->
+      <username>palantir</username>
+      <plaintextPassword>paloalto</plaintextPassword>
+    </connection>
+    <repository>
+      <path>
+        <directory>/opt/palantir/pXML-Prod/HRSA-UDS</directory>
+        <levels>2</levels>
+      </path>
+    </repository>
+  </config>
+  <tables>
+ <!--                            I M P O R T    T A B L E    7       -->
+  
+    <!--                            2 0 0 8                         -->
+<!-- <table > -->
+<!--       <description>HRSA REPORT TABLE 7 2008</description> -->
+<!--       <rowproviderSet> -->
+<!--         <rowprovider class="com.palantir.kite.provider.BasicRowProvider"> -->
+<!--           <param key="sql">       -->
+<!-- 		</param> -->
+<!--         </rowprovider> -->
+<!--       </rowproviderSet> -->
+<!--       <globalParams> -->
+<!-- 	      <param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param>  -->
+<!-- 	      <param key="documentName">REPORT_</param>  -->
+<!-- 	      <param key="documentIdColumns">gi_txtUDS,ry_lngReportingYear</param> -->
+<!-- 	      <param key="objectName">REPORT_</param> -->
+<!-- 	      <param key="objectType">com.palantir.object.UDSReport</param> -->
+<!--       </globalParams> -->
+<!--       <rowprocessorSet> -->
+  		
+<!--      </rowprocessorSet> -->
+<!--     </table> -->
+    
+ <!--                            2 0 0 9                         -->
+ <table >
+      <description>HRSA REPORT TABLE 7 2009</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">
+           SELECT [HRSA_UDS_2009].[dbo].tblGranteeInfo.gi_txtUDS
+					  ,'2009' as ry_lngReportingYear
+					  ,'01/01/2009' as ReportingPeriodBegin, '12/31/2009' as ReportingPeriodEnd     
+					  ,[HRSA_UDS_2009].[dbo].tblGranteeInfo.[gi_txtName]
+					  ,'7' as UDSTableType
+				  	  ,'TABLE 7-HEALTH OUTCOMES AND DISPARITIES-' + [HRSA_UDS_2009].[dbo].tblGranteeInfo.[gi_txtName] + '-2009' as  ReportSectionName 				 				      
+					  ,[T7_L0_Ci]
+				      ,[T7_L1_Ca2]
+				      ,[T7_L1_Ce2]
+				      ,[T7_L1_Cc2]
+				      ,[T7_L1_Ch]
+				      ,[T7_L1_Ca1]
+				      ,[T7_L1_Cf2]
+				      ,[T7_L1_Cb11]
+				      ,[T7_L1_Cf1]
+				      ,[T7_L1_Cd2]
+				      ,[T7_L1_Cd1]
+				      ,[T7_L1_Ci]
+				      ,[T7_L1_Cc1]
+				      ,[T7_L1_Cg2]
+				      ,[T7_L1_Cb22]
+				      ,[T7_L1_Ce1]
+				      ,[T7_L1_Cg1]
+				      ,[T7_L1_Cb12]
+				      ,[T7_L1_Cb21]
+				      ,[T7_L2_Ci]
+				      ,[T7_L3_Ci]
+				      ,[T7_L3_Cf2]
+				      ,[T7_L3_Cf1]
+				      ,[T7_L3_Cc2]
+				      ,[T7_L3_Ce1]
+				      ,[T7_L3_Cd1]
+				      ,[T7_L3_Ca2]
+				      ,[T7_L3_Cc1]
+				      ,[T7_L3_Cb12]
+				      ,[T7_L3_Ce2]
+				      ,[T7_L3_Cb22]
+				      ,[T7_L3_Cd2]
+				      ,[T7_L3_Cb11]
+				      ,[T7_L3_Ca1]
+				      ,[T7_L3_Cb21]
+				      ,[T7_L3_Cg1]
+				      ,[T7_L3_Cg2]
+				      ,[T7_L3_Ch]
+				      ,[T7_L4_Cb22]
+				      ,[T7_L4_Ce1]
+				      ,[T7_L4_Cf1]
+				      ,[T7_L4_Cb11]
+				      ,[T7_L4_Cg2]
+				      ,[T7_L4_Cc2]
+				      ,[T7_L4_Cd2]
+				      ,[T7_L4_Cc1]
+				      ,[T7_L4_Cb21]
+				      ,[T7_L4_Ca1]
+				      ,[T7_L4_Ca2]
+				      ,[T7_L4_Ch]
+				      ,[T7_L4_Ce2]
+				      ,[T7_L4_Cb12]
+				      ,[T7_L4_Ci]
+				      ,[T7_L4_Cd1]
+				      ,[T7_L4_Cf2]
+				      ,[T7_L4_Cg1]
+				      ,[T7_L5_Cf2]
+				      ,[T7_L5_Cg1]
+				      ,[T7_L5_Ci]
+				      ,[T7_L5_Ca1]
+				      ,[T7_L5_Ce2]
+				      ,[T7_L5_Cc1]
+				      ,[T7_L5_Ca2]
+				      ,[T7_L5_Cd1]
+				      ,[T7_L5_Cb12]
+				      ,[T7_L5_Cf1]
+				      ,[T7_L5_Ce1]
+				      ,[T7_L5_Cc2]
+				      ,[T7_L5_Cb22]
+				      ,[T7_L5_Cg2]
+				      ,[T7_L5_Ch]
+				      ,[T7_L5_Cd2]
+				      ,[T7_L5_Cb11]
+				      ,[T7_L5_Cb21]
+				      ,[T7_L6_Ce2]
+				      ,[T7_L6_Ca2]
+				      ,[T7_L6_Cb22]
+				      ,[T7_L6_Ce1]
+				      ,[T7_L6_Cf2]
+				      ,[T7_L6_Ca1]
+				      ,[T7_L6_Cg1]
+				      ,[T7_L6_Cb12]
+				      ,[T7_L6_Cd2]
+				      ,[T7_L6_Cd1]
+				      ,[T7_L6_Cc1]
+				      ,[T7_L6_Cb11]
+				      ,[T7_L6_Cc2]
+				      ,[T7_L6_Cb21]
+				      ,[T7_L6_Cg2]
+				      ,[T7_L6_Cf1]
+				      ,[T7_L6_Ci]
+				      ,[T7_L6_Ch]
+				      ,[T7_L7_Cg2]
+				      ,[T7_L7_Cf2]
+				      ,[T7_L7_Cd1]
+				      ,[T7_L7_Ce2]
+				      ,[T7_L7_Ca1]
+				      ,[T7_L7_Cb11]
+				      ,[T7_L7_Cb22]
+				      ,[T7_L7_Ca2]
+				      ,[T7_L7_Ch]
+				      ,[T7_L7_Cd2]
+				      ,[T7_L7_Cb21]
+				      ,[T7_L7_Cf1]
+				      ,[T7_L7_Cc2]
+				      ,[T7_L7_Cg1]
+				      ,[T7_L7_Ci]
+				      ,[T7_L7_Ce1]
+				      ,[T7_L7_Cb12]
+				      ,[T7_L7_Cc1]
+				      ,[T7_L8_Ch]
+				      ,[T7_L8_Ce1]
+				      ,[T7_L8_Cd2]
+				      ,[T7_L8_Cc1]
+				      ,[T7_L8_Ci]
+				      ,[T7_L8_Ca2]
+				      ,[T7_L8_Cf1]
+				      ,[T7_L8_Cc2]
+				      ,[T7_L8_Ce2]
+				      ,[T7_L8_Cd1]
+				      ,[T7_L8_Cb22]
+				      ,[T7_L8_Cf2]
+				      ,[T7_L8_Ca1]
+				      ,[T7_L8_Cg1]
+				      ,[T7_L8_Cg2]
+				      ,[T7_L8_Cb11]
+				      ,[T7_L8_Cb21]
+				      ,[T7_L8_Cb12]
+				      ,[T7_L9_Ci]
+				      ,[T7_L9_Ca1]
+				      ,[T7_L9_Cb11]
+				      ,[T7_L9_Ce1]
+				      ,[T7_L9_Cd1]
+				      ,[T7_L9_Cb21]
+				      ,[T7_L9_Cd2]
+				      ,[T7_L9_Cc1]
+				      ,[T7_L9_Cg2]
+				      ,[T7_L9_Ca2]
+				      ,[T7_L9_Cg1]
+				      ,[T7_L9_Cb22]
+				      ,[T7_L9_Cb12]
+				      ,[T7_L9_Cf1]
+				      ,[T7_L9_Cf2]
+				      ,[T7_L9_Ch]
+				      ,[T7_L9_Ce2]
+				      ,[T7_L9_Cc2]
+				      ,[T7_L10_Ci]
+				      ,[T7_L10_Ca1]
+				      ,[T7_L10_Cf1]
+				      ,[T7_L10_Cc1]
+				      ,[T7_L10_Cb12]
+				      ,[T7_L10_Cb22]
+				      ,[T7_L10_Ch]
+				      ,[T7_L10_Cg1]
+				      ,[T7_L10_Cb11]
+				      ,[T7_L10_Cg2]
+				      ,[T7_L10_Ce2]
+				      ,[T7_L10_Cd2]
+				      ,[T7_L10_Cf2]
+				      ,[T7_L10_Cc2]
+				      ,[T7_L10_Ca2]
+				      ,[T7_L10_Ce1]
+				      ,[T7_L10_Cb21]
+				      ,[T7_L10_Cd1]
+				      ,[T7_L11_Ce2]
+				      ,[T7_L11_Cc2]
+				      ,[T7_L11_Cd2]
+				      ,[T7_L11_Ci]
+				      ,[T7_L11_Ce1]
+				      ,[T7_L11_Ca2]
+				      ,[T7_L11_Cb12]
+				      ,[T7_L11_Cf1]
+				      ,[T7_L11_Cb11]
+				      ,[T7_L11_Cb22]
+				      ,[T7_L11_Ca1]
+				      ,[T7_L11_Cb21]
+				      ,[T7_L11_Cc1]
+				      ,[T7_L11_Cg2]
+				      ,[T7_L11_Cd1]
+				      ,[T7_L11_Cf2]
+				      ,[T7_L11_Cg1]
+				      ,[T7_L11_Ch]
+				      ,[T7_L12_Cd1]
+				      ,[T7_L12_Cb22]
+				      ,[T7_L12_Cc1]
+				      ,[T7_L12_Cf1]
+				      ,[T7_L12_Ca2]
+				      ,[T7_L12_Ce2]
+				      ,[T7_L12_Cb21]
+				      ,[T7_L12_Cd2]
+				      ,[T7_L12_Ce1]
+				      ,[T7_L12_Cg1]
+				      ,[T7_L12_Cf2]
+				      ,[T7_L12_Ci]
+				      ,[T7_L12_Ca1]
+				      ,[T7_L12_Ch]
+				      ,[T7_L12_Cc2]
+				      ,[T7_L12_Cg2]
+				      ,[T7_L12_Cb11]
+				      ,[T7_L12_Cb12]
+				      ,[T7_L13_Ci]
+				      ,[T7_L13_Ca1]
+				      ,[T7_L13_Ca2]
+				      ,[T7_L13_Cb21]
+				      ,[T7_L13_Cc2]
+				      ,[T7_L13_Cf1]
+				      ,[T7_L13_Cd2]
+				      ,[T7_L13_Cb22]
+				      ,[T7_L13_Ch]
+				      ,[T7_L13_Cd1]
+				      ,[T7_L13_Cc1]
+				      ,[T7_L13_Cb11]
+				      ,[T7_L13_Cg2]
+				      ,[T7_L13_Ce1]
+				      ,[T7_L13_Cg1]
+				      ,[T7_L13_Cf2]
+				      ,[T7_L13_Cb12]
+				      ,[T7_L13_Ce2]
+				 FROM [HRSA_UDS_2009].[dbo].[tblTable7],[HRSA_UDS_2009].[dbo].tblGranteeInfo
+					where [HRSA_UDS_2009].[dbo].[tblTable7].[gi_lnggranteeid] = [HRSA_UDS_2009].[dbo].tblGranteeInfo.[gi_lnggranteeid]
+                    </param>
+        </rowprovider>
+      </rowproviderSet>
+     <globalParams>
+	      <param key="primaryKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_SECTION_</param> 
+	      <param key="documentIdColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_SECTION_</param>
+	      <param key="objectType">com.palantir.object.UDSReportSection</param>
+      </globalParams>
+      <rowprocessorSet>
+      <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>     
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportSectionName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportSectionName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">UDSTableType_</param>
+			<param key="propertyType">com.palantir.property.UDSTableType</param>
+			<param key="propertyValueColumn">UDSTableType</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+       		<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L0_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L0_Ci</param>
+				<param key="propertyValueColumn">T7_L0_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Ca1</param>
+				<param key="propertyValueColumn">T7_L1_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Ca2</param>
+				<param key="propertyValueColumn">T7_L1_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cb11</param>
+				<param key="propertyValueColumn">T7_L1_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cb12</param>
+				<param key="propertyValueColumn">T7_L1_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cb21</param>
+				<param key="propertyValueColumn">T7_L1_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cb22</param>
+				<param key="propertyValueColumn">T7_L1_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cc1</param>
+				<param key="propertyValueColumn">T7_L1_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cc2</param>
+				<param key="propertyValueColumn">T7_L1_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cd1</param>
+				<param key="propertyValueColumn">T7_L1_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cd2</param>
+				<param key="propertyValueColumn">T7_L1_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Ce1</param>
+				<param key="propertyValueColumn">T7_L1_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Ce2</param>
+				<param key="propertyValueColumn">T7_L1_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cf1</param>
+				<param key="propertyValueColumn">T7_L1_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cf2</param>
+				<param key="propertyValueColumn">T7_L1_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cg1</param>
+				<param key="propertyValueColumn">T7_L1_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cg2</param>
+				<param key="propertyValueColumn">T7_L1_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Ch</param>
+				<param key="propertyValueColumn">T7_L1_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Ci</param>
+				<param key="propertyValueColumn">T7_L1_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Ca1</param>
+				<param key="propertyValueColumn">T7_L10_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Ca2</param>
+				<param key="propertyValueColumn">T7_L10_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cb11</param>
+				<param key="propertyValueColumn">T7_L10_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cb12</param>
+				<param key="propertyValueColumn">T7_L10_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cb21</param>
+				<param key="propertyValueColumn">T7_L10_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cb22</param>
+				<param key="propertyValueColumn">T7_L10_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cc1</param>
+				<param key="propertyValueColumn">T7_L10_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cc2</param>
+				<param key="propertyValueColumn">T7_L10_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cd1</param>
+				<param key="propertyValueColumn">T7_L10_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cd2</param>
+				<param key="propertyValueColumn">T7_L10_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Ce1</param>
+				<param key="propertyValueColumn">T7_L10_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Ce2</param>
+				<param key="propertyValueColumn">T7_L10_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cf1</param>
+				<param key="propertyValueColumn">T7_L10_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cf2</param>
+				<param key="propertyValueColumn">T7_L10_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cg1</param>
+				<param key="propertyValueColumn">T7_L10_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cg2</param>
+				<param key="propertyValueColumn">T7_L10_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Ch</param>
+				<param key="propertyValueColumn">T7_L10_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Ci</param>
+				<param key="propertyValueColumn">T7_L10_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Ca1</param>
+				<param key="propertyValueColumn">T7_L11_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Ca2</param>
+				<param key="propertyValueColumn">T7_L11_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cb11</param>
+				<param key="propertyValueColumn">T7_L11_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cb12</param>
+				<param key="propertyValueColumn">T7_L11_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cb21</param>
+				<param key="propertyValueColumn">T7_L11_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cb22</param>
+				<param key="propertyValueColumn">T7_L11_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cc1</param>
+				<param key="propertyValueColumn">T7_L11_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cc2</param>
+				<param key="propertyValueColumn">T7_L11_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cd1</param>
+				<param key="propertyValueColumn">T7_L11_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cd2</param>
+				<param key="propertyValueColumn">T7_L11_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Ce1</param>
+				<param key="propertyValueColumn">T7_L11_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Ce2</param>
+				<param key="propertyValueColumn">T7_L11_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cf1</param>
+				<param key="propertyValueColumn">T7_L11_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cf2</param>
+				<param key="propertyValueColumn">T7_L11_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cg1</param>
+				<param key="propertyValueColumn">T7_L11_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cg2</param>
+				<param key="propertyValueColumn">T7_L11_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Ch</param>
+				<param key="propertyValueColumn">T7_L11_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Ci</param>
+				<param key="propertyValueColumn">T7_L11_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Ca1</param>
+				<param key="propertyValueColumn">T7_L12_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Ca2</param>
+				<param key="propertyValueColumn">T7_L12_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cb11</param>
+				<param key="propertyValueColumn">T7_L12_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cb12</param>
+				<param key="propertyValueColumn">T7_L12_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cb21</param>
+				<param key="propertyValueColumn">T7_L12_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cb22</param>
+				<param key="propertyValueColumn">T7_L12_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cc1</param>
+				<param key="propertyValueColumn">T7_L12_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cc2</param>
+				<param key="propertyValueColumn">T7_L12_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cd1</param>
+				<param key="propertyValueColumn">T7_L12_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cd2</param>
+				<param key="propertyValueColumn">T7_L12_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Ce1</param>
+				<param key="propertyValueColumn">T7_L12_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Ce2</param>
+				<param key="propertyValueColumn">T7_L12_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cf1</param>
+				<param key="propertyValueColumn">T7_L12_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cf2</param>
+				<param key="propertyValueColumn">T7_L12_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cg1</param>
+				<param key="propertyValueColumn">T7_L12_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cg2</param>
+				<param key="propertyValueColumn">T7_L12_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Ch</param>
+				<param key="propertyValueColumn">T7_L12_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Ci</param>
+				<param key="propertyValueColumn">T7_L12_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Ca1</param>
+				<param key="propertyValueColumn">T7_L13_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Ca2</param>
+				<param key="propertyValueColumn">T7_L13_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cb11</param>
+				<param key="propertyValueColumn">T7_L13_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cb12</param>
+				<param key="propertyValueColumn">T7_L13_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cb21</param>
+				<param key="propertyValueColumn">T7_L13_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cb22</param>
+				<param key="propertyValueColumn">T7_L13_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cc1</param>
+				<param key="propertyValueColumn">T7_L13_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cc2</param>
+				<param key="propertyValueColumn">T7_L13_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cd1</param>
+				<param key="propertyValueColumn">T7_L13_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cd2</param>
+				<param key="propertyValueColumn">T7_L13_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Ce1</param>
+				<param key="propertyValueColumn">T7_L13_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Ce2</param>
+				<param key="propertyValueColumn">T7_L13_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cf1</param>
+				<param key="propertyValueColumn">T7_L13_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cf2</param>
+				<param key="propertyValueColumn">T7_L13_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cg1</param>
+				<param key="propertyValueColumn">T7_L13_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cg2</param>
+				<param key="propertyValueColumn">T7_L13_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Ch</param>
+				<param key="propertyValueColumn">T7_L13_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Ci</param>
+				<param key="propertyValueColumn">T7_L13_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L2_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L2_Ci</param>
+				<param key="propertyValueColumn">T7_L2_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Ca1</param>
+				<param key="propertyValueColumn">T7_L3_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Ca2</param>
+				<param key="propertyValueColumn">T7_L3_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cb11</param>
+				<param key="propertyValueColumn">T7_L3_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cb12</param>
+				<param key="propertyValueColumn">T7_L3_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cb21</param>
+				<param key="propertyValueColumn">T7_L3_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cb22</param>
+				<param key="propertyValueColumn">T7_L3_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cc1</param>
+				<param key="propertyValueColumn">T7_L3_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cc2</param>
+				<param key="propertyValueColumn">T7_L3_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cd1</param>
+				<param key="propertyValueColumn">T7_L3_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cd2</param>
+				<param key="propertyValueColumn">T7_L3_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Ce1</param>
+				<param key="propertyValueColumn">T7_L3_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Ce2</param>
+				<param key="propertyValueColumn">T7_L3_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cf1</param>
+				<param key="propertyValueColumn">T7_L3_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cf2</param>
+				<param key="propertyValueColumn">T7_L3_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cg1</param>
+				<param key="propertyValueColumn">T7_L3_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cg2</param>
+				<param key="propertyValueColumn">T7_L3_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Ch</param>
+				<param key="propertyValueColumn">T7_L3_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Ci</param>
+				<param key="propertyValueColumn">T7_L3_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Ca1</param>
+				<param key="propertyValueColumn">T7_L4_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Ca2</param>
+				<param key="propertyValueColumn">T7_L4_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cb11</param>
+				<param key="propertyValueColumn">T7_L4_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cb12</param>
+				<param key="propertyValueColumn">T7_L4_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cb21</param>
+				<param key="propertyValueColumn">T7_L4_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cb22</param>
+				<param key="propertyValueColumn">T7_L4_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cc1</param>
+				<param key="propertyValueColumn">T7_L4_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cc2</param>
+				<param key="propertyValueColumn">T7_L4_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cd1</param>
+				<param key="propertyValueColumn">T7_L4_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cd2</param>
+				<param key="propertyValueColumn">T7_L4_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Ce1</param>
+				<param key="propertyValueColumn">T7_L4_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Ce2</param>
+				<param key="propertyValueColumn">T7_L4_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cf1</param>
+				<param key="propertyValueColumn">T7_L4_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cf2</param>
+				<param key="propertyValueColumn">T7_L4_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cg1</param>
+				<param key="propertyValueColumn">T7_L4_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cg2</param>
+				<param key="propertyValueColumn">T7_L4_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Ch</param>
+				<param key="propertyValueColumn">T7_L4_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Ci</param>
+				<param key="propertyValueColumn">T7_L4_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Ca1</param>
+				<param key="propertyValueColumn">T7_L5_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Ca2</param>
+				<param key="propertyValueColumn">T7_L5_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cb11</param>
+				<param key="propertyValueColumn">T7_L5_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cb12</param>
+				<param key="propertyValueColumn">T7_L5_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cb21</param>
+				<param key="propertyValueColumn">T7_L5_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cb22</param>
+				<param key="propertyValueColumn">T7_L5_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cc1</param>
+				<param key="propertyValueColumn">T7_L5_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cc2</param>
+				<param key="propertyValueColumn">T7_L5_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cd1</param>
+				<param key="propertyValueColumn">T7_L5_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cd2</param>
+				<param key="propertyValueColumn">T7_L5_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Ce1</param>
+				<param key="propertyValueColumn">T7_L5_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Ce2</param>
+				<param key="propertyValueColumn">T7_L5_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cf1</param>
+				<param key="propertyValueColumn">T7_L5_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cf2</param>
+				<param key="propertyValueColumn">T7_L5_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cg1</param>
+				<param key="propertyValueColumn">T7_L5_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cg2</param>
+				<param key="propertyValueColumn">T7_L5_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Ch</param>
+				<param key="propertyValueColumn">T7_L5_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Ci</param>
+				<param key="propertyValueColumn">T7_L5_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Ca1</param>
+				<param key="propertyValueColumn">T7_L6_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Ca2</param>
+				<param key="propertyValueColumn">T7_L6_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cb11</param>
+				<param key="propertyValueColumn">T7_L6_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cb12</param>
+				<param key="propertyValueColumn">T7_L6_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cb21</param>
+				<param key="propertyValueColumn">T7_L6_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cb22</param>
+				<param key="propertyValueColumn">T7_L6_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cc1</param>
+				<param key="propertyValueColumn">T7_L6_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cc2</param>
+				<param key="propertyValueColumn">T7_L6_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cd1</param>
+				<param key="propertyValueColumn">T7_L6_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cd2</param>
+				<param key="propertyValueColumn">T7_L6_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Ce1</param>
+				<param key="propertyValueColumn">T7_L6_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Ce2</param>
+				<param key="propertyValueColumn">T7_L6_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cf1</param>
+				<param key="propertyValueColumn">T7_L6_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cf2</param>
+				<param key="propertyValueColumn">T7_L6_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cg1</param>
+				<param key="propertyValueColumn">T7_L6_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cg2</param>
+				<param key="propertyValueColumn">T7_L6_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Ch</param>
+				<param key="propertyValueColumn">T7_L6_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Ci</param>
+				<param key="propertyValueColumn">T7_L6_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Ca1</param>
+				<param key="propertyValueColumn">T7_L7_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Ca2</param>
+				<param key="propertyValueColumn">T7_L7_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cb11</param>
+				<param key="propertyValueColumn">T7_L7_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cb12</param>
+				<param key="propertyValueColumn">T7_L7_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cb21</param>
+				<param key="propertyValueColumn">T7_L7_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cb22</param>
+				<param key="propertyValueColumn">T7_L7_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cc1</param>
+				<param key="propertyValueColumn">T7_L7_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cc2</param>
+				<param key="propertyValueColumn">T7_L7_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cd1</param>
+				<param key="propertyValueColumn">T7_L7_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cd2</param>
+				<param key="propertyValueColumn">T7_L7_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Ce1</param>
+				<param key="propertyValueColumn">T7_L7_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Ce2</param>
+				<param key="propertyValueColumn">T7_L7_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cf1</param>
+				<param key="propertyValueColumn">T7_L7_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cf2</param>
+				<param key="propertyValueColumn">T7_L7_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cg1</param>
+				<param key="propertyValueColumn">T7_L7_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cg2</param>
+				<param key="propertyValueColumn">T7_L7_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Ch</param>
+				<param key="propertyValueColumn">T7_L7_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Ci</param>
+				<param key="propertyValueColumn">T7_L7_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Ca1</param>
+				<param key="propertyValueColumn">T7_L8_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Ca2</param>
+				<param key="propertyValueColumn">T7_L8_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cb11</param>
+				<param key="propertyValueColumn">T7_L8_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cb12</param>
+				<param key="propertyValueColumn">T7_L8_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cb21</param>
+				<param key="propertyValueColumn">T7_L8_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cb22</param>
+				<param key="propertyValueColumn">T7_L8_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cc1</param>
+				<param key="propertyValueColumn">T7_L8_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cc2</param>
+				<param key="propertyValueColumn">T7_L8_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cd1</param>
+				<param key="propertyValueColumn">T7_L8_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cd2</param>
+				<param key="propertyValueColumn">T7_L8_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Ce1</param>
+				<param key="propertyValueColumn">T7_L8_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Ce2</param>
+				<param key="propertyValueColumn">T7_L8_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cf1</param>
+				<param key="propertyValueColumn">T7_L8_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cf2</param>
+				<param key="propertyValueColumn">T7_L8_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cg1</param>
+				<param key="propertyValueColumn">T7_L8_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cg2</param>
+				<param key="propertyValueColumn">T7_L8_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Ch</param>
+				<param key="propertyValueColumn">T7_L8_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Ci</param>
+				<param key="propertyValueColumn">T7_L8_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Ca1</param>
+				<param key="propertyValueColumn">T7_L9_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Ca2</param>
+				<param key="propertyValueColumn">T7_L9_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cb11</param>
+				<param key="propertyValueColumn">T7_L9_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cb12</param>
+				<param key="propertyValueColumn">T7_L9_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cb21</param>
+				<param key="propertyValueColumn">T7_L9_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cb22</param>
+				<param key="propertyValueColumn">T7_L9_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cc1</param>
+				<param key="propertyValueColumn">T7_L9_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cc2</param>
+				<param key="propertyValueColumn">T7_L9_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cd1</param>
+				<param key="propertyValueColumn">T7_L9_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cd2</param>
+				<param key="propertyValueColumn">T7_L9_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Ce1</param>
+				<param key="propertyValueColumn">T7_L9_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Ce2</param>
+				<param key="propertyValueColumn">T7_L9_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cf1</param>
+				<param key="propertyValueColumn">T7_L9_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cf2</param>
+				<param key="propertyValueColumn">T7_L9_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cg1</param>
+				<param key="propertyValueColumn">T7_L9_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cg2</param>
+				<param key="propertyValueColumn">T7_L9_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Ch</param>
+				<param key="propertyValueColumn">T7_L9_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Ci</param>
+				<param key="propertyValueColumn">T7_L9_Ci</param>
+			</rowprocessor>			
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">REPORT_</param>
+			<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">REPORT_</param>
+			<param key="parentKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="childObjectName">REPORT_SECTION_</param>
+			<param key="childKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear,UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">BelongsTo_</param>	
+			<param key="linkText">BelongsTo</param>		
+		</rowprocessor>		
+     </rowprocessorSet>
+    </table>
+   
+<!--                            2 0 1 0                         -->
+<table>
+      <description>HRSA REPORT TABLE 7 2010</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+          SELECT [HRSA_UDS_2010].[dbo].tblGranteeInfo.gi_txtUDS
+					  ,'2010' as ry_lngReportingYear
+					  ,'01/01/2010' as ReportingPeriodBegin, '12/31/2010' as ReportingPeriodEnd     
+					  ,[HRSA_UDS_2010].[dbo].tblGranteeInfo.[gi_txtName]
+					  ,'7' as UDSTableType
+				  	  ,'TABLE 7-HEALTH OUTCOMES AND DISPARITIES-' + [HRSA_UDS_2010].[dbo].tblGranteeInfo.[gi_txtName] + '-2010' as  ReportSectionName 				 				      
+				  	  ,[T7_L0_Ci]					  
+				      ,[T7_L0_Ci]
+				      ,[T7_L1_Ca2]
+				      ,[T7_L1_Ce2]
+				      ,[T7_L1_Cc2]
+				      ,[T7_L1_Ch]
+				      ,[T7_L1_Ca1]
+				      ,[T7_L1_Cf2]
+				      ,[T7_L1_Cb11]
+				      ,[T7_L1_Cf1]
+				      ,[T7_L1_Cd2]
+				      ,[T7_L1_Cd1]
+				      ,[T7_L1_Ci]
+				      ,[T7_L1_Cc1]
+				      ,[T7_L1_Cg2]
+				      ,[T7_L1_Cb22]
+				      ,[T7_L1_Ce1]
+				      ,[T7_L1_Cg1]
+				      ,[T7_L1_Cb12]
+				      ,[T7_L1_Cb21]
+				      ,[T7_L2_Ci]
+				      ,[T7_L3_Ci]
+				      ,[T7_L3_Cf2]
+				      ,[T7_L3_Cf1]
+				      ,[T7_L3_Cc2]
+				      ,[T7_L3_Ce1]
+				      ,[T7_L3_Cd1]
+				      ,[T7_L3_Ca2]
+				      ,[T7_L3_Cc1]
+				      ,[T7_L3_Cb12]
+				      ,[T7_L3_Ce2]
+				      ,[T7_L3_Cb22]
+				      ,[T7_L3_Cd2]
+				      ,[T7_L3_Cb11]
+				      ,[T7_L3_Ca1]
+				      ,[T7_L3_Cb21]
+				      ,[T7_L3_Cg1]
+				      ,[T7_L3_Cg2]
+				      ,[T7_L3_Ch]
+				      ,[T7_L4_Cb22]
+				      ,[T7_L4_Ce1]
+				      ,[T7_L4_Cf1]
+				      ,[T7_L4_Cb11]
+				      ,[T7_L4_Cg2]
+				      ,[T7_L4_Cc2]
+				      ,[T7_L4_Cd2]
+				      ,[T7_L4_Cc1]
+				      ,[T7_L4_Cb21]
+				      ,[T7_L4_Ca1]
+				      ,[T7_L4_Ca2]
+				      ,[T7_L4_Ch]
+				      ,[T7_L4_Ce2]
+				      ,[T7_L4_Cb12]
+				      ,[T7_L4_Ci]
+				      ,[T7_L4_Cd1]
+				      ,[T7_L4_Cf2]
+				      ,[T7_L4_Cg1]
+				      ,[T7_L5_Cf2]
+				      ,[T7_L5_Cg1]
+				      ,[T7_L5_Ci]
+				      ,[T7_L5_Ca1]
+				      ,[T7_L5_Ce2]
+				      ,[T7_L5_Cc1]
+				      ,[T7_L5_Ca2]
+				      ,[T7_L5_Cd1]
+				      ,[T7_L5_Cb12]
+				      ,[T7_L5_Cf1]
+				      ,[T7_L5_Ce1]
+				      ,[T7_L5_Cc2]
+				      ,[T7_L5_Cb22]
+				      ,[T7_L5_Cg2]
+				      ,[T7_L5_Ch]
+				      ,[T7_L5_Cd2]
+				      ,[T7_L5_Cb11]
+				      ,[T7_L5_Cb21]
+				      ,[T7_L6_Ce2]
+				      ,[T7_L6_Ca2]
+				      ,[T7_L6_Cb22]
+				      ,[T7_L6_Ce1]
+				      ,[T7_L6_Cf2]
+				      ,[T7_L6_Ca1]
+				      ,[T7_L6_Cg1]
+				      ,[T7_L6_Cb12]
+				      ,[T7_L6_Cd2]
+				      ,[T7_L6_Cd1]
+				      ,[T7_L6_Cc1]
+				      ,[T7_L6_Cb11]
+				      ,[T7_L6_Cc2]
+				      ,[T7_L6_Cb21]
+				      ,[T7_L6_Cg2]
+				      ,[T7_L6_Cf1]
+				      ,[T7_L6_Ci]
+				      ,[T7_L6_Ch]
+				      ,[T7_L7_Cg2]
+				      ,[T7_L7_Cf2]
+				      ,[T7_L7_Cd1]
+				      ,[T7_L7_Ce2]
+				      ,[T7_L7_Ca1]
+				      ,[T7_L7_Cb11]
+				      ,[T7_L7_Cb22]
+				      ,[T7_L7_Ca2]
+				      ,[T7_L7_Ch]
+				      ,[T7_L7_Cd2]
+				      ,[T7_L7_Cb21]
+				      ,[T7_L7_Cf1]
+				      ,[T7_L7_Cc2]
+				      ,[T7_L7_Cg1]
+				      ,[T7_L7_Ci]
+				      ,[T7_L7_Ce1]
+				      ,[T7_L7_Cb12]
+				      ,[T7_L7_Cc1]
+				      ,[T7_L8_Ch]
+				      ,[T7_L8_Ce1]
+				      ,[T7_L8_Cd2]
+				      ,[T7_L8_Cc1]
+				      ,[T7_L8_Ci]
+				      ,[T7_L8_Ca2]
+				      ,[T7_L8_Cf1]
+				      ,[T7_L8_Cc2]
+				      ,[T7_L8_Ce2]
+				      ,[T7_L8_Cd1]
+				      ,[T7_L8_Cb22]
+				      ,[T7_L8_Cf2]
+				      ,[T7_L8_Ca1]
+				      ,[T7_L8_Cg1]
+				      ,[T7_L8_Cg2]
+				      ,[T7_L8_Cb11]
+				      ,[T7_L8_Cb21]
+				      ,[T7_L8_Cb12]
+				      ,[T7_L9_Ci]
+				      ,[T7_L9_Ca1]
+				      ,[T7_L9_Cb11]
+				      ,[T7_L9_Ce1]
+				      ,[T7_L9_Cd1]
+				      ,[T7_L9_Cb21]
+				      ,[T7_L9_Cd2]
+				      ,[T7_L9_Cc1]
+				      ,[T7_L9_Cg2]
+				      ,[T7_L9_Ca2]
+				      ,[T7_L9_Cg1]
+				      ,[T7_L9_Cb22]
+				      ,[T7_L9_Cb12]
+				      ,[T7_L9_Cf1]
+				      ,[T7_L9_Cf2]
+				      ,[T7_L9_Ch]
+				      ,[T7_L9_Ce2]
+				      ,[T7_L9_Cc2]
+				      ,[T7_L10_Ci]
+				      ,[T7_L10_Ca1]
+				      ,[T7_L10_Cf1]
+				      ,[T7_L10_Cc1]
+				      ,[T7_L10_Cb12]
+				      ,[T7_L10_Cb22]
+				      ,[T7_L10_Ch]
+				      ,[T7_L10_Cg1]
+				      ,[T7_L10_Cb11]
+				      ,[T7_L10_Cg2]
+				      ,[T7_L10_Ce2]
+				      ,[T7_L10_Cd2]
+				      ,[T7_L10_Cf2]
+				      ,[T7_L10_Cc2]
+				      ,[T7_L10_Ca2]
+				      ,[T7_L10_Ce1]
+				      ,[T7_L10_Cb21]
+				      ,[T7_L10_Cd1]
+				      ,[T7_L11_Ce2]
+				      ,[T7_L11_Cc2]
+				      ,[T7_L11_Cd2]
+				      ,[T7_L11_Ci]
+				      ,[T7_L11_Ce1]
+				      ,[T7_L11_Ca2]
+				      ,[T7_L11_Cb12]
+				      ,[T7_L11_Cf1]
+				      ,[T7_L11_Cb11]
+				      ,[T7_L11_Cb22]
+				      ,[T7_L11_Ca1]
+				      ,[T7_L11_Cb21]
+				      ,[T7_L11_Cc1]
+				      ,[T7_L11_Cg2]
+				      ,[T7_L11_Cd1]
+				      ,[T7_L11_Cf2]
+				      ,[T7_L11_Cg1]
+				      ,[T7_L11_Ch]
+				      ,[T7_L12_Cd1]
+				      ,[T7_L12_Cb22]
+				      ,[T7_L12_Cc1]
+				      ,[T7_L12_Cf1]
+				      ,[T7_L12_Ca2]
+				      ,[T7_L12_Ce2]
+				      ,[T7_L12_Cb21]
+				      ,[T7_L12_Cd2]
+				      ,[T7_L12_Ce1]
+				      ,[T7_L12_Cg1]
+				      ,[T7_L12_Cf2]
+				      ,[T7_L12_Ci]
+				      ,[T7_L12_Ca1]
+				      ,[T7_L12_Ch]
+				      ,[T7_L12_Cc2]
+				      ,[T7_L12_Cg2]
+				      ,[T7_L12_Cb11]
+				      ,[T7_L12_Cb12]
+				      ,[T7_L13_Ci]
+				      ,[T7_L13_Ca1]
+				      ,[T7_L13_Ca2]
+				      ,[T7_L13_Cb21]
+				      ,[T7_L13_Cc2]
+				      ,[T7_L13_Cf1]
+				      ,[T7_L13_Cd2]
+				      ,[T7_L13_Cb22]
+				      ,[T7_L13_Ch]
+				      ,[T7_L13_Cd1]
+				      ,[T7_L13_Cc1]
+				      ,[T7_L13_Cb11]
+				      ,[T7_L13_Cg2]
+				      ,[T7_L13_Ce1]
+				      ,[T7_L13_Cg1]
+				      ,[T7_L13_Cf2]
+				      ,[T7_L13_Cb12]
+				      ,[T7_L13_Ce2]
+				 FROM [HRSA_UDS_2010].[dbo].[tblTable7],[HRSA_UDS_2010].[dbo].tblGranteeInfo
+					where [HRSA_UDS_2010].[dbo].[tblTable7].[gi_lnggranteeid] = [HRSA_UDS_2010].[dbo].tblGranteeInfo.[gi_lnggranteeid]
+                    </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_SECTION_</param> 
+	      <param key="documentIdColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_SECTION_</param>
+	      <param key="objectType">com.palantir.object.UDSReportSection</param>
+      </globalParams>
+      <rowprocessorSet>
+      <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>     
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportSectionName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportSectionName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">BHCMISID_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">UDSTableType_</param>
+			<param key="propertyType">com.palantir.property.UDSTableType</param>
+			<param key="propertyValueColumn">UDSTableType</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L0_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L0_Ci</param>
+				<param key="propertyValueColumn">T7_L0_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Ca1</param>
+				<param key="propertyValueColumn">T7_L1_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Ca2</param>
+				<param key="propertyValueColumn">T7_L1_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cb11</param>
+				<param key="propertyValueColumn">T7_L1_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cb12</param>
+				<param key="propertyValueColumn">T7_L1_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cb21</param>
+				<param key="propertyValueColumn">T7_L1_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cb22</param>
+				<param key="propertyValueColumn">T7_L1_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cc1</param>
+				<param key="propertyValueColumn">T7_L1_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cc2</param>
+				<param key="propertyValueColumn">T7_L1_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cd1</param>
+				<param key="propertyValueColumn">T7_L1_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cd2</param>
+				<param key="propertyValueColumn">T7_L1_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Ce1</param>
+				<param key="propertyValueColumn">T7_L1_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Ce2</param>
+				<param key="propertyValueColumn">T7_L1_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cf1</param>
+				<param key="propertyValueColumn">T7_L1_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cf2</param>
+				<param key="propertyValueColumn">T7_L1_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cg1</param>
+				<param key="propertyValueColumn">T7_L1_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Cg2</param>
+				<param key="propertyValueColumn">T7_L1_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Ch</param>
+				<param key="propertyValueColumn">T7_L1_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L1_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L1_Ci</param>
+				<param key="propertyValueColumn">T7_L1_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Ca1</param>
+				<param key="propertyValueColumn">T7_L10_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Ca2</param>
+				<param key="propertyValueColumn">T7_L10_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cb11</param>
+				<param key="propertyValueColumn">T7_L10_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cb12</param>
+				<param key="propertyValueColumn">T7_L10_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cb21</param>
+				<param key="propertyValueColumn">T7_L10_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cb22</param>
+				<param key="propertyValueColumn">T7_L10_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cc1</param>
+				<param key="propertyValueColumn">T7_L10_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cc2</param>
+				<param key="propertyValueColumn">T7_L10_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cd1</param>
+				<param key="propertyValueColumn">T7_L10_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cd2</param>
+				<param key="propertyValueColumn">T7_L10_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Ce1</param>
+				<param key="propertyValueColumn">T7_L10_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Ce2</param>
+				<param key="propertyValueColumn">T7_L10_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cf1</param>
+				<param key="propertyValueColumn">T7_L10_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cf2</param>
+				<param key="propertyValueColumn">T7_L10_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cg1</param>
+				<param key="propertyValueColumn">T7_L10_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Cg2</param>
+				<param key="propertyValueColumn">T7_L10_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Ch</param>
+				<param key="propertyValueColumn">T7_L10_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L10_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L10_Ci</param>
+				<param key="propertyValueColumn">T7_L10_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Ca1</param>
+				<param key="propertyValueColumn">T7_L11_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Ca2</param>
+				<param key="propertyValueColumn">T7_L11_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cb11</param>
+				<param key="propertyValueColumn">T7_L11_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cb12</param>
+				<param key="propertyValueColumn">T7_L11_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cb21</param>
+				<param key="propertyValueColumn">T7_L11_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cb22</param>
+				<param key="propertyValueColumn">T7_L11_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cc1</param>
+				<param key="propertyValueColumn">T7_L11_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cc2</param>
+				<param key="propertyValueColumn">T7_L11_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cd1</param>
+				<param key="propertyValueColumn">T7_L11_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cd2</param>
+				<param key="propertyValueColumn">T7_L11_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Ce1</param>
+				<param key="propertyValueColumn">T7_L11_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Ce2</param>
+				<param key="propertyValueColumn">T7_L11_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cf1</param>
+				<param key="propertyValueColumn">T7_L11_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cf2</param>
+				<param key="propertyValueColumn">T7_L11_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cg1</param>
+				<param key="propertyValueColumn">T7_L11_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Cg2</param>
+				<param key="propertyValueColumn">T7_L11_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Ch</param>
+				<param key="propertyValueColumn">T7_L11_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L11_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L11_Ci</param>
+				<param key="propertyValueColumn">T7_L11_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Ca1</param>
+				<param key="propertyValueColumn">T7_L12_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Ca2</param>
+				<param key="propertyValueColumn">T7_L12_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cb11</param>
+				<param key="propertyValueColumn">T7_L12_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cb12</param>
+				<param key="propertyValueColumn">T7_L12_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cb21</param>
+				<param key="propertyValueColumn">T7_L12_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cb22</param>
+				<param key="propertyValueColumn">T7_L12_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cc1</param>
+				<param key="propertyValueColumn">T7_L12_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cc2</param>
+				<param key="propertyValueColumn">T7_L12_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cd1</param>
+				<param key="propertyValueColumn">T7_L12_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cd2</param>
+				<param key="propertyValueColumn">T7_L12_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Ce1</param>
+				<param key="propertyValueColumn">T7_L12_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Ce2</param>
+				<param key="propertyValueColumn">T7_L12_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cf1</param>
+				<param key="propertyValueColumn">T7_L12_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cf2</param>
+				<param key="propertyValueColumn">T7_L12_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cg1</param>
+				<param key="propertyValueColumn">T7_L12_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Cg2</param>
+				<param key="propertyValueColumn">T7_L12_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Ch</param>
+				<param key="propertyValueColumn">T7_L12_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L12_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L12_Ci</param>
+				<param key="propertyValueColumn">T7_L12_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Ca1</param>
+				<param key="propertyValueColumn">T7_L13_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Ca2</param>
+				<param key="propertyValueColumn">T7_L13_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cb11</param>
+				<param key="propertyValueColumn">T7_L13_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cb12</param>
+				<param key="propertyValueColumn">T7_L13_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cb21</param>
+				<param key="propertyValueColumn">T7_L13_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cb22</param>
+				<param key="propertyValueColumn">T7_L13_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cc1</param>
+				<param key="propertyValueColumn">T7_L13_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cc2</param>
+				<param key="propertyValueColumn">T7_L13_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cd1</param>
+				<param key="propertyValueColumn">T7_L13_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cd2</param>
+				<param key="propertyValueColumn">T7_L13_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Ce1</param>
+				<param key="propertyValueColumn">T7_L13_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Ce2</param>
+				<param key="propertyValueColumn">T7_L13_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cf1</param>
+				<param key="propertyValueColumn">T7_L13_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cf2</param>
+				<param key="propertyValueColumn">T7_L13_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cg1</param>
+				<param key="propertyValueColumn">T7_L13_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Cg2</param>
+				<param key="propertyValueColumn">T7_L13_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Ch</param>
+				<param key="propertyValueColumn">T7_L13_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L13_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L13_Ci</param>
+				<param key="propertyValueColumn">T7_L13_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L2_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L2_Ci</param>
+				<param key="propertyValueColumn">T7_L2_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Ca1</param>
+				<param key="propertyValueColumn">T7_L3_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Ca2</param>
+				<param key="propertyValueColumn">T7_L3_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cb11</param>
+				<param key="propertyValueColumn">T7_L3_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cb12</param>
+				<param key="propertyValueColumn">T7_L3_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cb21</param>
+				<param key="propertyValueColumn">T7_L3_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cb22</param>
+				<param key="propertyValueColumn">T7_L3_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cc1</param>
+				<param key="propertyValueColumn">T7_L3_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cc2</param>
+				<param key="propertyValueColumn">T7_L3_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cd1</param>
+				<param key="propertyValueColumn">T7_L3_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cd2</param>
+				<param key="propertyValueColumn">T7_L3_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Ce1</param>
+				<param key="propertyValueColumn">T7_L3_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Ce2</param>
+				<param key="propertyValueColumn">T7_L3_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cf1</param>
+				<param key="propertyValueColumn">T7_L3_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cf2</param>
+				<param key="propertyValueColumn">T7_L3_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cg1</param>
+				<param key="propertyValueColumn">T7_L3_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Cg2</param>
+				<param key="propertyValueColumn">T7_L3_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Ch</param>
+				<param key="propertyValueColumn">T7_L3_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L3_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L3_Ci</param>
+				<param key="propertyValueColumn">T7_L3_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Ca1</param>
+				<param key="propertyValueColumn">T7_L4_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Ca2</param>
+				<param key="propertyValueColumn">T7_L4_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cb11</param>
+				<param key="propertyValueColumn">T7_L4_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cb12</param>
+				<param key="propertyValueColumn">T7_L4_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cb21</param>
+				<param key="propertyValueColumn">T7_L4_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cb22</param>
+				<param key="propertyValueColumn">T7_L4_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cc1</param>
+				<param key="propertyValueColumn">T7_L4_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cc2</param>
+				<param key="propertyValueColumn">T7_L4_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cd1</param>
+				<param key="propertyValueColumn">T7_L4_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cd2</param>
+				<param key="propertyValueColumn">T7_L4_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Ce1</param>
+				<param key="propertyValueColumn">T7_L4_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Ce2</param>
+				<param key="propertyValueColumn">T7_L4_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cf1</param>
+				<param key="propertyValueColumn">T7_L4_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cf2</param>
+				<param key="propertyValueColumn">T7_L4_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cg1</param>
+				<param key="propertyValueColumn">T7_L4_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Cg2</param>
+				<param key="propertyValueColumn">T7_L4_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Ch</param>
+				<param key="propertyValueColumn">T7_L4_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L4_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L4_Ci</param>
+				<param key="propertyValueColumn">T7_L4_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Ca1</param>
+				<param key="propertyValueColumn">T7_L5_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Ca2</param>
+				<param key="propertyValueColumn">T7_L5_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cb11</param>
+				<param key="propertyValueColumn">T7_L5_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cb12</param>
+				<param key="propertyValueColumn">T7_L5_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cb21</param>
+				<param key="propertyValueColumn">T7_L5_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cb22</param>
+				<param key="propertyValueColumn">T7_L5_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cc1</param>
+				<param key="propertyValueColumn">T7_L5_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cc2</param>
+				<param key="propertyValueColumn">T7_L5_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cd1</param>
+				<param key="propertyValueColumn">T7_L5_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cd2</param>
+				<param key="propertyValueColumn">T7_L5_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Ce1</param>
+				<param key="propertyValueColumn">T7_L5_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Ce2</param>
+				<param key="propertyValueColumn">T7_L5_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cf1</param>
+				<param key="propertyValueColumn">T7_L5_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cf2</param>
+				<param key="propertyValueColumn">T7_L5_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cg1</param>
+				<param key="propertyValueColumn">T7_L5_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Cg2</param>
+				<param key="propertyValueColumn">T7_L5_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Ch</param>
+				<param key="propertyValueColumn">T7_L5_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L5_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L5_Ci</param>
+				<param key="propertyValueColumn">T7_L5_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Ca1</param>
+				<param key="propertyValueColumn">T7_L6_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Ca2</param>
+				<param key="propertyValueColumn">T7_L6_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cb11</param>
+				<param key="propertyValueColumn">T7_L6_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cb12</param>
+				<param key="propertyValueColumn">T7_L6_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cb21</param>
+				<param key="propertyValueColumn">T7_L6_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cb22</param>
+				<param key="propertyValueColumn">T7_L6_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cc1</param>
+				<param key="propertyValueColumn">T7_L6_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cc2</param>
+				<param key="propertyValueColumn">T7_L6_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cd1</param>
+				<param key="propertyValueColumn">T7_L6_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cd2</param>
+				<param key="propertyValueColumn">T7_L6_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Ce1</param>
+				<param key="propertyValueColumn">T7_L6_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Ce2</param>
+				<param key="propertyValueColumn">T7_L6_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cf1</param>
+				<param key="propertyValueColumn">T7_L6_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cf2</param>
+				<param key="propertyValueColumn">T7_L6_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cg1</param>
+				<param key="propertyValueColumn">T7_L6_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Cg2</param>
+				<param key="propertyValueColumn">T7_L6_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Ch</param>
+				<param key="propertyValueColumn">T7_L6_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L6_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L6_Ci</param>
+				<param key="propertyValueColumn">T7_L6_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Ca1</param>
+				<param key="propertyValueColumn">T7_L7_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Ca2</param>
+				<param key="propertyValueColumn">T7_L7_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cb11</param>
+				<param key="propertyValueColumn">T7_L7_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cb12</param>
+				<param key="propertyValueColumn">T7_L7_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cb21</param>
+				<param key="propertyValueColumn">T7_L7_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cb22</param>
+				<param key="propertyValueColumn">T7_L7_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cc1</param>
+				<param key="propertyValueColumn">T7_L7_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cc2</param>
+				<param key="propertyValueColumn">T7_L7_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cd1</param>
+				<param key="propertyValueColumn">T7_L7_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cd2</param>
+				<param key="propertyValueColumn">T7_L7_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Ce1</param>
+				<param key="propertyValueColumn">T7_L7_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Ce2</param>
+				<param key="propertyValueColumn">T7_L7_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cf1</param>
+				<param key="propertyValueColumn">T7_L7_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cf2</param>
+				<param key="propertyValueColumn">T7_L7_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cg1</param>
+				<param key="propertyValueColumn">T7_L7_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Cg2</param>
+				<param key="propertyValueColumn">T7_L7_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Ch</param>
+				<param key="propertyValueColumn">T7_L7_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L7_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L7_Ci</param>
+				<param key="propertyValueColumn">T7_L7_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Ca1</param>
+				<param key="propertyValueColumn">T7_L8_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Ca2</param>
+				<param key="propertyValueColumn">T7_L8_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cb11</param>
+				<param key="propertyValueColumn">T7_L8_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cb12</param>
+				<param key="propertyValueColumn">T7_L8_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cb21</param>
+				<param key="propertyValueColumn">T7_L8_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cb22</param>
+				<param key="propertyValueColumn">T7_L8_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cc1</param>
+				<param key="propertyValueColumn">T7_L8_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cc2</param>
+				<param key="propertyValueColumn">T7_L8_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cd1</param>
+				<param key="propertyValueColumn">T7_L8_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cd2</param>
+				<param key="propertyValueColumn">T7_L8_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Ce1</param>
+				<param key="propertyValueColumn">T7_L8_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Ce2</param>
+				<param key="propertyValueColumn">T7_L8_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cf1</param>
+				<param key="propertyValueColumn">T7_L8_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cf2</param>
+				<param key="propertyValueColumn">T7_L8_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cg1</param>
+				<param key="propertyValueColumn">T7_L8_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Cg2</param>
+				<param key="propertyValueColumn">T7_L8_Cg2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Ch</param>
+				<param key="propertyValueColumn">T7_L8_Ch</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L8_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L8_Ci</param>
+				<param key="propertyValueColumn">T7_L8_Ci</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Ca1_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Ca1</param>
+				<param key="propertyValueColumn">T7_L9_Ca1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Ca2_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Ca2</param>
+				<param key="propertyValueColumn">T7_L9_Ca2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cb11_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cb11</param>
+				<param key="propertyValueColumn">T7_L9_Cb11</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cb12_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cb12</param>
+				<param key="propertyValueColumn">T7_L9_Cb12</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cb21_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cb21</param>
+				<param key="propertyValueColumn">T7_L9_Cb21</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cb22_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cb22</param>
+				<param key="propertyValueColumn">T7_L9_Cb22</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cc1_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cc1</param>
+				<param key="propertyValueColumn">T7_L9_Cc1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cc2_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cc2</param>
+				<param key="propertyValueColumn">T7_L9_Cc2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cd1_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cd1</param>
+				<param key="propertyValueColumn">T7_L9_Cd1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cd2_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cd2</param>
+				<param key="propertyValueColumn">T7_L9_Cd2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Ce1_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Ce1</param>
+				<param key="propertyValueColumn">T7_L9_Ce1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Ce2_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Ce2</param>
+				<param key="propertyValueColumn">T7_L9_Ce2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cf1_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cf1</param>
+				<param key="propertyValueColumn">T7_L9_Cf1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cf2_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cf2</param>
+				<param key="propertyValueColumn">T7_L9_Cf2</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cg1_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cg1</param>
+				<param key="propertyValueColumn">T7_L9_Cg1</param>
+			</rowprocessor>
+			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Cg2_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Cg2</param>
+				<param key="propertyValueColumn">T7_L9_Cg2</param>
+			</rowprocessor>			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Ch_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Ch</param>
+				<param key="propertyValueColumn">T7_L9_Ch</param>
+			</rowprocessor>			
+			<rowprocessor class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+				<param key="propertyName">T7_L9_Ci_</param>
+				<param key="propertyType">com.palantir.property.T7_L9_Ci</param>
+				<param key="propertyValueColumn">T7_L9_Ci</param>
+			</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">REPORT_</param>
+			<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">REPORT_</param>
+			<param key="parentKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="childObjectName">REPORT_SECTION_</param>
+			<param key="childKeyColumns">UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear,UDSTableType,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">BelongsTo_</param>	
+			<param key="linkText">BelongsTo</param>		
+		</rowprocessor>		
+      </rowprocessorSet>      
+    </table>
+  </tables>
+</kite>
+
+

@@ -1,0 +1,2545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 1.	This code and matching ontology is developed by Artemis Ozten for Direct Relief 	-->
+<!-- 2.	This work includes the following: 									-->
+<!--  	a. 11 years HRSA UDS reports and the matching relational databases were examined to correctly name properties, and, maintain yearly changes.-->
+<!-- 		That is to say, it has been made sure that throughout 11 year history, a property indicates semantically the same data.   -->
+<!-- 		So, if age ranges were changed or adjusted, or data was split (or joined) amongst different ethnic or racial groups,  -->
+<!-- 		either the new properties were added, or, existing properties were combined, or, some properties were discontinued.   -->
+<!-- 	b. Iterative consulting with expert business users was conducted to define the scope: -->
+<!-- 		a.	Irrelevant data was left out  -->
+<!-- 		b.	All  relevant data was retrieved   -->
+<!-- 		c.	Clinic level aggregates were determined -->
+<kite  xmlns="http://www.palantirtech.com/pg/schema/kite/">
+<config>
+     <batchSize>1000</batchSize>
+    <batchSleepTime>0</batchSleepTime>
+    <connection>
+	  <driverName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverName>   
+	   <!-- <driverName>net.sourceforge.jtds.jdbc.Driver</driverName> -->
+       <!-- <url>jdbc:jtds:sqlserver://DRISQLHAPRD:1433;DatabaseName=InformationExplorer</url> -->
+	<url>jdbc:sqlserver://DRISQLHAPRD:1433;DatabaseName=HRSA_UDS_2011</url>
+      <!-- DRISQLHAPRD -->
+      <username>palantir</username>
+      <plaintextPassword>paloalto</plaintextPassword>
+    </connection>
+    <repository>
+      <path>
+        <directory>/opt/palantir/pXML-Prod/HRSA-UDS</directory>
+        <levels>2</levels>
+      </path>
+    </repository>
+  </config>
+  <tables>
+      <!--                            I M P O R T      R E P O R T S                         -->
+  
+      <!--                            2 0 0 0                         --> 
+<table >
+      <description>HRSA REPORT HEADERS 2000</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">SELECT gi.[gi_txtUDS],gi.[gi_txtName] 
+					  ,gi.ry_lngReportingYear + 1998 as ry_lngReportingYear
+					  ,'01/01/2000' as ReportingPeriodBegin, '12/31/2000' as ReportingPeriodEnd      				     
+					  ,'UDSReport-'+gi.[gi_txtName] + '-2000' as  ReportName 
+			          ,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey 
+					  ,isnull(convert(int,p.partnerid),'') as partnerID
+				      ,gi.[gi_txtStreetAddress]
+				      ,gi.[gi_txtOtherAddress]
+				      ,gi.[gi_txtCity]
+				      ,gi.[gi_txtState]
+				      ,gi.[gi_txtZipCode]
+				      ,[gi_lngDeliverySites]
+				      ,[gi_lngAssignees]
+				      ,[gi_fCHC]=case [gi_fCHC] when 1 then 'Y' when 0 then 'N' else NULL end
+				      ,[gi_fMHC]=case [gi_fMHC] when 1 then 'Y' when 0 then 'N' else NULL end
+				      ,[gi_fHO]=case [gi_fHO] when 1 then 'Y' when 0 then 'N' else NULL end
+				      ,[gi_fPH]=case [gi_fPH] when 1 then 'Y' when 0 then 'N' else NULL end
+				      ,[gi_txtComment], geo.Longitude, geo.Latitude				      
+				  FROM  [HRSA_UDS_2000].[dbo].TBLGRANTEEINFOGEOCODED geo, [HRSA_UDS_2000].[dbo].[tblGranteeInfo] gi
+				  left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS] = p.UDSGranteeID
+            WHERE  gi.[gi_txtUDS] = geo.[gi_txtUDS]         
+            </param>
+        </rowprovider>
+<!--         	<rowprovider class="com.palantir.kite.provider.chained.RubyRowProvider"> -->
+<!--         	<param key="generatedColumn">fileName</param> -->
+<!--         	<param key="ruby">gi_txtName</param> -->
+<!--         </rowprovider>	 -->
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_</param>
+	      <param key="objectType">com.palantir.object.UDSReport</param>
+	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param></globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>	
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">gi_txtStreetAddress,gi_txtOtherAddress,gi_txtCity,gi_txtState,gi_txtZipCode</param>
+			<param key="componentTypes">ADDRESS1,ADDRESS2,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="blacklistValues">0</param>
+			<param key="propertyName">PartnerID_</param>
+			<param key="propertyType">com.palantir.property.OrganizationId</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngDeliverySites_</param>
+			<param key="propertyType">com.palantir.property.DeliverySites</param>
+			<param key="propertyValueColumn">gi_lngDeliverySites</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngAssignees_</param>
+			<param key="propertyType">com.palantir.property.Assignees</param>
+			<param key="propertyValueColumn">gi_lngAssignees</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fCHC_</param>
+			<param key="propertyType">com.palantir.property.fCHC</param>
+			<param key="propertyValueColumn">gi_fCHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fMHC_</param>
+			<param key="propertyType">com.palantir.property.fMHC</param>
+			<param key="propertyValueColumn">gi_fMHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHO_</param>
+			<param key="propertyType">com.palantir.property.fHO</param>
+			<param key="propertyValueColumn">gi_fHO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fPH_</param>
+			<param key="propertyType">com.palantir.property.fPH</param>
+			<param key="propertyValueColumn">gi_fPH</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtComment_</param>
+			<param key="propertyType">com.palantir.property.Comment</param>
+			<param key="propertyValueColumn">gi_txtComment</param>
+		</rowprocessor>
+		 <rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">REPORT_</param>
+			<param key="childKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">Reported_</param>	
+			<param key="linkText">Reported</param>		
+		</rowprocessor>
+		</rowprocessorSet>
+    </table>    
+    <!--                            2 0 0 1                         -->
+<table >
+      <description>HRSA REPORT HEADERS 2001</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> 
+          SELECT gi.[gi_txtUDS], gi.[gi_txtName]
+				  ,gi.ry_lngReportingYear + 1998 as ry_lngReportingYear
+				  ,'01/01/2001' as ReportingPeriodBegin, '12/31/2001' as ReportingPeriodEnd      
+			      ,'UDSReport-'+gi.[gi_txtName] + '-2001' as  ReportName 
+			      ,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey 
+				  ,isnull(convert(int,p.partnerid),'') as partnerID
+			      ,gi.[gi_txtStreetAddress]
+			      ,gi.[gi_txtOtherAddress]
+			      ,gi.[gi_txtCity]
+			      ,gi.[gi_txtState]
+			      ,gi.[gi_txtZipCode]
+			      ,[gi_lngDeliverySites]
+			      ,[gi_lngAssignees]
+				  ,[gi_fCHC]=case [gi_fCHC] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fMHC]=case [gi_fMHC] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fHO]=case [gi_fHO] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fPH]=case [gi_fPH] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_txtComment], geo.Longitude,geo.Latitude 
+				  ,[gi_txtSchoolHealthCoord]
+				  ,[gi_txtHomelessProgCoord]
+				  ,[gi_txtPHProgCoord]
+				  ,[gi_bytNetworkParticipation]
+				  ,[gi_fISDIFunding]=case [gi_fISDIFunding] when 1 then 'Y' when 0 then 'N' else NULL end 
+			  FROM  [HRSA_UDS_2001].[dbo].TBLGRANTEEINFOGEOCODED geo, [HRSA_UDS_2001].[dbo].[tblGranteeInfo] gi
+			  left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS] = p.UDSGranteeID
+            WHERE  gi.[gi_txtUDS] = geo.[gi_txtUDS]            
+ 		</param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_</param>
+	      <param key="objectType">com.palantir.object.UDSReport</param>
+      	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param></globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="blacklistValues">0</param>
+			<param key="propertyName">PartnerID_</param>
+			<param key="propertyType">com.palantir.property.OrganizationId</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">gi_txtStreetAddress,gi_txtOtherAddress,gi_txtCity,gi_txtState,gi_txtZipCode</param>
+			<param key="componentTypes">ADDRESS1,ADDRESS2,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngDeliverySites_</param>
+			<param key="propertyType">com.palantir.property.DeliverySites</param>
+			<param key="propertyValueColumn">gi_lngDeliverySites</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngAssignees_</param>
+			<param key="propertyType">com.palantir.property.Assignees</param>
+			<param key="propertyValueColumn">gi_lngAssignees</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fCHC_</param>
+			<param key="propertyType">com.palantir.property.fCHC</param>
+			<param key="propertyValueColumn">gi_fCHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fMHC_</param>
+			<param key="propertyType">com.palantir.property.fMHC</param>
+			<param key="propertyValueColumn">gi_fMHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHO_</param>
+			<param key="propertyType">com.palantir.property.fHO</param>
+			<param key="propertyValueColumn">gi_fHO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fPH_</param>
+			<param key="propertyType">com.palantir.property.fPH</param>
+			<param key="propertyValueColumn">gi_fPH</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtComment_</param>
+			<param key="propertyType">com.palantir.property.Comment</param>
+			<param key="propertyValueColumn">gi_txtComment</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtSchoolHealthCoord_</param>
+			<param key="propertyType">com.palantir.property.SchoolHealthCoord</param>
+			<param key="propertyValueColumn">gi_txtSchoolHealthCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>			
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtHomelessProgCoord_</param>
+			<param key="propertyType">com.palantir.property.HomelessProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtHomelessProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtPHProgCoord_</param>
+			<param key="propertyType">com.palantir.property.PHProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtPHProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_bytNetworkParticipation_</param>
+			<param key="propertyType">com.palantir.property.NetworkParticipation</param>
+			<param key="propertyValueColumn">gi_bytNetworkParticipation</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fISDIFunding_</param>
+			<param key="propertyType">com.palantir.property.fISDIFunding</param>
+			<param key="propertyValueColumn">gi_fISDIFunding</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>
+				<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">REPORT_</param>
+			<param key="childKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">Reported_</param>	
+			<param key="linkText">Reported</param>		
+		</rowprocessor>
+		</rowprocessorSet>
+    </table>
+
+<!--                            2 0 0 2                         -->
+<table>
+      <description>HRSA REPORT HEADERS 2002</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">SELECT gi.[gi_txtUDS], gi.[gi_txtName]
+						  ,gi.ry_lngReportingYear + 1998 as ry_lngReportingYear
+						  ,'01/01/2002' as ReportingPeriodBegin, '12/31/2002' as ReportingPeriodEnd      
+					      ,'UDSReport-'+gi.[gi_txtName] + '-2002' as  ReportName 
+					      ,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey 
+				  		  ,isnull(convert(int,p.partnerid),'') as partnerID
+					      ,gi.[gi_txtStreetAddress]
+					      ,gi.[gi_txtOtherAddress]
+					      ,gi.[gi_txtCity]
+					      ,gi.[gi_txtState]
+					      ,gi.[gi_txtZipCode]
+					      ,[gi_lngDeliverySites]
+					      ,[gi_lngAssignees]
+						  ,[gi_fCHC]=case [gi_fCHC] when 1 then 'Y' when 0 then 'N' else NULL end
+					      ,[gi_fMHC]=case [gi_fMHC] when 1 then 'Y' when 0 then 'N' else NULL end
+					      ,[gi_fHO]=case [gi_fHO] when 1 then 'Y' when 0 then 'N' else NULL end
+					      ,[gi_fPH]=case [gi_fPH] when 1 then 'Y' when 0 then 'N' else NULL end 
+						  ,[gi_fHSHC]=case [gi_fHSHC] when 1 then 'Y' when 0 then 'N' else NULL end 
+					      ,[gi_txtComment], geo.Longitude,geo.Latitude 
+						  ,[gi_txtSchoolHealthCoord]
+						  ,[gi_txtHomelessProgCoord]
+						  ,[gi_txtPHProgCoord]
+						  ,[gi_bytNetworkParticipation]
+						  ,[gi_fISDIFunding]=case [gi_fISDIFunding] when 1 then 'Y' when 0 then 'N' else NULL end 
+					      ,[gi_fShareStatePCA]=case [gi_fShareStatePCA] when 1 then 'Y' when 0 then 'N' else NULL end 
+					      ,[gi_fShareRegionPCA]=case [gi_fShareRegionPCA] when 1 then 'Y' when 0 then 'N' else NULL end 
+					      ,[gi_fShareStatePCO]=case [gi_fShareStatePCO] when 1 then 'Y' when 0 then 'N' else NULL end 
+					      ,[gi_fFTCADeemed]=case [gi_fFTCADeemed] when 1 then 'Y' when 0 then 'N' else NULL end 
+					      ,[gi_f340bDrug]=case [gi_f340bDrug] when 1 then 'Y' when 0 then 'N' else NULL end 
+					      ,[gi_fAltDrugDiscount]=case [gi_fAltDrugDiscount] when 1 then 'Y' when 0 then 'N' else NULL end 
+					  FROM  [HRSA_UDS_2002].[dbo].TBLGRANTEEINFOGEOCODED geo, [HRSA_UDS_2002].[dbo].[tblGranteeInfo] gi
+					   left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS] = p.UDSGranteeID
+            WHERE  gi.[gi_txtUDS] = geo.[gi_txtUDS]      
+		</param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_</param>
+	      <param key="objectType">com.palantir.object.UDSReport</param>
+      	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param></globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">gi_txtStreetAddress,gi_txtOtherAddress,gi_txtCity,gi_txtState,gi_txtZipCode</param>
+			<param key="componentTypes">ADDRESS1,ADDRESS2,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngDeliverySites_</param>
+			<param key="propertyType">com.palantir.property.DeliverySites</param>
+			<param key="propertyValueColumn">gi_lngDeliverySites</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngAssignees_</param>
+			<param key="propertyType">com.palantir.property.Assignees</param>
+			<param key="propertyValueColumn">gi_lngAssignees</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fCHC_</param>
+			<param key="propertyType">com.palantir.property.fCHC</param>
+			<param key="propertyValueColumn">gi_fCHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fMHC_</param>
+			<param key="propertyType">com.palantir.property.fMHC</param>
+			<param key="propertyValueColumn">gi_fMHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHO_</param>
+			<param key="propertyType">com.palantir.property.fHO</param>
+			<param key="propertyValueColumn">gi_fHO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fPH_</param>
+			<param key="propertyType">com.palantir.property.fPH</param>
+			<param key="propertyValueColumn">gi_fPH</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHSHC_</param>
+			<param key="propertyType">com.palantir.property.fHSHC</param>
+			<param key="propertyValueColumn">gi_fHSHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtComment_</param>
+			<param key="propertyType">com.palantir.property.Comment</param>
+			<param key="propertyValueColumn">gi_txtComment</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtSchoolHealthCoord_</param>
+			<param key="propertyType">com.palantir.property.SchoolHealthCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtSchoolHealthCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtHomelessProgCoord_</param>
+			<param key="propertyType">com.palantir.property.HomelessProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtHomelessProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtPHProgCoord_</param>
+			<param key="propertyType">com.palantir.property.PHProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtPHProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_bytNetworkParticipation_</param>
+			<param key="propertyType">com.palantir.property.NetworkParticipation</param>
+			<param key="propertyValueColumn">gi_bytNetworkParticipation</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fISDIFunding_</param>
+			<param key="propertyType">com.palantir.property.fISDIFunding</param>
+			<param key="propertyValueColumn">gi_fISDIFunding</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCA_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCA</param>
+			<param key="propertyValueColumn">gi_fShareStatePCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareRegionPCA_</param>
+			<param key="propertyType">com.palantir.property.fShareRegionPCA</param>
+			<param key="propertyValueColumn">gi_fShareRegionPCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCO_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCO</param>
+			<param key="propertyValueColumn">gi_fShareStatePCO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fFTCADeemed_</param>
+			<param key="propertyType">com.palantir.property.fFTCADeemed</param>
+			<param key="propertyValueColumn">gi_fFTCADeemed</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_f340bDrug_</param>
+			<param key="propertyType">com.palantir.property.f340bDrug</param>
+			<param key="propertyValueColumn">gi_f340bDrug</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fAltDrugDiscount_</param>
+			<param key="propertyType">com.palantir.property.fAltDrugDiscount</param>
+			<param key="propertyValueColumn">gi_fAltDrugDiscount</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="blacklistValues">0</param>
+			<param key="propertyName">PartnerID_</param>
+			<param key="propertyType">com.palantir.property.OrganizationId</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">REPORT_</param>
+			<param key="childKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">Reported_</param>	
+			<param key="linkText">Reported</param>		
+		</rowprocessor>
+		</rowprocessorSet>
+    </table>
+   <!--                            2 0 0 3                         -->
+<table >
+      <description>HRSA REPORT HEADERS 2003</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">   SELECT gi.[gi_txtUDS], gi.[gi_txtName]
+				,gi.ry_lngReportingYear + 1998 as ry_lngReportingYear
+				  ,'01/01/2003' as ReportingPeriodBegin, '12/31/2003' as ReportingPeriodEnd      
+			      ,'UDSReport-'+gi.[gi_txtName] + '-2003' as  ReportName 
+				 ,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey 
+				  ,isnull(convert(int,p.partnerid),'') as partnerID
+			      ,gi.[gi_txtStreetAddress]
+			      ,gi.[gi_txtOtherAddress]
+			      ,gi.[gi_txtCity]
+			      ,gi.[gi_txtState]
+			      ,gi.[gi_txtZipCode]
+			      ,[gi_lngDeliverySites]
+			      ,[gi_lngAssignees]
+				  ,[gi_fCHC]=case [gi_fCHC] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fMHC]=case [gi_fMHC] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fHO]=case [gi_fHO] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fPH]=case [gi_fPH] when 1 then 'Y' when 0 then 'N' else NULL end 
+				  ,[gi_fHSHC]
+			      ,[gi_txtComment], geo.Longitude,geo.Latitude 
+				  ,[gi_txtSchoolHealthCoord]
+				  ,[gi_txtHomelessProgCoord]
+				  ,[gi_txtPHProgCoord]
+				  ,[gi_bytNetworkParticipation]
+				  ,[gi_fISDIFunding]=case [gi_fISDIFunding] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fShareStatePCA]=case [gi_fShareStatePCA] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fShareRegionPCA]=case [gi_fShareRegionPCA] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fShareStatePCO]=case [gi_fShareStatePCO] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fFTCADeemed]=case [gi_fFTCADeemed] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_f340bDrug]=case [gi_f340bDrug] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fAltDrugDiscount]=case [gi_fAltDrugDiscount] when 1 then 'Y' when 0 then 'N' else NULL end 
+			  FROM  [HRSA_UDS_2003].[dbo].TBLGRANTEEINFOGEOCODED geo, [HRSA_UDS_2003].[dbo].[tblGranteeInfo] gi
+			  left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS] = p.UDSGranteeID
+            WHERE  gi.[gi_txtUDS] = geo.[gi_txtUDS]            
+  		</param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_</param>
+	      <param key="objectType">com.palantir.object.UDSReport</param>
+      	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param></globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">gi_txtStreetAddress,gi_txtOtherAddress,gi_txtCity,gi_txtState,gi_txtZipCode</param>
+			<param key="componentTypes">ADDRESS1,ADDRESS2,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngDeliverySites_</param>
+			<param key="propertyType">com.palantir.property.DeliverySites</param>
+			<param key="propertyValueColumn">gi_lngDeliverySites</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngAssignees_</param>
+			<param key="propertyType">com.palantir.property.Assignees</param>
+			<param key="propertyValueColumn">gi_lngAssignees</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fCHC_</param>
+			<param key="propertyType">com.palantir.property.fCHC</param>
+			<param key="propertyValueColumn">gi_fCHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fMHC_</param>
+			<param key="propertyType">com.palantir.property.fMHC</param>
+			<param key="propertyValueColumn">gi_fMHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHO_</param>
+			<param key="propertyType">com.palantir.property.fHO</param>
+			<param key="propertyValueColumn">gi_fHO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fPH_</param>
+			<param key="propertyType">com.palantir.property.fPH</param>
+			<param key="propertyValueColumn">gi_fPH</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHSHC_</param>
+			<param key="propertyType">com.palantir.property.fHSHC</param>
+			<param key="propertyValueColumn">gi_fHSHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtComment_</param>
+			<param key="propertyType">com.palantir.property.Comment</param>
+			<param key="propertyValueColumn">gi_txtComment</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtSchoolHealthCoord_</param>
+			<param key="propertyType">com.palantir.property.SchoolHealthCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtSchoolHealthCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtHomelessProgCoord_</param>
+			<param key="propertyType">com.palantir.property.HomelessProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtHomelessProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtPHProgCoord_</param>
+			<param key="propertyType">com.palantir.property.PHProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtPHProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_bytNetworkParticipation_</param>
+			<param key="propertyType">com.palantir.property.NetworkParticipation</param>
+			<param key="propertyValueColumn">gi_bytNetworkParticipation</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fISDIFunding_</param>
+			<param key="propertyType">com.palantir.property.fISDIFunding</param>
+			<param key="propertyValueColumn">gi_fISDIFunding</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCA_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCA</param>
+			<param key="propertyValueColumn">gi_fShareStatePCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareRegionPCA_</param>
+			<param key="propertyType">com.palantir.property.fShareRegionPCA</param>
+			<param key="propertyValueColumn">gi_fShareRegionPCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCO_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCO</param>
+			<param key="propertyValueColumn">gi_fShareStatePCO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fFTCADeemed_</param>
+			<param key="propertyType">com.palantir.property.fFTCADeemed</param>
+			<param key="propertyValueColumn">gi_fFTCADeemed</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_f340bDrug_</param>
+			<param key="propertyType">com.palantir.property.f340bDrug</param>
+			<param key="propertyValueColumn">gi_f340bDrug</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fAltDrugDiscount_</param>
+			<param key="propertyType">com.palantir.property.fAltDrugDiscount</param>
+			<param key="propertyValueColumn">gi_fAltDrugDiscount</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="blacklistValues">0</param>
+			<param key="propertyName">PartnerID_</param>
+			<param key="propertyType">com.palantir.property.OrganizationId</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+				<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">REPORT_</param>
+			<param key="childKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">Reported_</param>	
+			<param key="linkText">Reported</param>		
+		</rowprocessor>
+		</rowprocessorSet>
+    </table>
+    
+   <!--                            2 0 0 4                         -->
+<table >
+      <description>HRSA REPORT HEADERS 2004</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">            
+            SELECT gi.[gi_txtUDS], gi.[gi_txtName]
+				  ,'2004' as ry_lngReportingYear
+				  ,'01/01/2004' as ReportingPeriodBegin, '12/31/2004' as ReportingPeriodEnd      
+			      ,'UDSReport-'+gi.[gi_txtName] + '-2004' as  ReportName 
+				  ,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey 
+				  ,isnull(convert(int,p.partnerid),'') as partnerID
+			      ,gi.[gi_txtStreetAddress]
+			      ,gi.[gi_txtOtherAddress]
+			      ,gi.[gi_txtCity]
+			      ,gi.[gi_txtState]
+			      ,gi.[gi_txtZipCode]
+			      ,[gi_lngDeliverySites]
+			      ,[gi_lngAssignees]
+				  ,[gi_fCHC]=case [gi_fCHC] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fMHC]=case [gi_fMHC] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fHO]=case [gi_fHO] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fPH]=case [gi_fPH] when 1 then 'Y' when 0 then 'N' else NULL end 
+				  ,[gi_fHSHC]=case [gi_fHSHC] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_txtComment], geo.Longitude,geo.Latitude 
+				  ,[gi_txtSchoolHealthCoord]
+				  ,[gi_txtHomelessProgCoord]
+				  ,[gi_txtPHProgCoord]
+				  ,[gi_bytNetworkParticipation]
+				  ,[gi_fISDIFunding]=case [gi_fISDIFunding] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fShareStatePCA]=case [gi_fShareStatePCA] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fShareRegionPCA]=case [gi_fShareRegionPCA] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fShareStatePCO]=case [gi_fShareStatePCO] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fFTCADeemed]=case [gi_fFTCADeemed] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_f340bDrug]=case [gi_f340bDrug] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fAltDrugDiscount]=case [gi_fAltDrugDiscount] when 1 then 'Y' when 0 then 'N' else NULL end 
+			 FROM  [HRSA_UDS_2004].[dbo].TBLGRANTEEINFOGEOCODED geo, [HRSA_UDS_2004].[dbo].[tblGranteeInfo] gi
+			  left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS] = p.UDSGranteeID
+            WHERE  gi.[gi_txtUDS] = geo.[gi_txtUDS]
+		</param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_</param>
+	      <param key="objectType">com.palantir.object.UDSReport</param>
+      	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param></globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">gi_txtStreetAddress,gi_txtOtherAddress,gi_txtCity,gi_txtState,gi_txtZipCode</param>
+			<param key="componentTypes">ADDRESS1,ADDRESS2,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="blacklistValues">0</param>
+			<param key="propertyName">PartnerID_</param>
+			<param key="propertyType">com.palantir.property.OrganizationId</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngDeliverySites_</param>
+			<param key="propertyType">com.palantir.property.DeliverySites</param>
+			<param key="propertyValueColumn">gi_lngDeliverySites</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngAssignees_</param>
+			<param key="propertyType">com.palantir.property.Assignees</param>
+			<param key="propertyValueColumn">gi_lngAssignees</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fCHC_</param>
+			<param key="propertyType">com.palantir.property.fCHC</param>
+			<param key="propertyValueColumn">gi_fCHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fMHC_</param>
+			<param key="propertyType">com.palantir.property.fMHC</param>
+			<param key="propertyValueColumn">gi_fMHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHO_</param>
+			<param key="propertyType">com.palantir.property.fHO</param>
+			<param key="propertyValueColumn">gi_fHO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fPH_</param>
+			<param key="propertyType">com.palantir.property.fPH</param>
+			<param key="propertyValueColumn">gi_fPH</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHSHC_</param>
+			<param key="propertyType">com.palantir.property.fHSHC</param>
+			<param key="propertyValueColumn">gi_fHSHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtComment_</param>
+			<param key="propertyType">com.palantir.property.Comment</param>
+			<param key="propertyValueColumn">gi_txtComment</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtSchoolHealthCoord_</param>
+			<param key="propertyType">com.palantir.property.SchoolHealthCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtSchoolHealthCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtHomelessProgCoord_</param>
+			<param key="propertyType">com.palantir.property.HomelessProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtHomelessProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtPHProgCoord_</param>
+			<param key="propertyType">com.palantir.property.PHProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtPHProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_bytNetworkParticipation_</param>
+			<param key="propertyType">com.palantir.property.NetworkParticipation</param>
+			<param key="propertyValueColumn">gi_bytNetworkParticipation</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fISDIFunding_</param>
+			<param key="propertyType">com.palantir.property.fISDIFunding</param>
+			<param key="propertyValueColumn">gi_fISDIFunding</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCA_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCA</param>
+			<param key="propertyValueColumn">gi_fShareStatePCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareRegionPCA_</param>
+			<param key="propertyType">com.palantir.property.fShareRegionPCA</param>
+			<param key="propertyValueColumn">gi_fShareRegionPCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCO_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCO</param>
+			<param key="propertyValueColumn">gi_fShareStatePCO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fFTCADeemed_</param>
+			<param key="propertyType">com.palantir.property.fFTCADeemed</param>
+			<param key="propertyValueColumn">gi_fFTCADeemed</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_f340bDrug_</param>
+			<param key="propertyType">com.palantir.property.f340bDrug</param>
+			<param key="propertyValueColumn">gi_f340bDrug</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fAltDrugDiscount_</param>
+			<param key="propertyType">com.palantir.property.fAltDrugDiscount</param>
+			<param key="propertyValueColumn">gi_fAltDrugDiscount</param>
+		</rowprocessor>
+
+				<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">REPORT_</param>
+			<param key="childKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">Reported_</param>	
+			<param key="linkText">Reported</param>		
+		</rowprocessor>
+		</rowprocessorSet>
+    </table>
+      
+       <!--                            2 0 0 5                         -->
+<table >
+      <description>HRSA REPORT HEADERS 2005</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">  SELECT  gi.[gi_txtUDS], gi.[gi_txtName]
+					,'2005' as ry_lngReportingYear
+					,'01/01/2005' as ReportingPeriodBegin, '12/31/2005' as ReportingPeriodEnd      
+				    ,'UDSReport-'+gi.[gi_txtName] + '-2005' as  ReportName 
+				    ,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey 
+				    ,isnull(convert(int,p.partnerid),'') as partnerID
+				      , gi.[gi_txtStreetAddress]
+				      , gi.[gi_txtOtherAddress]
+				      , gi.[gi_txtCity]
+				      , gi.[gi_txtState]
+				      , gi.[gi_txtZipCode]
+				      ,[gi_lngDeliverySites]
+				      ,[gi_lngAssignees]
+					  ,[gi_fCHC]=case [gi_fCHC] when 1 then 'Y' when 0 then 'N' else NULL end
+				      ,[gi_fMHC]=case [gi_fMHC] when 1 then 'Y' when 0 then 'N' else NULL end
+				      ,[gi_fHO]=case [gi_fHO] when 1 then 'Y' when 0 then 'N' else NULL end
+				      ,[gi_fPH]=case [gi_fPH] when 1 then 'Y' when 0 then 'N' else NULL end 
+					  ,[gi_fHSHC]=case [gi_fHSHC] when 1 then 'Y' when 0 then 'N' else NULL end 
+				       ,[gi_txtComment], geo.Longitude,geo.Latitude 
+					  ,[gi_txtSchoolHealthCoord]
+					  ,[gi_txtHomelessProgCoord]
+					  ,[gi_txtPHProgCoord]
+					  ,[gi_bytNetworkParticipation]
+					  ,[gi_fISDIFunding]=case [gi_fISDIFunding] when 1 then 'Y' when 0 then 'N' else NULL end 
+				      ,[gi_fShareStatePCA]=case [gi_fShareStatePCA] when 1 then 'Y' when 0 then 'N' else NULL end
+				      ,[gi_fShareRegionPCA]=case [gi_fShareRegionPCA] when 1 then 'Y' when 0 then 'N' else NULL end 
+				      ,[gi_fShareStatePCO]=case [gi_fShareStatePCO] when 1 then 'Y' when 0 then 'N' else NULL end 
+				      ,[gi_fFTCADeemed]=case [gi_fFTCADeemed] when 1 then 'Y' when 0 then 'N' else NULL end 
+				      ,[gi_f340bDrug]=case [gi_f340bDrug] when 1 then 'Y' when 0 then 'N' else NULL end 
+				      ,[gi_fAltDrugDiscount]=case [gi_fAltDrugDiscount] when 1 then 'Y' when 0 then 'N' else NULL end 
+				      ,[gi_UnknownZipUsers]
+				      ,[gi_OtherZipUsers]
+				  FROM [HRSA_UDS_2005].[dbo].TBLGRANTEEINFOGEOCODED geo, [HRSA_UDS_2005].[dbo].[tblGranteeInfo] gi
+				  left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS] = p.UDSGranteeID
+            WHERE  gi.[gi_txtUDS] = geo.[gi_txtUDS]
+ 		</param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_</param>
+	      <param key="objectType">com.palantir.object.UDSReport</param>
+      	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param></globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">gi_txtStreetAddress,gi_txtOtherAddress,gi_txtCity,gi_txtState,gi_txtZipCode</param>
+			<param key="componentTypes">ADDRESS1,ADDRESS2,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="blacklistValues">0</param>
+			<param key="propertyName">PartnerID_</param>
+			<param key="propertyType">com.palantir.property.OrganizationId</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngDeliverySites_</param>
+			<param key="propertyType">com.palantir.property.DeliverySites</param>
+			<param key="propertyValueColumn">gi_lngDeliverySites</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngAssignees_</param>
+			<param key="propertyType">com.palantir.property.Assignees</param>
+			<param key="propertyValueColumn">gi_lngAssignees</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fCHC_</param>
+			<param key="propertyType">com.palantir.property.fCHC</param>
+			<param key="propertyValueColumn">gi_fCHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fMHC_</param>
+			<param key="propertyType">com.palantir.property.fMHC</param>
+			<param key="propertyValueColumn">gi_fMHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHO_</param>
+			<param key="propertyType">com.palantir.property.fHO</param>
+			<param key="propertyValueColumn">gi_fHO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fPH_</param>
+			<param key="propertyType">com.palantir.property.fPH</param>
+			<param key="propertyValueColumn">gi_fPH</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHSHC_</param>
+			<param key="propertyType">com.palantir.property.fHSHC</param>
+			<param key="propertyValueColumn">gi_fHSHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtComment_</param>
+			<param key="propertyType">com.palantir.property.Comment</param>
+			<param key="propertyValueColumn">gi_txtComment</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtSchoolHealthCoord_</param>
+			<param key="propertyType">com.palantir.property.SchoolHealthCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtSchoolHealthCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtHomelessProgCoord_</param>
+			<param key="propertyType">com.palantir.property.HomelessProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtHomelessProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtPHProgCoord_</param>
+			<param key="propertyType">com.palantir.property.PHProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtPHProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_bytNetworkParticipation_</param>
+			<param key="propertyType">com.palantir.property.NetworkParticipation</param>
+			<param key="propertyValueColumn">gi_bytNetworkParticipation</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fISDIFunding_</param>
+			<param key="propertyType">com.palantir.property.fISDIFunding</param>
+			<param key="propertyValueColumn">gi_fISDIFunding</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCA_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCA</param>
+			<param key="propertyValueColumn">gi_fShareStatePCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareRegionPCA_</param>
+			<param key="propertyType">com.palantir.property.fShareRegionPCA</param>
+			<param key="propertyValueColumn">gi_fShareRegionPCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCO_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCO</param>
+			<param key="propertyValueColumn">gi_fShareStatePCO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fFTCADeemed_</param>
+			<param key="propertyType">com.palantir.property.fFTCADeemed</param>
+			<param key="propertyValueColumn">gi_fFTCADeemed</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_f340bDrug_</param>
+			<param key="propertyType">com.palantir.property.f340bDrug</param>
+			<param key="propertyValueColumn">gi_f340bDrug</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_UnknownZipUsers_</param>
+			<param key="propertyType">com.palantir.property.UnknownZipUsers</param>
+			<param key="propertyValueColumn">gi_UnknownZipUsers</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_OtherZipUsers_</param>
+			<param key="propertyType">com.palantir.property.OtherZipUsers</param>
+			<param key="propertyValueColumn">gi_OtherZipUsers</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">REPORT_</param>
+			<param key="childKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">Reported_</param>	
+			<param key="linkText">Reported</param>		
+		</rowprocessor>
+		</rowprocessorSet>
+    </table>
+   <!--                            2 0 0 6                         -->
+<table >
+      <description>HRSA REPORT HEADERS 2006</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">SELECT gi.[gi_txtUDS],gi.[gi_txtName] 
+				,'2006' as ry_lngReportingYear
+				   ,'01/01/2006' as ReportingPeriodBegin, '12/31/2006' as ReportingPeriodEnd      
+			      ,'UDSReport-'+gi.[gi_txtName] + '-2006' as  ReportName 
+			          ,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey 
+					  ,isnull(convert(int,p.partnerid),'') as partnerID
+			      ,gi.[gi_txtStreetAddress]
+			      ,gi.[gi_txtOtherAddress]
+			      ,gi.[gi_txtCity]
+			      ,gi.[gi_txtState]
+			      ,gi.[gi_txtZipCode]
+			      ,[gi_lngDeliverySites]
+			      ,[gi_lngAssignees]
+				  ,[gi_fCHC]=case [gi_fCHC] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fMHC]=case [gi_fMHC] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fHO]=case [gi_fHO] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fPH]=case [gi_fPH] when 1 then 'Y' when 0 then 'N' else NULL end 
+				  ,[gi_fHSHC]=case [gi_fHSHC] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_txtComment], geo.Longitude,geo.Latitude 
+				  ,[gi_txtSchoolHealthCoord]
+				  ,[gi_txtHomelessProgCoord]
+				  ,[gi_txtPHProgCoord]
+				  ,[gi_bytNetworkParticipation]
+				  ,[gi_fISDIFunding]=case [gi_fISDIFunding] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fShareStatePCA]=case [gi_fShareStatePCA] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fShareRegionPCA]=case [gi_fShareRegionPCA] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fShareStatePCO]=case [gi_fShareStatePCO] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fFTCADeemed]=case [gi_fFTCADeemed] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_f340bDrug]=case [gi_f340bDrug] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fAltDrugDiscount]=case [gi_fAltDrugDiscount] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_UnknownZipUsers]
+			      ,[gi_OtherZipUsers]
+			  FROM [HRSA_UDS_2006].[dbo].TBLGRANTEEINFOGEOCODED geo, [HRSA_UDS_2006].[dbo].[tblGranteeInfo] gi
+			   left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS] = p.UDSGranteeID
+            WHERE  gi.[gi_txtUDS] = geo.[gi_txtUDS]
+ 		</param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_</param>
+	      <param key="objectType">com.palantir.object.UDSReport</param>
+      	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param></globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">gi_txtStreetAddress,gi_txtOtherAddress,gi_txtCity,gi_txtState,gi_txtZipCode</param>
+			<param key="componentTypes">ADDRESS1,ADDRESS2,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="blacklistValues">0</param>
+			<param key="propertyName">PartnerID_</param>
+			<param key="propertyType">com.palantir.property.OrganizationId</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngDeliverySites_</param>
+			<param key="propertyType">com.palantir.property.DeliverySites</param>
+			<param key="propertyValueColumn">gi_lngDeliverySites</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngAssignees_</param>
+			<param key="propertyType">com.palantir.property.Assignees</param>
+			<param key="propertyValueColumn">gi_lngAssignees</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fCHC_</param>
+			<param key="propertyType">com.palantir.property.fCHC</param>
+			<param key="propertyValueColumn">gi_fCHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fMHC_</param>
+			<param key="propertyType">com.palantir.property.fMHC</param>
+			<param key="propertyValueColumn">gi_fMHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHO_</param>
+			<param key="propertyType">com.palantir.property.fHO</param>
+			<param key="propertyValueColumn">gi_fHO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fPH_</param>
+			<param key="propertyType">com.palantir.property.fPH</param>
+			<param key="propertyValueColumn">gi_fPH</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHSHC_</param>
+			<param key="propertyType">com.palantir.property.fHSHC</param>
+			<param key="propertyValueColumn">gi_fHSHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtComment_</param>
+			<param key="propertyType">com.palantir.property.Comment</param>
+			<param key="propertyValueColumn">gi_txtComment</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtSchoolHealthCoord_</param>
+			<param key="propertyType">com.palantir.property.SchoolHealthCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtSchoolHealthCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtHomelessProgCoord_</param>
+			<param key="propertyType">com.palantir.property.HomelessProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtHomelessProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtPHProgCoord_</param>
+			<param key="propertyType">com.palantir.property.PHProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtPHProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_bytNetworkParticipation_</param>
+			<param key="propertyType">com.palantir.property.NetworkParticipation</param>
+			<param key="propertyValueColumn">gi_bytNetworkParticipation</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fISDIFunding_</param>
+			<param key="propertyType">com.palantir.property.fISDIFunding</param>
+			<param key="propertyValueColumn">gi_fISDIFunding</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCA_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCA</param>
+			<param key="propertyValueColumn">gi_fShareStatePCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareRegionPCA_</param>
+			<param key="propertyType">com.palantir.property.fShareRegionPCA</param>
+			<param key="propertyValueColumn">gi_fShareRegionPCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCO_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCO</param>
+			<param key="propertyValueColumn">gi_fShareStatePCO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fFTCADeemed_</param>
+			<param key="propertyType">com.palantir.property.fFTCADeemed</param>
+			<param key="propertyValueColumn">gi_fFTCADeemed</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_f340bDrug_</param>
+			<param key="propertyType">com.palantir.property.f340bDrug</param>
+			<param key="propertyValueColumn">gi_f340bDrug</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_UnknownZipUsers_</param>
+			<param key="propertyType">com.palantir.property.UnknownZipUsers</param>
+			<param key="propertyValueColumn">gi_UnknownZipUsers</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_OtherZipUsers_</param>
+			<param key="propertyType">com.palantir.property.OtherZipUsers</param>
+			<param key="propertyValueColumn">gi_OtherZipUsers</param>
+		</rowprocessor>
+
+				<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">REPORT_</param>
+			<param key="childKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">Reported_</param>	
+			<param key="linkText">Reported</param>		
+		</rowprocessor>
+		</rowprocessorSet>
+    </table>
+    
+    <!--                            2 0 0 7                         -->
+<table >
+      <description>HRSA REPORT HEADERS 2007</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">  SELECT gi.[gi_txtUDS],gi.[gi_txtName] 
+				,'2007' as ry_lngReportingYear
+				   ,'01/01/2007' as ReportingPeriodBegin, '12/31/2007' as ReportingPeriodEnd      
+			       ,'UDSReport-'+gi.[gi_txtName] + '-2007' as  ReportName 
+			       ,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey 
+					,isnull(convert(int,p.partnerid),'') as partnerID
+			      ,gi.[gi_txtStreetAddress]
+			      ,gi.[gi_txtOtherAddress]
+			      ,gi.[gi_txtCity]
+			      ,gi.[gi_txtState]
+			      ,gi.[gi_txtZipCode]
+			      ,[gi_lngDeliverySites]
+			      ,[gi_lngAssignees]
+				  ,[gi_fCHC]=case [gi_fCHC] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fMHC]=case [gi_fMHC] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fHO]=case [gi_fHO] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fPH]=case [gi_fPH] when 1 then 'Y' when 0 then 'N' else NULL end 
+				  ,[gi_fHSHC]=case [gi_fHSHC] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_txtComment], geo.Longitude,geo.Latitude 
+				  ,[gi_txtSchoolHealthCoord]
+				  ,[gi_txtHomelessProgCoord]
+				  ,[gi_txtPHProgCoord]
+				  ,[gi_bytNetworkParticipation]
+				  ,[gi_fISDIFunding]=case [gi_fISDIFunding] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fShareStatePCA]=case [gi_fShareStatePCA] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fShareRegionPCA]=case [gi_fShareRegionPCA] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fShareStatePCO]=case [gi_fShareStatePCO] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fFTCADeemed]=case [gi_fFTCADeemed] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_f340bDrug]=case [gi_f340bDrug] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fAltDrugDiscount]=case [gi_fAltDrugDiscount] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_UnknownZipUsers]
+			      ,[gi_OtherZipUsers]
+			 FROM  [HRSA_UDS_2007].[dbo].TBLGRANTEEINFOGEOCODED geo, [HRSA_UDS_2007].[dbo].[tblGranteeInfo] gi
+			 left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS] = p.UDSGranteeID
+            WHERE  gi.[gi_txtUDS] = geo.[gi_txtUDS]
+  		</param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_</param>
+	      <param key="objectType">com.palantir.object.UDSReport</param>
+      	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param></globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">gi_txtStreetAddress,gi_txtOtherAddress,gi_txtCity,gi_txtState,gi_txtZipCode</param>
+			<param key="componentTypes">ADDRESS1,ADDRESS2,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="blacklistValues">0</param>
+			<param key="propertyName">PartnerID_</param>
+			<param key="propertyType">com.palantir.property.OrganizationId</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngDeliverySites_</param>
+			<param key="propertyType">com.palantir.property.DeliverySites</param>
+			<param key="propertyValueColumn">gi_lngDeliverySites</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngAssignees_</param>
+			<param key="propertyType">com.palantir.property.Assignees</param>
+			<param key="propertyValueColumn">gi_lngAssignees</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fCHC_</param>
+			<param key="propertyType">com.palantir.property.fCHC</param>
+			<param key="propertyValueColumn">gi_fCHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fMHC_</param>
+			<param key="propertyType">com.palantir.property.fMHC</param>
+			<param key="propertyValueColumn">gi_fMHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHO_</param>
+			<param key="propertyType">com.palantir.property.fHO</param>
+			<param key="propertyValueColumn">gi_fHO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fPH_</param>
+			<param key="propertyType">com.palantir.property.fPH</param>
+			<param key="propertyValueColumn">gi_fPH</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHSHC_</param>
+			<param key="propertyType">com.palantir.property.fHSHC</param>
+			<param key="propertyValueColumn">gi_fHSHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtComment_</param>
+			<param key="propertyType">com.palantir.property.Comment</param>
+			<param key="propertyValueColumn">gi_txtComment</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtSchoolHealthCoord_</param>
+			<param key="propertyType">com.palantir.property.SchoolHealthCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtSchoolHealthCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtHomelessProgCoord_</param>
+			<param key="propertyType">com.palantir.property.HomelessProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtHomelessProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtPHProgCoord_</param>
+			<param key="propertyType">com.palantir.property.PHProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtPHProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_bytNetworkParticipation_</param>
+			<param key="propertyType">com.palantir.property.NetworkParticipation</param>
+			<param key="propertyValueColumn">gi_bytNetworkParticipation</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fISDIFunding_</param>
+			<param key="propertyType">com.palantir.property.fISDIFunding</param>
+			<param key="propertyValueColumn">gi_fISDIFunding</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCA_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCA</param>
+			<param key="propertyValueColumn">gi_fShareStatePCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareRegionPCA_</param>
+			<param key="propertyType">com.palantir.property.fShareRegionPCA</param>
+			<param key="propertyValueColumn">gi_fShareRegionPCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCO_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCO</param>
+			<param key="propertyValueColumn">gi_fShareStatePCO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fFTCADeemed_</param>
+			<param key="propertyType">com.palantir.property.fFTCADeemed</param>
+			<param key="propertyValueColumn">gi_fFTCADeemed</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_f340bDrug_</param>
+			<param key="propertyType">com.palantir.property.f340bDrug</param>
+			<param key="propertyValueColumn">gi_f340bDrug</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_UnknownZipUsers_</param>
+			<param key="propertyType">com.palantir.property.UnknownZipUsers</param>
+			<param key="propertyValueColumn">gi_UnknownZipUsers</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_OtherZipUsers_</param>
+			<param key="propertyType">com.palantir.property.OtherZipUsers</param>
+			<param key="propertyValueColumn">gi_OtherZipUsers</param>
+		</rowprocessor>
+
+				<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">REPORT_</param>
+			<param key="childKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">Reported_</param>	
+			<param key="linkText">Reported</param>		
+		</rowprocessor>
+		</rowprocessorSet>
+    </table>
+    
+   <!--                            2 0 0 8                         -->
+<table >
+      <description>HRSA REPORT HEADERS 2008</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">SELECT gi.[gi_txtUDS] ,gi.[gi_txtName] 
+				,'2008' as ry_lngReportingYear
+				   ,'01/01/2008' as ReportingPeriodBegin, '12/31/2008' as ReportingPeriodEnd      
+			      ,'UDSReport-'+gi.[gi_txtName] + '-2008' as  ReportName 
+			      ,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey 
+				  ,isnull(convert(int,p.partnerid),'') as partnerID
+			      ,gi.[gi_txtStreetAddress]
+			      ,gi.[gi_txtOtherAddress]
+			      ,gi.[gi_txtCity]
+			      ,gi.[gi_txtState]
+			      ,gi.[gi_txtZipCode]
+			      ,[gi_lngDeliverySites]
+			      ,[gi_lngAssignees]
+				  ,[gi_fCHC]=case [gi_fCHC] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fMHC]=case [gi_fMHC] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fHO]=case [gi_fHO] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fPH]=case [gi_fPH] when 1 then 'Y' when 0 then 'N' else NULL end 
+				  ,[gi_fHSHC]=case [gi_fHSHC] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_txtComment], geo.Longitude,geo.Latitude 
+				  ,[gi_txtSchoolHealthCoord]
+				  ,[gi_txtHomelessProgCoord]
+				  ,[gi_txtPHProgCoord]
+				  ,[gi_bytNetworkParticipation]
+				  ,[gi_fISDIFunding]=case [gi_fISDIFunding] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fShareStatePCA]=case [gi_fShareStatePCA] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fShareRegionPCA]=case [gi_fShareRegionPCA] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fShareStatePCO]=case [gi_fShareStatePCO] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fFTCADeemed]=case [gi_fFTCADeemed] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_f340bDrug]=case [gi_f340bDrug] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fAltDrugDiscount]=case [gi_fAltDrugDiscount] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_UnknownZipUsers]
+			      ,[gi_OtherZipUsers]
+			  FROM  [HRSA_UDS_2008].[dbo].TBLGRANTEEINFOGEOCODED geo, [HRSA_UDS_2008].[dbo].[tblGranteeInfo] gi
+			  left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS] = p.UDSGranteeID
+            WHERE  gi.[gi_txtUDS] = geo.[gi_txtUDS]
+		</param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_</param>
+	      <param key="objectType">com.palantir.object.UDSReport</param>
+      	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param></globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">gi_txtStreetAddress,gi_txtOtherAddress,gi_txtCity,gi_txtState,gi_txtZipCode</param>
+			<param key="componentTypes">ADDRESS1,ADDRESS2,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="blacklistValues">0</param>
+			<param key="propertyName">PartnerID_</param>
+			<param key="propertyType">com.palantir.property.OrganizationId</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngDeliverySites_</param>
+			<param key="propertyType">com.palantir.property.DeliverySites</param>
+			<param key="propertyValueColumn">gi_lngDeliverySites</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngAssignees_</param>
+			<param key="propertyType">com.palantir.property.Assignees</param>
+			<param key="propertyValueColumn">gi_lngAssignees</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fCHC_</param>
+			<param key="propertyType">com.palantir.property.fCHC</param>
+			<param key="propertyValueColumn">gi_fCHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fMHC_</param>
+			<param key="propertyType">com.palantir.property.fMHC</param>
+			<param key="propertyValueColumn">gi_fMHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHO_</param>
+			<param key="propertyType">com.palantir.property.fHO</param>
+			<param key="propertyValueColumn">gi_fHO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fPH_</param>
+			<param key="propertyType">com.palantir.property.fPH</param>
+			<param key="propertyValueColumn">gi_fPH</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHSHC_</param>
+			<param key="propertyType">com.palantir.property.fHSHC</param>
+			<param key="propertyValueColumn">gi_fHSHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtComment_</param>
+			<param key="propertyType">com.palantir.property.Comment</param>
+			<param key="propertyValueColumn">gi_txtComment</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtSchoolHealthCoord_</param>
+			<param key="propertyType">com.palantir.property.SchoolHealthCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtSchoolHealthCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtHomelessProgCoord_</param>
+			<param key="propertyType">com.palantir.property.HomelessProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtHomelessProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtPHProgCoord_</param>
+			<param key="propertyType">com.palantir.property.PHProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtPHProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_bytNetworkParticipation_</param>
+			<param key="propertyType">com.palantir.property.NetworkParticipation</param>
+			<param key="propertyValueColumn">gi_bytNetworkParticipation</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fISDIFunding_</param>
+			<param key="propertyType">com.palantir.property.fISDIFunding</param>
+			<param key="propertyValueColumn">gi_fISDIFunding</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCA_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCA</param>
+			<param key="propertyValueColumn">gi_fShareStatePCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareRegionPCA_</param>
+			<param key="propertyType">com.palantir.property.fShareRegionPCA</param>
+			<param key="propertyValueColumn">gi_fShareRegionPCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCO_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCO</param>
+			<param key="propertyValueColumn">gi_fShareStatePCO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fFTCADeemed_</param>
+			<param key="propertyType">com.palantir.property.fFTCADeemed</param>
+			<param key="propertyValueColumn">gi_fFTCADeemed</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_f340bDrug_</param>
+			<param key="propertyType">com.palantir.property.f340bDrug</param>
+			<param key="propertyValueColumn">gi_f340bDrug</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_UnknownZipUsers_</param>
+			<param key="propertyType">com.palantir.property.UnknownZipUsers</param>
+			<param key="propertyValueColumn">gi_UnknownZipUsers</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_OtherZipUsers_</param>
+			<param key="propertyType">com.palantir.property.OtherZipUsers</param>
+			<param key="propertyValueColumn">gi_OtherZipUsers</param>
+		</rowprocessor>
+
+				<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">REPORT_</param>
+			<param key="childKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">Reported_</param>	
+			<param key="linkText">Reported</param>		
+		</rowprocessor>
+      </rowprocessorSet>
+    </table>
+    
+ <!--                            2 0 0 9                         -->
+ <table >
+      <description>HRSA REPORT HEADERS 2009</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql"> SELECT gi.[gi_txtUDS],gi.[gi_txtName] 
+					,'2009' as ry_lngReportingYear
+					   ,'01/01/2009' as ReportingPeriodBegin, '12/31/2009' as ReportingPeriodEnd      
+				      ,'UDSReport-'+gi.[gi_txtName] + '-2009' as  ReportName 
+			          ,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey 
+					  ,isnull(convert(int,p.partnerid),'') as partnerID
+				      ,gi.[gi_txtStreetAddress]
+				      ,gi.[gi_txtOtherAddress]
+				      ,gi.[gi_txtCity]
+				      ,gi.[gi_txtState]
+				      ,gi.[gi_txtZipCode]
+				      ,[gi_lngDeliverySites]
+				      ,[gi_lngAssignees]
+					  ,[gi_fCHC]=case [gi_fCHC] when 1 then 'Y' when 0 then 'N' else NULL end
+				      ,[gi_fMHC]=case [gi_fMHC] when 1 then 'Y' when 0 then 'N' else NULL end
+				      ,[gi_fHO]=case [gi_fHO] when 1 then 'Y' when 0 then 'N' else NULL end
+				      ,[gi_fPH]=case [gi_fPH] when 1 then 'Y' when 0 then 'N' else NULL end 
+					  ,[gi_fHSHC]=case [gi_fHSHC] when 1 then 'Y' when 0 then 'N' else NULL end 
+				      ,[gi_txtComment], geo.Longitude,geo.Latitude 
+					  ,[gi_txtSchoolHealthCoord]
+					  ,[gi_txtHomelessProgCoord]
+					  ,[gi_txtPHProgCoord]
+					  ,[gi_bytNetworkParticipation]
+					  ,[gi_fISDIFunding]=case [gi_fISDIFunding] when 1 then 'Y' when 0 then 'N' else NULL end 
+				      ,[gi_fShareStatePCA]=case [gi_fShareStatePCA] when 1 then 'Y' when 0 then 'N' else NULL end
+				      ,[gi_fShareRegionPCA]=case [gi_fShareRegionPCA] when 1 then 'Y' when 0 then 'N' else NULL end 
+				      ,[gi_fShareStatePCO]=case [gi_fShareStatePCO] when 1 then 'Y' when 0 then 'N' else NULL end 
+				      ,[gi_fFTCADeemed]=case [gi_fFTCADeemed] when 1 then 'Y' when 0 then 'N' else NULL end 
+				      ,[gi_f340bDrug]=case [gi_f340bDrug] when 1 then 'Y' when 0 then 'N' else NULL end 
+				      ,[gi_fAltDrugDiscount]=case [gi_fAltDrugDiscount] when 1 then 'Y' when 0 then 'N' else NULL end 
+				      ,[gi_UnknownZipUsers]
+				      ,[gi_OtherZipUsers]
+				  FROM  [HRSA_UDS_2009].[dbo].TBLGRANTEEINFOGEOCODED geo, [HRSA_UDS_2009].[dbo].[tblGranteeInfo] gi
+				  left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS] = p.UDSGranteeID
+            WHERE  gi.[gi_txtUDS] = geo.[gi_txtUDS]
+          </param>
+        </rowprovider>
+      </rowproviderSet>
+     <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_</param>
+	      <param key="objectType">com.palantir.object.UDSReport</param>
+      	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param></globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">gi_txtStreetAddress,gi_txtOtherAddress,gi_txtCity,gi_txtState,gi_txtZipCode</param>
+			<param key="componentTypes">ADDRESS1,ADDRESS2,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="blacklistValues">0</param>
+			<param key="propertyName">PartnerID_</param>
+			<param key="propertyType">com.palantir.property.OrganizationId</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngDeliverySites_</param>
+			<param key="propertyType">com.palantir.property.DeliverySites</param>
+			<param key="propertyValueColumn">gi_lngDeliverySites</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngAssignees_</param>
+			<param key="propertyType">com.palantir.property.Assignees</param>
+			<param key="propertyValueColumn">gi_lngAssignees</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fCHC_</param>
+			<param key="propertyType">com.palantir.property.fCHC</param>
+			<param key="propertyValueColumn">gi_fCHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fMHC_</param>
+			<param key="propertyType">com.palantir.property.fMHC</param>
+			<param key="propertyValueColumn">gi_fMHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHO_</param>
+			<param key="propertyType">com.palantir.property.fHO</param>
+			<param key="propertyValueColumn">gi_fHO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fPH_</param>
+			<param key="propertyType">com.palantir.property.fPH</param>
+			<param key="propertyValueColumn">gi_fPH</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHSHC_</param>
+			<param key="propertyType">com.palantir.property.fHSHC</param>
+			<param key="propertyValueColumn">gi_fHSHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtComment_</param>
+			<param key="propertyType">com.palantir.property.Comment</param>
+			<param key="propertyValueColumn">gi_txtComment</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtSchoolHealthCoord_</param>
+			<param key="propertyType">com.palantir.property.SchoolHealthCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtSchoolHealthCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtHomelessProgCoord_</param>
+			<param key="propertyType">com.palantir.property.HomelessProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtHomelessProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtPHProgCoord_</param>
+			<param key="propertyType">com.palantir.property.PHProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtPHProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_bytNetworkParticipation_</param>
+			<param key="propertyType">com.palantir.property.NetworkParticipation</param>
+			<param key="propertyValueColumn">gi_bytNetworkParticipation</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fISDIFunding_</param>
+			<param key="propertyType">com.palantir.property.fISDIFunding</param>
+			<param key="propertyValueColumn">gi_fISDIFunding</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCA_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCA</param>
+			<param key="propertyValueColumn">gi_fShareStatePCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareRegionPCA_</param>
+			<param key="propertyType">com.palantir.property.fShareRegionPCA</param>
+			<param key="propertyValueColumn">gi_fShareRegionPCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCO_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCO</param>
+			<param key="propertyValueColumn">gi_fShareStatePCO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fFTCADeemed_</param>
+			<param key="propertyType">com.palantir.property.fFTCADeemed</param>
+			<param key="propertyValueColumn">gi_fFTCADeemed</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_f340bDrug_</param>
+			<param key="propertyType">com.palantir.property.f340bDrug</param>
+			<param key="propertyValueColumn">gi_f340bDrug</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_UnknownZipUsers_</param>
+			<param key="propertyType">com.palantir.property.UnknownZipUsers</param>
+			<param key="propertyValueColumn">gi_UnknownZipUsers</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_OtherZipUsers_</param>
+			<param key="propertyType">com.palantir.property.OtherZipUsers</param>
+			<param key="propertyValueColumn">gi_OtherZipUsers</param>
+		</rowprocessor>
+         <!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">REPORT_</param>
+			<param key="childKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">Reported_</param>	
+			<param key="linkText">Reported</param>		
+		</rowprocessor>
+      </rowprocessorSet>
+    </table>
+   
+<!--                            2 0 1 0                         -->
+<table>
+      <description>HRSA REPORT HEADERS 2010</description>
+      <rowproviderSet>
+        <rowprovider class="com.palantir.kite.provider.BasicRowProvider">
+          <param key="sql">SELECT gi.[gi_txtUDS],gi.[gi_txtName] 
+				,'2010' as ry_lngReportingYear
+				   ,'01/01/2010' as ReportingPeriodBegin, '12/31/2010' as ReportingPeriodEnd      
+			      ,'UDSReport-'+gi.[gi_txtName] + '-2010' as  ReportName 
+			          ,isnull (CONVERT(varchar, convert(int,p.partnerid)), 'UDS' + gi.[gi_txtUDS]) as pkey 
+					  ,isnull(convert(int,p.partnerid),'') as partnerID
+			      ,gi.[gi_txtStreetAddress]
+			      ,gi.[gi_txtOtherAddress]
+			      ,gi.[gi_txtCity]
+			      ,gi.[gi_txtState]
+			      ,gi.[gi_txtZipCode]
+			      ,[gi_lngDeliverySites]
+			      ,[gi_lngAssignees]
+				  ,[gi_fCHC]=case [gi_fCHC] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fMHC]=case [gi_fMHC] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fHO]=case [gi_fHO] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fPH]=case [gi_fPH] when 1 then 'Y' when 0 then 'N' else NULL end 
+				 ,[gi_fHSHC]=case [gi_fHSHC] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_txtComment],geo.Longitude,geo.Latitude
+				  ,[gi_txtSchoolHealthCoord]
+				  ,[gi_txtHomelessProgCoord]
+				  ,[gi_txtPHProgCoord]
+				  ,[gi_bytNetworkParticipation]
+				  ,[gi_fISDIFunding]=case [gi_fISDIFunding] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fShareStatePCA]=case [gi_fShareStatePCA] when 1 then 'Y' when 0 then 'N' else NULL end
+			      ,[gi_fShareRegionPCA]=case [gi_fShareRegionPCA] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fShareStatePCO]=case [gi_fShareStatePCO] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fFTCADeemed]=case [gi_fFTCADeemed] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_f340bDrug]=case [gi_f340bDrug] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_fAltDrugDiscount]=case [gi_fAltDrugDiscount] when 1 then 'Y' when 0 then 'N' else NULL end 
+			      ,[gi_UnknownZipUsers]
+			      ,[gi_OtherZipUsers]
+			  FROM [HRSA_UDS_2010].[dbo].TBLGRANTEEINFOGEOCODED geo, [HRSA_UDS_2010].[dbo].[tblGranteeInfo] gi
+			   left outer join InformationExplorer.dbo.Partner p on gi.[gi_txtUDS] = p.UDSGranteeID
+            WHERE  gi.[gi_txtUDS] = geo.[gi_txtUDS]
+		 </param>
+        </rowprovider>
+      </rowproviderSet>
+      <globalParams>
+	      <param key="primaryKeyColumns">gi_txtUDS,ry_lngReportingYear</param> 
+	      <param key="documentName">REPORT_</param> 
+	      <param key="documentIdColumns">gi_txtUDS,ry_lngReportingYear</param>
+	      <param key="objectName">REPORT_</param>
+	      <param key="objectType">com.palantir.object.UDSReport</param>
+      	      <param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No</param></globalParams>
+      <rowprocessorSet>
+     	<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtUDS_</param>
+			<param key="propertyType">com.palantir.property.UDSGranteeId</param>
+			<param key="propertyValueColumn">gi_txtUDS</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.TimeIntervalPropertyProcessor">
+			<param key="propertyName">ReportingPeriod_</param>
+			<param key="propertyType">com.palantir.property.ReportingPeriod</param>
+			<param key="beginDateColumn">ReportingPeriodBegin</param>
+			 <param key="endDateColumn">ReportingPeriodEnd</param>
+			  <param key="inputDateFormat">MM/dd/yyyy</param> 
+			  <param key="propertyLinkType">com.palantir.link.TimeInterval</param> 
+			  <param key="propertyType">com.palantir.property.TimeInterval</param>
+		</rowprocessor>
+		
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">ReportName_</param>
+			<param key="propertyType">com.palantir.property.Filename</param>
+			<param key="propertyValueColumn">ReportName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyComponentProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="propertyType">com.palantir.property.Address</param>
+			<param key="componentColumns">gi_txtStreetAddress,gi_txtOtherAddress,gi_txtCity,gi_txtState,gi_txtZipCode</param>
+			<param key="componentTypes">ADDRESS1,ADDRESS2,CITY,STATE,ZIP</param>
+		</rowprocessor>
+		<rowprocessor 
+			class="com.palantir.kite.processor.importresync.DecimalLatLongPointProcessor">
+			<param key="propertyName">ADDRESS_</param>
+			<param key="latitudeColumn">Latitude</param>
+			<param key="longitudeColumn">Longitude</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="blacklistValues">0</param>
+			<param key="propertyName">PartnerID_</param>
+			<param key="propertyType">com.palantir.property.OrganizationId</param>
+			<param key="propertyValueColumn">PartnerID</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">OrganizationName_</param>
+			<param key="propertyType">com.palantir.property.OrganizationName</param>
+			<param key="propertyValueColumn">gi_txtName</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngDeliverySites_</param>
+			<param key="propertyType">com.palantir.property.DeliverySites</param>
+			<param key="propertyValueColumn">gi_lngDeliverySites</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_lngAssignees_</param>
+			<param key="propertyType">com.palantir.property.Assignees</param>
+			<param key="propertyValueColumn">gi_lngAssignees</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fCHC_</param>
+			<param key="propertyType">com.palantir.property.fCHC</param>
+			<param key="propertyValueColumn">gi_fCHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fMHC_</param>
+			<param key="propertyType">com.palantir.property.fMHC</param>
+			<param key="propertyValueColumn">gi_fMHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHO_</param>
+			<param key="propertyType">com.palantir.property.fHO</param>
+			<param key="propertyValueColumn">gi_fHO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fPH_</param>
+			<param key="propertyType">com.palantir.property.fPH</param>
+			<param key="propertyValueColumn">gi_fPH</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fHSHC_</param>
+			<param key="propertyType">com.palantir.property.fHSHC</param>
+			<param key="propertyValueColumn">gi_fHSHC</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtComment_</param>
+			<param key="propertyType">com.palantir.property.Comment</param>
+			<param key="propertyValueColumn">gi_txtComment</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtSchoolHealthCoord_</param>
+			<param key="propertyType">com.palantir.property.SchoolHealthCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtSchoolHealthCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtHomelessProgCoord_</param>
+			<param key="propertyType">com.palantir.property.HomelessProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtHomelessProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_txtPHProgCoord_</param>
+			<param key="propertyType">com.palantir.property.PHProgCoord</param>
+			<param key="blacklistValues">N/A,NA,none,na,n/a,None,Not applicable,vacant,Vacant,N.A.,n.a.,Vaccant,Not Applicable,NONE,not applicable,'NA','na',N/N,non were served,non-applicable,open,no,NOT APPLICABLE,d/n/a,N//A,VACANT,N\A,na/,"NA",NO,n\a,non,n/s,No,0</param>
+			<param key="propertyValueColumn">gi_txtPHProgCoord</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_bytNetworkParticipation_</param>
+			<param key="propertyType">com.palantir.property.NetworkParticipation</param>
+			<param key="propertyValueColumn">gi_bytNetworkParticipation</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fISDIFunding_</param>
+			<param key="propertyType">com.palantir.property.fISDIFunding</param>
+			<param key="propertyValueColumn">gi_fISDIFunding</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCA_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCA</param>
+			<param key="propertyValueColumn">gi_fShareStatePCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareRegionPCA_</param>
+			<param key="propertyType">com.palantir.property.fShareRegionPCA</param>
+			<param key="propertyValueColumn">gi_fShareRegionPCA</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fShareStatePCO_</param>
+			<param key="propertyType">com.palantir.property.fShareStatePCO</param>
+			<param key="propertyValueColumn">gi_fShareStatePCO</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_fFTCADeemed_</param>
+			<param key="propertyType">com.palantir.property.fFTCADeemed</param>
+			<param key="propertyValueColumn">gi_fFTCADeemed</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_f340bDrug_</param>
+			<param key="propertyType">com.palantir.property.f340bDrug</param>
+			<param key="propertyValueColumn">gi_f340bDrug</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_UnknownZipUsers_</param>
+			<param key="propertyType">com.palantir.property.UnknownZipUsers</param>
+			<param key="propertyValueColumn">gi_UnknownZipUsers</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.PropertyRawProcessor">
+			<param key="propertyName">gi_OtherZipUsers_</param>
+			<param key="propertyType">com.palantir.property.OtherZipUsers</param>
+			<param key="propertyValueColumn">gi_OtherZipUsers</param>
+		</rowprocessor>
+		<!--      HERE ***********GOES*********  STUB***********  & LINK********* PROCESSORS********* FOR******* PARENT-CHILD********* RELATIONSHIPS        -->	 
+		 <rowprocessor class="com.palantir.kite.processor.importresync.StubObjectProcessor">
+			<param key="objectName">Partner__internalexternalID__</param>
+			<param key="primaryKeyColumns">pkey</param>
+			<param key="objectType">com.palantir.object.abstract</param>
+		</rowprocessor>
+		<rowprocessor
+			class="com.palantir.kite.processor.importresync.ParentChildLinkProcessor">
+			<param key="parentObjectName">Partner__internalexternalID__</param>
+			<param key="parentKeyColumns">pkey</param>
+			<param key="childObjectName">REPORT_</param>
+			<param key="childKeyColumns">gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkRole">com.palantir.role.none</param>
+			<param key="linkType">com.palantir.link.Simple</param>
+			<param key="primaryKeyColumns">pkey,gi_txtUDS,ry_lngReportingYear</param>
+			<param key="linkName">Reported_</param>	
+			<param key="linkText">Reported</param>		
+		</rowprocessor>
+      </rowprocessorSet>
+    </table>
+  </tables>
+</kite>
